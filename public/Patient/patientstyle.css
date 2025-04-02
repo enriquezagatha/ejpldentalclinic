@@ -1,0 +1,932 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    text-align: center;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../media/background/bgpatient.jfif") no-repeat center center/cover;
+    opacity: 0.5; /* Adjust opacity (0.0 to 1.0) */
+    z-index: -1; /* Background image */
+}
+
+/* Header Styles */
+header {
+    position: relative;
+    background-color: #82C3FF;
+    color: white;
+    padding: 8px 15px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 80px;
+}
+
+.logo {
+    height: 150%; /* Adjust as needed */
+    width: auto;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 60px; 
+    height: 60px; 
+    object-fit: cover; 
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 20px;
+    position: relative;
+}
+
+.nav-links a:first-child {
+    margin-left: 0;
+}
+
+.nav-links a:hover {
+    color: #1db7de;
+}
+
+.nav-links a.active {
+    border-bottom: 5px solid #080000; /* Active link underline */
+}
+
+/* Services Section */
+.services-title {
+    font-size: 50px;
+}
+
+.services-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin: 20px;
+}
+
+.services-images-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.services-image {
+    width: 300px; 
+    height: auto;
+    object-fit: cover;
+}
+
+.services-text {
+    flex: 1;
+}
+
+.section-title {
+    color: #000306;
+    font-size: 45px;
+    text-align: center;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #82C3FF;
+    color: white;
+    text-align: center;
+    height: 30px; 
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    line-height: 15px; 
+    font-size: 12px; 
+    padding-top: 5px; 
+}
+
+/* Social Links */
+.facebook-link {
+    text-decoration: none; 
+}
+
+.facebook-link img {
+    vertical-align: middle; 
+}
+
+.facebook-link-text {
+    font-size: 22px; 
+    margin-left: 10px; 
+}
+
+/* About Us Section */
+.aboutus-container {
+    max-width: fit-content; 
+    padding: 20px; 
+}
+
+#aboutus-content {
+    margin: 20px auto; 
+    max-width: fit-content; 
+    padding: 20px; 
+    text-align: center;
+}
+
+#aboutus-content p {
+    font-size: 25px;
+    margin: 20px 0; 
+}
+
+/* Contact Section */
+.contact-container, .location-container, .doctors-container {
+    margin: 20px auto;
+    padding: 20px; 
+    text-align: center; 
+}
+
+#contact-content, #location-content, #doctors-content {
+    max-width: fit-content; 
+    padding: 20px; 
+    margin: 0 auto; 
+}
+
+#contact-content p, #location-content p, #doctors-content p {
+    font-size: 25px;
+    margin: 20px 0; 
+}
+
+/* Services Section */
+.services-container {
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.services-grid {
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px;
+}
+
+@media (min-width: 1200px) {
+    .services-grid {
+        grid-template-rows: repeat(2, auto); 
+    }
+}
+
+.service-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 20px;
+}
+
+.service-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 2px solid #007BFF;
+}
+
+.service-title {
+    font-size: 1.5em;
+    color: #333;
+    margin: 15px 0;
+}
+
+.service-description {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.service-link {
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.service-link:hover {
+    color: #0056b3;
+}
+
+/* Doctors Section */
+.doctors-container {
+    margin: 20px auto;
+    padding: 20px; /* Add padding around the content */
+    text-align: center; /* Center the text inside */
+}
+
+.credentials {
+    display: none;
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    background-color: rgba(255, 255, 255, 0.9); 
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 200px; 
+    text-align: center;
+    z-index: 10; 
+}
+
+.credentials p {
+    margin: 10px 0; 
+    font-size: 14px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 5px;
+    left: 10px; 
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+/* Buttons */
+.back-to-services-button {
+    position: absolute;
+    top: 80px;
+    left: 10px;
+    background-color: #1ABC9C;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.back-to-services-button:hover {
+    background-color: #16A085;
+}
+
+.logout-button {
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    position: absolute; 
+    bottom: 40px; 
+    right: 20px; 
+}
+
+.logout-button:hover {
+    background-color: #16A085;
+}
+
+/* Profile Section */
+.profile-info-grid {
+    display: grid;
+    grid-template-columns: 300px 400px; 
+    gap: 10px 20px; 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 20px;
+    border-radius: 5px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.profile-label {
+    font-weight: bold;
+    text-align: right; 
+    font-size: 25px;
+}
+
+.profile-value {
+    text-align: left; 
+    padding-left: 10px; 
+    font-size: 25px;
+}
+
+/* Patient Profile Information */
+#profile-info p {
+    font-size: 24px; 
+    line-height: 1.5; 
+    margin: 8px 0; 
+    color: #040000; 
+}
+
+#profile-info p strong {
+    font-weight: bold; 
+    color: #00070e; 
+}
+
+/* Edit Profile Information */
+main {
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding-bottom: 100px; 
+}
+
+.edit-button {
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 20px; 
+}
+
+.edit-button:hover {
+    background-color: #16A085;
+}
+
+/* Overlay to cover the entire screen */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    display: none; /* Initially hidden */
+}
+
+/* Form container is now fixed, so it overlays the screen */
+.form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    border-radius: 5px;
+    width: calc(100% - 60px);
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    display: none; /* Initially hidden */
+    box-sizing: border-box;
+}
+
+/* Close button positioned on top-right of the form */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button:hover {
+    color: red;
+}
+
+.profileconfirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.modal-content {
+    background-color: #075646;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Logout Button */
+.logout-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.logout-modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logout-modal h2 {
+    margin-bottom: 10px;
+}
+
+.logout-modal button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-modal .confirm-btn {
+    background-color: #d9534f;
+    color: white;
+}
+
+.logout-modal .cancel-btn {
+    background-color: #5bc0de;
+    color: white;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+    width: 100%; 
+    padding: 10px; 
+    margin: 10px 0; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    box-sizing: border-box; 
+    font-size: 16px; 
+}
+
+input[type="submit"],
+input[type="button"] {
+    background-color: #1ABC9C; 
+    color: white; 
+    border: none; 
+    padding: 10px 15px; 
+    border-radius: 5px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    background-color: #16A085; 
+}
+
+#appointments-container {
+    max-width: 1000px;
+    max-height: 1000px; /* Set maximum height */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #2C3E50;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#appointments-container h2 {
+    text-align: center; /* Center the heading */
+    color: white; /* Dark gray text color */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+#appointments {
+    width: 100%; /* Make the table take full width */
+    border-collapse: collapse; /* Remove double borders */
+}
+
+#appointments th, #appointments td {
+    padding: 12px; /* Space inside cells */
+    text-align: left; /* Align text to the left */
+    border: 1px solid #ddd; /* Light gray border for cells */
+}
+
+#appointments th {
+    background-color: #075646; /* Green background for header */
+    color: white; /* White text color for header */
+    font-weight: bold; /* Bold text for header */
+}
+
+#appointments tr:nth-child(even) {
+    background-color: #ddd; /* Light gray for even rows */
+}
+
+#appointments tr:nth-child(odd) {
+    background-color: #ddd; /* Light gray for even rows */
+}
+
+#appointments tr:hover {
+    background-color: #2C3E50; /* Change background color on hover */
+}
+
+.status-pending {
+    color: orangered; /* Specific color for 'Pending' status */
+    font-weight: bold; /* Make the text bold */
+}
+
+.status-confirmed {
+    color: green; /* Color for 'Confirmed' status */
+    font-weight: bold; /* Make the text bold */
+}
+
+.status-canceled {
+    color: red; /* Color for 'Canceled' status */
+    font-weight: bold; /* Make the text bold */
+}
+
+/* Profile picture styling */
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+/* Modal container styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal content styling */
+.modal-content {
+    position: relative;
+    width: 90%; /* Use most of the screen's width */
+    max-width: 600px; /* Limit maximum size */
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Enlarged profile preview inside modal */
+.profile-preview {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Upload and close button styling */
+.confirm-upload-button , .confirm-delete-button{
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.confirm-upload-button, .confirm-delete-button {
+    background-color: #28a745;
+    color: white;
+    margin-right: 10px;
+}
+
+.closepic-button {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.closepic-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.closepic-button:hover {
+    background-color: #c82333;
+}
+
+/* File input styling */
+input[type="file"] {
+    margin: 15px 0;
+    font-size: 14px;
+    width: 90%;
+}
+
+/* Styling for the label element */
+label[for="upload-picture"] {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+    font-family: Arial, sans-serif;
+}
+
+/* Modal background styling */
+.uploadmodal, .deletemodal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Slightly darker background for confirmation */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Make sure this sits above the picture options modal */
+}
+
+/* Modal content styling for the upload confirmation modal */
+.uploadmodal .modal-content, .deletemodal .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-width: 400px;
+    width: 90%;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal header styling */
+.uploadmodal .modal-content h3, .deletemodal .modal-content h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Modal paragraph styling */
+.uploadmodal .modal-content p, .deletemodal .modal-content p {
+    margin-bottom: 20px;
+    color: #555;
+    font-size: 16px;
+}
+
+/* Buttons inside the modal */
+.uploadmodal .modal-content button, .deletemodal .modal-content button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Yes button styling */
+.uploadmodal .modal-content button:first-child, .deletemodal .modal-content button:first-child {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.uploadmodal .modal-content button:first-child:hover, .deletemodal .modal-content button:first-child:hover{
+    background-color: #45a049;
+}
+
+/* No button styling */
+.uploadmodal .modal-content button:nth-child(2), .deletemodal .modal-content button:nth-child(2) {
+    background-color: #f44336;
+    color: white;
+}
+
+.uploadmodal .modal-content button:nth-child(2):hover, .deletemodal .modal-content button:nth-child(2):hover {
+    background-color: #d32f2f;
+}
+
+/* Close button styling for upload confirmation */
+.uploadmodal .modal-content button:last-child, .deletemodal .modal-content button:last-child{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+.uploadmodal .modal-content button:last-child:hover, .deletemodal .modal-content button:last-child(hover) {
+    color: red;
+}
+
+/* Modal animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.pagination-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination-button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+}
+
+.pagination-button:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-button:disabled {
+    background-color: #e9e9e9;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+/*Payment Section*/
+.paymentmodal {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.paymentmodal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    max-height: 90vh;
+    overflow: auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+.close {
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/*Records Section*/
+/* Style the table */
+#patient-table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+/* Table header */
+#patient-table thead {
+    background-color: #63aaf5;
+    color: white;
+    text-align: left;
+}
+
+/* Table rows */
+#patient-table th, 
+#patient-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Hover effect for rows */
+#patient-table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Style for patient links */
+.patient-link {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.patient-link:hover {
+    text-decoration: underline;
+}
+
+/* Center the details container but align it to the left */
+#patient-details {
+    width: 50%; /* Adjust width to your preference */
+    margin: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    float: left; /* Align to the left */
+}
+
+/* Style for headings */
+#patient-details h3 {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+/* Style for patient info */
+#patient-details p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+/* Highlight labels */
+#patient-details strong {
+    color: #333;
+}
+
+/* Treatment history section */
+.treatment {
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Add spacing to the main content */
+main {
+    text-align: center;
+    padding-left: 20px; /* Optional: For some left padding */
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EJPL Dental Clinic - Home</title>
+    <link rel="stylesheet" href="../main page/styles.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../main page/home.html" class="active">Home</a>
+                <a href="../main page/aboutus.html">About Us</a>
+                <a href="../main page/doctors.html">Doctors</a>
+                <a href="../main page/services.html">Services</a>
+                <a href="../main page/contact.html">Contact Us</a>
+                <a href="../main page/location.html">Location</a>
+            </div>
+            <a href="../main page/profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <div class="container">
+        <section id="home">
+            <div class="image-gallery">
+                <h2 class="home-section-title">EJPL Dental Clinic</h2> <!-- Added Section Title -->
+                <img src="../media/background/clinicbg1.jfif" alt="Clinic Image 1" id="background-image">
+                <div class="arrow left-arrow" onclick="previousImage()">&#8249;</div>
+                <div class="arrow right-arrow" onclick="nextImage()">&#8250;</div>
+            </div>
+        </section>
+    </div>
+    <script>
+        let images = [
+    "../media/background/clinicbg1.jfif",
+    "../media/background/clinicbg2.jfif",
+    "../media/background/clinicbg5.jfif"
+];
+
+let currentIndex = 0;
+
+function showImage(index) {
+    const backgroundImage = document.getElementById("background-image");
+    backgroundImage.src = images[index];
+}
+
+function previousImage() {
+    currentIndex = (currentIndex > 0) ? currentIndex - 1 : images.length - 1;
+    showImage(currentIndex);
+}
+
+function nextImage() {
+    currentIndex = (currentIndex < images.length - 1) ? currentIndex + 1 : 0;
+    showImage(currentIndex);
+}
+    </script>
+</body>
+</html>

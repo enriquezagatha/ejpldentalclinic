@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service & Treatment Maintenance</title>
+    <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
+    <link rel="stylesheet" href="../Medical Personnel/services.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='personnel-home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../Medical Personnel/personnel-home.html">Home</a>
+                <a href="../Medical Personnel/personnel-records.html">Patient Records</a>
+                <a href="../Medical Personnel/personnel-balance.html">Tracking Balance</a>
+                <a href="../Medical Personnel/personnel-appointment.html">Appointment Data</a>
+                <a href="../Medical Personnel/personnel-management.html" class="active">Management</a>
+            </div>
+            <a href="../Medical Personnel/personnel-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Management Module</h1>
+
+        <!-- Management Navigation Buttons-->
+         <div class="management-buttons">
+            <button class="tab-btn" onclick="showSection('service-section')">Service Management</button>
+            <button class="tab-btn" onclick="showSection('treatment-section')">Treatment Management</button>
+            <button class="tab-btn" onclick="showSection('contact-section')">Contact Management</button>
+            <button class="tab-btn" onclick="showSection('doctor-section')">Dentist Management</button>
+            <button class="tab-btn" id="staff-tab" onclick="showSection('staff-section')">Staff Management</button>
+            <button class="tab-btn" onclick="showSection('discount-section')">Discount Management</button>
+         </div>
+
+        <!-- ========== SERVICE MANAGEMENT ========== -->
+         <div id="service-section" class="management-section">
+            <section>
+                <h2>Manage Services</h2>
+                <button id="open-service-modal-btn">Add New Service</button>
+
+                <!-- Service Modal -->
+                <div id="service-modal" class="modal">
+                    <div id="service-overlay" class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <span id="close-service-modal-btn" class="close-btn">&times;</span>
+                        <h2 id="service-modal-title">Add New Service</h2>
+                        <input type="hidden" id="service-id"> <!-- For editing -->
+                        <input type="text" id="service-name" placeholder="Service Name" required>
+                        <input type="text" id="service-desc" placeholder="Service Description" required>
+                        <input type="file" id="service-image" accept="image/*">
+                        <button id="save-service-btn">Save Service</button>
+                    </div>
+                </div>
+
+                <!-- Service List -->
+                <div id="service-list" class="services-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Service Name</th>
+                                <th>Description</th>
+                                <th>Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="service-table-body">
+                            <!-- Services will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========== TREATMENT MANAGEMENT ========== -->
+        <div id="treatment-section" class="management-section">
+            <section>
+                <h2>Manage Treatments</h2>
+                <button id="open-treatment-modal-btn">Add New Treatment</button>
+
+                <!-- Treatment Modal -->
+                <div id="treatment-modal" class="modal">
+                    <div id="treatment-overlay" class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <span id="close-treatment-modal-btn" class="close-btn">&times;</span>
+                        <h2 id="treatment-modal-title">Add New Treatment</h2>
+                        <input type="text" id="treatment-name" placeholder="Treatment Name" required>
+                        <input type="text" id="treatment-price" placeholder="Price (₱)" required>
+                        <button id="save-treatment-btn">Add Treatment</button>
+                    </div>
+                </div>
+
+                <div id="treatment-list" class="services-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Treatment Name</th>
+                                <th>Price (₱)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="treatment-table-body">
+                            <!-- Treatments will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========== CONTACT MANAGEMENT ========== -->
+        <div id="contact-section" class="management-section">
+            <section>
+                <h2>Manage Contact Information</h2>
+            
+                <button id="open-add-modal-btn">Add Contact</button>
+            
+                <h3>Contact List</h3>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Contact Type</th>
+                            <th>Contact Info</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contact-list">
+                        <!-- Contact rows will be dynamically added here -->
+                    </tbody>
+                </table>
+            
+                <!-- 🔹 ADD CONTACT MODAL -->
+                <div id="add-contact-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h2 id="modal-title">Add Contact</h2>
+            
+                        <!-- Landline Input -->
+                        <div id="landline-section">
+                            <label>Landline:</label>
+                            <input type="tel" id="modal-landline" placeholder="Landline Number">
+                        </div>
+            
+                        <!-- Phone Input -->
+                        <div id="phone-section">
+                            <label>Phone:</label>
+                            <input type="tel" id="modal-phone" placeholder="Phone Number">
+                        </div>
+            
+                        <!-- Facebook Page URL Input -->
+                        <div id="facebook-section">
+                            <label>Facebook Page URL:</label>
+                            <input type="url" id="modal-facebook" placeholder="Facebook Page URL">
+                        </div>
+            
+                        <!-- Facebook Page Name Input -->
+                        <div id="facebook-text-section">
+                            <label>Facebook Page Name:</label>
+                            <input type="text" id="modal-facebook-text" placeholder="Facebook Page Name">
+                        </div>
+            
+                        <!-- Show this button for adding new contact -->
+                        <button id="add-contact-btn">Add Contact</button>
+                        
+                        <!-- Show this button for saving edits -->
+                        <button id="save-contact-btn" style="display:none;">Save Changes</button>
+                    </div>
+                </div>
+            </section>
+        </div>       
+        
+        <!-- ========== DOCTOR MANAGEMENT ========== -->
+        <div id="doctor-section" class="management-section">
+            <section>
+                <h2>Manage Dentists</h2>
+                <button id="open-dentist-modal-btn">Add New Dentists</button>
+
+                <!-- Doctor Modal -->
+                <div id="dentist-modal" class="modal">
+                    <div class="modal-content">
+                        <span id="close-dentist-modal-btn" class="close-btn">&times;</span>
+                        <h2 id="dentist-modal-title">Add New Doctor</h2>
+                        <input type="text" id="dentist-name" placeholder="Dentist's Name" required>
+                        <input type="text" id="dentist-contact" placeholder="Contact Number" required>
+                        <input type="file" id="dentist-image" accept="image/*" required>
+                        <input type="hidden" id="editdentistId"> <!-- For editing -->
+                        <button id="save-dentist-btn">Save Dentist</button>
+                    </div>
+                </div>
+
+                <div id="dentist-list" class="services-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dentist Name</th>
+                                <th>Contact Number</th>
+                                <th>Image</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dentist-table-body">
+                            <!-- Dentists will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- ========== STAFF MANAGEMENT ========== -->
+        <div id="staff-section" class="management-section">
+            <section>
+                <h2>Manage Staff</h2>
+                <button class="add-button" onclick="openAddStaffModal()">Add Staff</button>
+
+                <!-- Staff List -->
+                <div id="staff-list" class="staff-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Birthday</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staff-table-body">
+                            <!-- Staff will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Add Staff Modal -->
+        <div id="add-staff-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddStaffModal()">&times;</span>
+                <h2>Add New Staff</h2>
+                <form id="add-staff-form">
+                    <label for="staff-firstName">First Name:</label>
+                    <input type="text" id="staff-firstName" required>
+
+                    <label for="staff-middleName">Middle Name:</label>
+                    <input type="text" id="staff-middleName" required>
+
+                    <label for="staff-lastName">Last Name:</label>
+                    <input type="text" id="staff-lastName" required>
+
+                    <label for="staff-birthday">Birthday:</label>
+                    <input type="date" id="staff-birthday" required>
+
+                    <label for="staff-email">Email:</label>
+                    <input type="email" id="staff-email" required>
+
+                    <button type="button" onclick="addStaff()">Add Staff</button>
+                    <p id="add-staff-message" style="color: red;"></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- ✅ Move This Outside -->
+        <div id="generated-credentials-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <button class="close-button" onclick="closeGeneratedCredentialsModal()">X</button>
+                <h2>Generated Credentials</h2>
+                <div id="generated-password" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- ========== DISCOUNT MANAGEMENT ========== -->
+        <div id="discount-section" class="management-section">
+            <h2>Manage Discounts</h2>
+            <button onclick="openDiscountModal()">Add Discount</button>
+
+            <!-- Discount List -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Discount Name</th>
+                        <th>Percentage</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="discount-list">
+                    <!-- Discounts will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Discount Modal -->
+        <div id="discount-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDiscountModal()">&times;</span>
+                <h2 id="modal-title">Add Discount</h2>
+                <label for="discountName">Discount Name:</label>
+                <input type="text" id="discountName" required>
+
+                <label for="discountPercentage">Discount (%):</label>
+                <input type="number" id="discountPercentage" min="0" max="100" required>
+
+                <button onclick="saveDiscount()">Save Discount</button>
+                <input type="hidden" id="discountId"> <!-- Stores ID for editing -->
+            </div>
+        </div>
+
+    </main>    
+
+    <!-- JavaScript -->
+    <script src="../Medical Personnel/employeeServices.js"></script>
+    <script src="../Medical Personnel/employeeTreatments.js"></script>
+    <script src="../Medical Personnel/employeeContact.js"></script>
+    <script src="../Medical Personnel/employeeDentist.js"></script>
+    <script src="../Medical Personnel/employeeStaff.js"></script>
+    <script src="../Medical Personnel/employeeDiscount.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // ===== SERVICE MODAL =====
+            const serviceModal = document.getElementById("service-modal");
+            const serviceOverlay = document.getElementById("service-overlay");
+            const serviceImageInput = document.getElementById("service-image");
+
+            document.getElementById("open-service-modal-btn").addEventListener("click", () => {
+                serviceModal.style.display = "flex";
+            });
+
+            document.getElementById("close-service-modal-btn").addEventListener("click", () => {
+                serviceModal.style.display = "none";
+                serviceImageInput.value = ""; // Reset file input
+            });
+
+            serviceOverlay.addEventListener("click", () => {
+                serviceModal.style.display = "none";
+                serviceImageInput.value = "";
+            });
+
+            // ===== TREATMENT MODAL =====
+            const treatmentModal = document.getElementById("treatment-modal");
+            const treatmentOverlay = document.getElementById("treatment-overlay");
+
+            document.getElementById("open-treatment-modal-btn").addEventListener("click", () => {
+                treatmentModal.style.display = "flex";
+            });
+
+            document.getElementById("close-treatment-modal-btn").addEventListener("click", () => {
+                treatmentModal.style.display = "none";
+            });
+
+            treatmentOverlay.addEventListener("click", () => {
+                treatmentModal.style.display = "none";
+            });
+        });
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.management-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show the selected section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+    </script>
+
+</body>
+</html>

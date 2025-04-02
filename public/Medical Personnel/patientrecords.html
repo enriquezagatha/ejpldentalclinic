@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personnel - Home</title>
+    <link rel="stylesheet" href="../Medical Personnel/patientrecords.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='personnel-home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="personnel-home.html">Home</a>
+                <a href="personnel-records.html" class="active">Patient Records</a>
+                <a href="personnel-balance.html">Tracking Balance</a>
+                <a href="personnel-appointment.html">Appointment Data</a>
+            </div>
+            <a href="personnel-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <main>
+        <div class="search-container">
+            <input type="text" id="search-bar" placeholder="Search by name" class="search-bar">
+            <button id="search-button" class="search-button">Search</button>
+        </div>
+        <table id="records-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Treatment Type</th>
+                </tr>
+            </thead>
+            <tbody id="appointments-tbody"></tbody>
+        </table>
+        <div id="loading" class="loading" style="display:none;">Loading appointments...</div>
+    <script>
+        let allAppointments = [];
+    
+        async function fetchAppointments() {
+            const loadingElement = document.getElementById('loading');
+            if (loadingElement) loadingElement.style.display = 'block';
+    
+            const response = await fetch('/api/appointments');
+            if (response.ok) {
+                allAppointments = await response.json();
+                displayAppointments(allAppointments);
+            } else {
+                console.error('Error fetching appointments:', response.statusText);
+                const tbody = document.getElementById('appointments-tbody');
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="2" style="text-align: center;">Error loading appointments.</td></tr>';
+                }
+            }
+    
+            if (loadingElement) loadingElement.style.display = 'none';
+        }
+    
+        function displayAppointments(appointments) {
+            const tbody = document.getElementById('appointments-tbody');
+            if (!tbody) return;
+    
+            tbody.innerHTML = '';
+    
+            if (appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; padding: 20px;">No appointments found.</td></tr>';
+                return;
+            }
+    
+            appointments.forEach(appointment => {
+                if (!appointment._id) return;
+    
+                const tr = document.createElement('tr');
+                tr.classList.add('appointment-row');
+                tr.setAttribute('data-id', appointment._id);
+                tr.innerHTML = `<td>${appointment.firstName} ${appointment.lastName}</td>
+                                <td>${appointment.treatmentType}</td>`;
+                tbody.appendChild(tr);
+            });
+    
+            document.querySelectorAll('.appointment-row').forEach(row => {
+                row.addEventListener('click', () => {
+                    const appointmentId = row.getAttribute('data-id');
+                    openPatientEditWindow(appointmentId);
+                });
+            });
+        }
+    
+        function filterAppointments(searchTerm) {
+            const filteredAppointments = allAppointments.filter(appointment => {
+                const fullName = `${appointment.firstName} ${appointment.lastName}`.toLowerCase();
+                return fullName.includes(searchTerm.toLowerCase());
+            });
+            displayAppointments(filteredAppointments);
+        }
+    
+        function openPatientEditWindow(appointmentId) {
+            window.location.href = `personnel-editpatient.html?appointmentId=${encodeURIComponent(appointmentId)}`;
+        }
+    
+        const searchButton = document.getElementById('search-button');
+        if (searchButton) {
+            searchButton.addEventListener('click', () => {
+                const searchBar = document.getElementById('search-bar');
+                if (searchBar) {
+                    filterAppointments(searchBar.value);
+                }
+            });
+        }
+    
+        const searchBar = document.getElementById('search-bar');
+        if (searchBar) {
+            searchBar.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    filterAppointments(searchBar.value);
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchAppointments();
+        });
+    </script>   
+    <footer>
+        <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
+    </footer>
+</body>
+</html>

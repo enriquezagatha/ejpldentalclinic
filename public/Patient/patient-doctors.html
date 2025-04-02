@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient - Doctors</title>
+    <link rel="stylesheet" href="../Patient/patientstyle.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='patient-home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../Patient/patient-home.html">Home</a>
+                <a href="../Patient/patient-aboutus.html">About Us</a>
+                <a href="../Patient/patient-doctors.html" class="active">Doctors</a>
+                <a href="../Patient/patient-services.html">Services</a>
+                <a href="../Patient/patient-contact.html">Contact Us</a>
+                <a href="../Patient/patient-location.html">Location</a>
+                <a href="../Patient/patient-records.html">Records</a>
+            </div>
+            <a href="../Patient/patient-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <div class="doctors-container">
+        <center><h2 class="section-title">Meet Our Doctors</h2></center>
+        <section id="doctors-content">
+            <center>
+                <div class="team">
+                    <div class="team-member">
+                        <img src="https://i.mydramalist.com/Xpzjp_7f.jpg" alt="Dr. John Doe" onclick="toggleCredentials(this);">
+                        <h3 onclick="toggleCredentials(this);">Dr. Jane Smith, DDS</h3>
+                        <div class="credentials">
+                            <span class="close-btn" onclick="toggleCredentials(this);">&times;</span>
+                            <p><strong>Specialization:</strong> Chief Dentist</p>
+                            <p><strong>Experience:</strong> 15 years</p>
+                            <p><strong>Education:</strong> DDS, University of Dental Science</p>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <img src="https://i.mydramalist.com/EB82W_7f.jpg" alt="Dr. Jane Smith" onclick="toggleCredentials(this);">
+                        <h3 onclick="toggleCredentials(this);">Dr. John Doe, DMD</h3>
+                        <div class="credentials">
+                            <span class="close-btn" onclick="toggleCredentials(this);">&times;</span>
+                            <p><strong>Specialization:</strong> Pediatric Dentist</p>
+                            <p><strong>Experience:</strong> 10 years</p>
+                            <p><strong>Education:</strong> DMD, Pediatric Dentistry, University of Health</p>
+                        </div>
+                    </div>
+                </div>
+            </center>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function toggleCredentials(element) {
+            // Get the team member div (parent of the clicked element)
+            let teamMember = element.closest('.team-member');
+
+            // Find the credentials div within this team member
+            let credentials = teamMember.querySelector('.credentials');
+
+            // Toggle the display of the credentials
+            if (credentials.style.display === "none" || credentials.style.display === "") {
+                credentials.style.display = "block";
+            } else {
+                credentials.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

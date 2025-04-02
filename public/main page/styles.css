@@ -1,0 +1,417 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../media/logo/EJPL.png") no-repeat center center/cover;
+    background-size: contain;
+    opacity: 0.5; /* Adjust the opacity here (0.0 to 1.0) */
+    z-index: -1; /* Ensure the image stays behind other content */
+}
+
+header {
+    background-color: #82C3FF;
+    color: white;
+    padding: 0;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0px 20px;
+    height: 80px;
+}
+
+.logo {
+    height: 150%;
+    width: auto;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 60px;  /* Adjust width as needed */
+    height: 60px; /* Adjust height as needed */
+    object-fit: cover; /* Ensure the image maintains aspect ratio and covers the area */
+}
+
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 20px;
+    position: relative; /* Ensure that dropdown positioning is relative to this link */
+}
+
+.nav-links a:first-child {
+    margin-left: 0;
+}
+
+.nav-links a:hover {
+    color: #1db7de;
+}
+
+.nav-links a.active {
+    border-bottom: 5px solid #080000; /* Underline for active links */
+}
+
+.services-title{
+    font-size: 50px;
+}
+
+.services-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px; /* Space between text and images */
+    margin: 20px;
+}
+
+.services-images-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px; /* Space between images */
+}
+
+.services-image {
+    width: 300px; /* Adjust width as needed */
+    height: auto;
+    object-fit: cover;
+}
+
+.services-text {
+    flex: 1;
+}
+.section-title {
+    color: #000306;
+    font-size: 45px;
+    text-align: center;
+}
+
+.team {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Space between team members */
+    text-align: center;
+}
+
+.team-member {
+    position: relative;
+    text-align: center;
+    width: 200px; /* Set a fixed width for consistency */
+}
+
+.team-member img {
+    width: 150px; /* Fixed width for all images */
+    height: 150px; /* Fixed height for all images */
+    border-radius: 50%;
+    object-fit: cover; /* Ensure the image covers the area without distortion */
+}
+
+.team-member h3 {
+    font-size: 20px;
+    margin: 10px 0 5px;
+}
+
+.team-member p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Container to ensure space for footer */
+.container {
+    flex: 1; /* Take up available space */
+    padding-bottom: 40px; /* Add padding equal to the footer height to prevent overlap */
+}
+
+/* Footer styling */
+footer {
+    background-color: #82C3FF;
+    color: white;
+    text-align: center; /* Center text horizontally */
+    height: 40px; /* Fixed height for the footer */
+    position: fixed; /* Fixed positioning */
+    width: 100%; /* Full width */
+    bottom: 0; /* Stick to the bottom */
+    line-height: 40px; /* Vertically center the text */
+    font-size: 12px; /* Fixed font size */
+    padding: 0; /* No extra padding needed */
+    box-sizing: border-box; /* Include padding in height calculation */
+    font-family: Arial, sans-serif; /* Ensure consistent font-family */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    overflow: hidden; /* Hide overflow text */
+    /* Ensure no horizontal scrollbar is affecting layout */
+    margin: 0; /* Reset margin */
+    padding: 0; /* Reset padding */
+}
+
+/* Ensure the text inside the footer is centered and consistent */
+footer p {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+/* Optional: Prevent body from causing horizontal overflow */
+body {
+    overflow-x: hidden;
+}
+
+.facebook-link {
+    text-decoration: none; /* Remove underline from the link */
+}
+
+.facebook-link img {
+    vertical-align: middle; /* Align the image vertically with the text */
+}
+
+.facebook-link-text {
+    font-size: 22px; /* Set the font size to 22 pixels */
+    margin-left: 10px; /* Optional: Add margin for spacing between the image and text */
+}
+
+.image-gallery {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+#background-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.left-arrow, .right-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 50px;
+    color: #82C3FF;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 10;
+}
+
+.left-arrow {
+    left: 10px;
+}
+
+.right-arrow {
+    right: 10px;
+}
+
+.left-arrow:hover{
+    color: white;
+}
+
+.right-arrow:hover{
+    color: white;
+}
+
+/* About Us Section */
+.aboutus-container {
+    max-width: fit-content; /* Adjust this as needed for your design */
+    padding: 20px; /* Add padding around the content */
+}
+#aboutus-content {
+    margin: 20px auto; /* Adds space above and below the section */
+    max-width: fit-content; /* Adjust this as needed for your design */
+    padding: 20px; /* Adds padding around the content */
+    text-align: center;
+}
+
+#aboutus-content p {
+    font-size: 25px;
+    margin: 20px 0; /* Space between paragraphs */
+    bottom: 10px;
+    top: 10px;
+}
+
+/* Contact Section */
+.contact-container {
+    margin: 20px auto;
+    padding: 20px; /* Add padding around the content */
+    text-align: center; /* Center the text inside */
+}
+
+#contact-content {
+    max-width: fit-content; /* Adjust this as needed for your design */
+    padding: 20px; /* Adds padding around the content */
+    margin: 0 auto; /* Center the section horizontally */
+}
+
+#contact-content p {
+    font-size: 25px;
+    margin: 20px 0; /* Space between paragraphs */
+}
+
+/* Location Section */
+.location-container {
+    margin: 20px auto;
+    padding: 20px; /* Add padding around the content */
+    text-align: center; /* Center the text inside */
+}
+
+#location-content {
+    max-width: fit-content; /* Adjust this as needed for your design */
+    padding: 20px; /* Adds padding around the content */
+    margin: 0 auto; /* Center the section horizontally */
+}
+
+#location-content p {
+    font-size: 25px;
+    margin: 20px 0; /* Space between paragraphs */
+}
+
+/* Services Section */
+.services-container {
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.services-grid {
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(4, 1fr));
+    gap: 20px;
+}
+
+/* Ensure there are exactly 2 rows */
+@media (min-width: 1200px) {
+    .services-grid {
+        grid-template-rows: repeat(2, auto); /* 2 rows */
+    }
+}
+
+.service-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 20px;
+}
+
+.service-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-bottom: 2px solid #007BFF;
+}
+
+.service-title {
+    font-size: 1.5em;
+    color: #333;
+    margin: 15px 0;
+}
+
+.service-description {
+    font-size: 1em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.service-link {
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.service-link:hover {
+    color: #0056b3;
+}
+
+/* Doctors Section */
+.doctors-container {
+    margin: 20px auto;
+    padding: 20px; /* Add padding around the content */
+    text-align: center; /* Center the text inside */
+}
+
+#doctors-content {
+    max-width: fit-content; /* Adjust this as needed for your design */
+    padding: 20px; /* Adds padding around the content */
+    margin: 0 auto; /* Center the section horizontally */
+}
+
+#doctors-content p {
+    font-size: 25px;
+    margin: 20px 0; /* Space between paragraphs */
+}
+
+.credentials {
+    display: none;
+    position: absolute; /* Position credentials absolutely within .team-member */
+    top: 50%; /* Position below the team member */
+    left: 50%; /* Center horizontally relative to the container */
+    transform: translate(-50%, -50%); /* Adjust for perfect centering */
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 200px; /* Fixed width for the credentials box */
+    text-align: center;
+    z-index: 10; /* Ensure it appears above other content */
+}
+
+.credentials p {
+    margin: 10px 0; /* Adjust margin as needed */
+    font-size: 14px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 5px;
+    left: 10px; /* Position close button on the top-right */
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+.home-section-title {
+    position: absolute; /* Position title absolutely within .image-gallery */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for perfect centering */
+    color: black; /* White text color for contrast */
+    font-size: 45px; /* Adjust font size as needed */
+    text-align: center; /* Center text alignment */
+    padding: 10px; /* Optional padding for better readability */
+    background-color:#ffffff; /* Optional semi-transparent background for contrast */
+    border-radius: 8px; /* Rounded corners */
+    z-index: 10; /* Ensure it appears above other content */
+}

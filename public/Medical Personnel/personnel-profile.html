@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personnel - Profile</title>
+    <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo">
+            <div class="nav-links">
+                <a href="../Medical Personnel/personnel-home.html">Home</a>
+                <a href="../Medical Personnel/personnel-records.html">Patient Records</a>
+                <a href="../Medical Personnel/personnel-balance.html">Tracking Balance</a>
+                <a href="../Medical Personnel/personnel-appointment.html">Appointment Data</a>
+                <a href="../Medical Personnel/personnel-management.html">Management</a>
+            </div>
+            <a href="../Medical Personnel/personnel-home.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <main>
+        <h1>Medical Personnel Profile</h1>
+
+        <!-- Profile Picture Section -->
+        <div id="profile-picture-container">
+            <img src="../media/logo/default-profile.png?nocache=1"
+            id="profile-picture"  
+            alt="Profile Picture" 
+            class="profile-picture"
+            onclick ="openPictureModal()">
+
+            <div id="personnel-profile-info">
+                <p id="full-name"></p>
+                <p id="birthday-info"></p>
+                <p id="email-info"></p>        
+            </div>
+        </div>
+
+        <!-- Picture Picture Modal -->
+        <div id="picture-options-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <button class="closepic-button" onclick="closePictureModal()">X</button>
+                <h2>Profile Picture</h2>
+                <img id="profile-preview" src="" alt="Preview" class="profile-preview">
+                <label for="upload-picture">Change Profile Picture:</label>
+                <input type="file" id="upload-picture" name="profilePicture" accept="image/*">
+                <div class="image-controls">
+                    <button class="confirm-upload-button" onclick="showUploadConfirmation()">Upload</button>
+                    <button class="confirm-delete-button" onclick="showDeleteConfirmation()">Delete</button>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div id="delete-confirmation-modal" class="deletemodal" style="display: none;">
+                    <div class="modal-content">
+                        <h3>Confirm Delete</h3>
+                        <p>Are you sure you want to delete your profile picture?</p>
+                        <button onclick="confirmDelete(true)">Yes</button>
+                        <button onclick="confirmDelete(false)">No</button>
+                        <button onclick="closeDeleteConfirmation()">X</button>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div id="modal-success-message" style="display: none; color: green; text-align: center; margin-top: 10px;">
+                    Profile picture uploaded successfully.
+                </div>
+
+                <!-- Error Message -->
+                <div id="modal-error-message" style="display: none; color: red; text-align: center; margin-top: 10px;">
+                    Profile picture cancelled.
+                </div>
+
+                <!-- Upload Confirmation Modal -->
+                <div id="upload-confirmation-modal" class="uploadmodal" style="display: none;">
+                    <div class="modal-content">
+                        <h3>Confirm Upload</h3>
+                        <p>Are you sure you want to upload this picture as your profile picture?</p>
+                        <button onclick="confirmUpload(true)">Yes</button>
+                        <button onclick="confirmUpload(false)">No</button>
+                        <button onclick="closeUploadConfirmation()">X</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="overlay" style="display:none;"></div>
+        <div class="form-container" id="form-container" style="display:none;">
+            <button class="close-button" onclick="toggleEditForm()">✖</button>
+            <form id="edit-form">
+                <label for="edit-email">Email:</label>
+                <input type="email" id="edit-personnelemail" name="email" required>
+                
+                <label for="current-password">Current Password:</label>
+                <input type="password" id="personnelcurrent-password" name="currentPassword" required>
+                
+                <label for="new-password">New Password:</label>
+                <input type="password" id="personnelnew-password" name="newPassword">
+                
+                <input type="checkbox" id="personneltoggle-password" onclick="togglePasswordVisibility()"> Show Password
+                
+                <div id="edit-error-message" style="color: red; display: none;"></div>
+                <div id="edit-success-message" style="color: green; display: none;"></div>
+                <button class="save-button" type="button" onclick="confirmSave()">Save</button>
+
+                <!-- Confirmation Modal -->
+                <div class="profileconfirmation-modal" id="profileconfirmation-modal" style="display:none;">
+                    <div class="modal-content">
+                        <h2>Confirm Changes</h2>
+                        <p>Do you want to save the changes?</p>
+                        <button type="button" onclick="confirmChanges(true)">Yes</button>
+                        <button type="button" onclick="confirmChanges(false)">No</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <button class="edit-button" onclick="toggleEditForm()">Edit</button>
+        <button class="logout-button" onclick="showLogoutModal()">Logout</button>
+
+        <!-- Logout Confirmation Modal -->
+        <div class="logout-overlay" id="logout-overlay">
+            <div class="logout-modal">
+                <h2>Are you sure you want to log out?</h2>
+                <button class="confirm-btn" onclick="confirmLogout(true)">Yes</button>
+                <button class="cancel-btn" onclick="confirmLogout(false)">No</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        function showLogoutModal() {
+            const overlay = document.getElementById('logout-overlay');
+            overlay.style.display = 'flex';
+        }
+
+        function confirmLogout(isConfirmed) {
+            const overlay = document.getElementById('logout-overlay');
+            if (isConfirmed) {
+                window.location.href = "/main page/home.html";
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            const profileResponse = await fetch('/api/medicalPersonnel/profile');
+            if (profileResponse.ok) {
+                const personnelData = await profileResponse.json();
+                displayProfileInfo(personnelData);
+
+                // Set the profile picture if available
+                const profilePictureElement = document.getElementById('profile-picture');
+                profilePictureElement.src = personnelData.profilePicture 
+                    ? `/uploads/${personnelData.profilePicture}` 
+                    : '../media/logo/default-profile.png';
+            }
+        });
+        
+        function displayProfileInfo(data) {
+            const birthday = new Date(data.birthday);
+            
+            // Check if the date is valid
+            if (isNaN(birthday.getTime())) {
+                console.error("Invalid birthday format");
+                return;
+            }
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedBirthday = birthday.toLocaleDateString(undefined, options);
+
+            document.getElementById('full-name').innerText = `Full Name: ${data.firstName} ${data.lastName}`;
+            document.getElementById('birthday-info').innerText = `Birthday: ${formattedBirthday}`;
+            document.getElementById('email-info').innerText = `Email: ${data.email}`;
+        }
+        
+        function toggleEditForm() {
+            const overlay = document.getElementById('overlay');
+            const formContainer = document.getElementById('form-container');
+
+            // Toggle the visibility of the overlay and the form container
+            const isHidden = overlay.style.display === 'none' || overlay.style.display === '';
+
+            overlay.style.display = isHidden ? 'block' : 'none';
+            formContainer.style.display = isHidden ? 'block' : 'none';
+
+            if (!isHidden) {
+                hideMessages();
+            }
+        }
+
+        function hideMessages() {
+            const errorMessageDiv = document.getElementById('edit-error-message');
+            const successMessageDiv = document.getElementById('edit-success-message');
+            errorMessageDiv.style.display = 'none';
+            successMessageDiv.style.display = 'none';
+        }
+
+        function confirmSave() {
+            // Show the custom confirmation modal
+            document.getElementById('profileconfirmation-modal').style.display = 'flex';
+        }
+
+        function confirmChanges(isConfirmed) {
+            const modal = document.getElementById('profileconfirmation-modal');
+            if (isConfirmed) {
+                updateProfile(); // Call updateProfile if user confirmed
+            }
+            modal.style.display = 'none'; // Hide the modal regardless of the choice
+        }
+
+        async function updateProfile() {
+            const email = document.getElementById('edit-personnelemail').value;
+            const currentPassword = document.getElementById('personnelcurrent-password').value;
+            const newPassword = document.getElementById('personnelnew-password').value;
+
+            // Clear previous messages
+            const errorMessageDiv = document.getElementById('edit-error-message');
+            const successMessageDiv = document.getElementById('edit-success-message');
+            errorMessageDiv.innerText = '';
+            errorMessageDiv.style.display = 'none';
+            successMessageDiv.innerText = '';
+            successMessageDiv.style.display = 'none';
+
+            fetch('/api/medicalPersonnel/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, currentPassword, newPassword }),
+            })
+            .then(response => {
+                return response.json().then(result => {
+                    if (response.ok) {
+                        return { result, ok: true };
+                    } else {
+                        console.error('Error fetching updated profile:', response.statusText);
+                        return { result, ok: false };
+                    }
+                });
+            })
+            .then(({ result, ok }) => {
+                console.log('Update response:', result); // Log the entire result
+
+                if (ok) {
+                    let successMessage = '';
+                    if (result.emailUpdated) {
+                        successMessage += 'Email updated successfully. ';
+                    }
+                    if (result.passwordUpdated) {
+                        successMessage += 'Password updated successfully. ';
+                    }
+                    successMessageDiv.innerText = successMessage.trim();
+                    successMessageDiv.style.display = 'block';
+
+                    setTimeout(() => {
+                        successMessageDiv.style.display = 'none';
+                    }, 3000);
+                    
+                    document.getElementById('edit-form').reset();
+
+                    // Refresh profile
+                    fetchProfileData();
+                } else {
+                    errorMessageDiv.innerText = result.message || 'An error occurred during profile update.';
+                    errorMessageDiv.style.display = 'block';
+                }
+            });
+        }
+
+        async function fetchProfileData() {
+            fetch('/medicalPersonnel/profile')
+            .then(profileResponse => {
+                if (profileResponse.ok) {
+                    return profileResponse.json();
+                } else {
+                    console.error('Error fetching updated profile:', profileResponse.statusText);
+                    return null;
+                }
+            })
+            .then(personnelData => {
+                if (personnelData) {
+                    displayProfileInfo(personnelData);
+                } else {
+                    console.error('Profile data could not be retrieved.');
+                }
+            });
+        }
+
+        // Open picture modal
+        function openPictureModal() {
+            const modal = document.getElementById("picture-options-modal");
+            const profilePicture = document.getElementById("profile-picture").src;
+            const preview = document.getElementById("profile-preview");
+            preview.src = profilePicture; // Set the current picture as the preview
+            modal.style.display = "flex";
+        }
+
+        // Close picture modal
+        function closePictureModal() {
+            const modal = document.getElementById("picture-options-modal");
+            modal.style.display = "none";
+        }
+
+        // Preview the selected image before uploading
+        function previewSelectedImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById("profile-preview");
+                    preview.src = e.target.result; // Set the preview image source
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Show the upload confirmation modal
+        function showUploadConfirmation() {
+            const confirmationModal = document.getElementById("upload-confirmation-modal");
+            confirmationModal.style.display = "flex";
+        }
+
+        // Close the upload confirmation modal
+        function closeUploadConfirmation() {
+            const confirmationModal = document.getElementById("upload-confirmation-modal");
+            confirmationModal.style.display = "none";
+        }
+
+        // Display messages in modal
+        function showMessageInModal(isSuccess, message) {
+            const successMessage = document.getElementById("modal-success-message");
+            const errorMessage = document.getElementById("modal-error-message");
+
+            if (isSuccess) {
+                successMessage.textContent = message;
+                successMessage.style.display = "block";
+                errorMessage.style.display = "none";
+            } else {
+                errorMessage.textContent = message;
+                errorMessage.style.display = "block";
+                successMessage.style.display = "none";
+            }
+
+            // Auto-hide message after 3 seconds
+            setTimeout(() => {
+                successMessage.style.display = "none";
+                errorMessage.style.display = "none";
+            }, 3000);
+        }
+
+        // Confirm or cancel the upload
+        async function confirmUpload(isConfirmed) {
+            closeUploadConfirmation();
+
+            if (!isConfirmed) {
+                showMessageInModal(false, "Upload canceled.");
+            } else {
+                const pictureInput = document.getElementById("upload-picture");
+
+                if (!pictureInput.files || pictureInput.files.length === 0) {
+                    showMessageInModal(false, "Please select a picture to upload.");
+                } else {
+                    const formData = new FormData();
+                    formData.append("profilePicture", pictureInput.files[0]);
+
+                    const response = await fetch("/api/medicalPersonnel/upload-profile-picture", {
+                        method: "POST",
+                        body: formData,
+                    }).catch(() => null); // Handle network errors by returning null
+
+                    if (!response) {
+                        showMessageInModal(false, "An error occurred during the upload.");
+                    } else if (response.ok) {
+                        const result = await response.json();
+                        document.getElementById("profile-picture").src = `/uploads/${result.filename}`;
+                        document.getElementById("profile-preview").src = `/uploads/${result.filename}`;
+                        pictureInput.value = ""; // Clear the file input field
+                        showMessageInModal(true, "Profile picture uploaded successfully.");
+                    } else {
+                        showMessageInModal(false, "Failed to upload profile picture.");
+                    }
+                }
+            }
+        }
+
+        // Upload the new profile picture
+        async function uploadProfilePicture() {
+            const pictureInput = document.getElementById('upload-picture');
+
+            if (!pictureInput.files || pictureInput.files.length === 0) {
+                alert('Please select a picture to upload.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('profilePicture', pictureInput.files[0]);
+
+            const response = await fetch('/api/medicalPersonnel/upload-profile-picture', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include' // Ensure session-based authentication
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                const imageUrl = `/uploads/${result.filename}`;
+                document.getElementById('profile-picture').src = imageUrl;
+                document.getElementById('profile-preview').src = imageUrl;
+                alert('Profile picture updated successfully.');
+            } else {
+                response.json().then(result => {
+                    alert(result.message || 'Failed to upload profile picture.');
+                }).catch(() => {
+                    alert('An error occurred. Please try again.');
+                });
+            }
+        }
+
+        // Function to delete the profile picture
+        async function deleteProfilePicture() {
+            const response = await fetch('/api/medicalPersonnel/delete-profile-picture', {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                // Reset the profile picture to the default image
+                const defaultPicture = "../media/default-profile.png";
+                document.getElementById("profile-picture").src = defaultPicture;
+                document.getElementById("profile-preview").src = defaultPicture;
+
+                // Show success message
+                showMessageInModal(true, "Profile picture deleted successfully.");
+            } else {
+                // Show error message
+                showMessageInModal(false, "Failed to delete profile picture.");
+            }
+        }
+
+        // Show the delete confirmation modal
+        function showDeleteConfirmation() {
+            const confirmationModal = document.getElementById("delete-confirmation-modal");
+            confirmationModal.style.display = "flex";
+        }
+
+        // Close the delete confirmation modal
+        function closeDeleteConfirmation() {
+            const confirmationModal = document.getElementById("delete-confirmation-modal");
+            confirmationModal.style.display = "none";
+        }
+
+        // Confirm or cancel the deletion
+        async function confirmDelete(isConfirmed) {
+            closeDeleteConfirmation();
+
+            if (!isConfirmed) {
+                showMessageInModal(false, "Profile picture deletion canceled.");
+            } else {
+                const response = await fetch('/api/medicalPersonnel/delete-profile-picture', {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    // Reset the profile picture to the default image
+                    const defaultPicture = "../media/logo/default-profile.png";
+                    document.getElementById("profile-picture").src = defaultPicture;
+                    document.getElementById("profile-preview").src = defaultPicture;
+
+                    // Show success message
+                    showMessageInModal(true, "Profile picture deleted successfully.");
+                } else {
+                    // Show error message
+                    showMessageInModal(false, "Failed to delete profile picture.");
+                }
+            }
+        }
+    </script> 
+    <footer>
+        <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
+    </footer>       
+</body>
+</html>

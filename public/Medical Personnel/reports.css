@@ -1,0 +1,205 @@
+/* Report Navigation Buttons */
+.report-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.tab-btn:hover {
+    background-color: #0056b3;
+}
+
+.tab-btn.active {
+    background-color: #0056b3;
+}
+
+/* Report Sections */
+.report-section {
+    display: none;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.report-section.active {
+    display: block;
+}
+
+/* Container Styling */
+.container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Buttons */
+button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+input[type="date"] {
+    padding: 8px;
+    margin: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 250px;
+}
+
+.dropdown-btn {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    background: white;
+    z-index: 10;
+}
+
+.dropdown-content input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.dropdown-content div {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.paymentcustom-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+}
+
+.paymentdropdown-btn {
+    background-color: #f3f3f3;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    text-align: center;
+    width: 80%;
+}
+
+.paymentdropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    width: 80%;
+    max-height: 150px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* ✅ Ensure dropdown appears when .show is added */
+.paymentdropdown-content.show {
+    display: block;
+}
+
+.paymentdropdown-content div {
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.treatmentdropdown-btn {
+    background-color: #f3f3f3;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    text-align: center;
+    width: 80%;
+}
+
+.treatmentdropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    width: 80%;
+    max-height: 150px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+/* ✅ Ensure dropdown appears when .show is added */
+.treatmentdropdown-content.show {
+    display: block;
+}
+
+.treatmentdropdown-content div {
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+}

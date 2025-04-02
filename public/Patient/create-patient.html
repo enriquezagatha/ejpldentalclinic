@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Create Account - EJPL Dental Clinic</title>
+    <link rel="stylesheet" href="../Patient/patientlogin.css">
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.875em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="personnel-back-button" onclick="goPatientBack()">← Back</button>
+        <div class="logo">
+            <img src="../media/logo/EJPL.png" alt="EJPL Dental Clinic Logo">
+        </div>
+        <h1>CREATE ACCOUNT</h1>
+        <div class="login-form">
+            <div>
+                <input type="text" id="first-name" placeholder="First Name" class="input-field" required>
+                <div id="first-name-error" class="error-message"></div>
+            </div>
+            <div>
+                <input type="text" id="last-name" placeholder="Last Name" class="input-field" required>
+                <div id="last-name-error" class="error-message"></div>
+            </div>
+            <div class="date-picker-container">
+                <input type="text" id="birthday-placeholder" placeholder="Birthday" class="input-field date-placeholder" readonly>
+                <input type="date" id="birthday" class="input-field date-input" required>
+                <span class="calendar-icon">&#x1F4C5;</span> <!-- Unicode for calendar icon -->
+                <div id="birthday-error" class="error-message"></div>
+            </div> 
+            <div>
+                <input type="email" id="email" placeholder="Email Address" class="input-field" required>
+                <div id="email-error" class="error-message"></div>
+            </div>
+            <div>
+                <input type="password" id="password" placeholder="Password" class="input-field" required>
+                <div id="password-error" class="error-message"></div>
+            </div>
+            <div>
+                <input type="password" id="confirm-password" placeholder="Confirm Password" class="input-field" required>
+                <div id="confirm-password-error" class="error-message"></div>
+            </div>
+            <center><button id="create-account-button" class="create-button">CREATE ACCOUNT</button></center>
+        </div>
+    </div>
+
+    <script>
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        function goPatientBack() {
+            window.location.href = "login-patient.html";
+        }
+
+        document.querySelector('.calendar-icon').addEventListener('click', function() {
+            const dateInput = document.querySelector('#birthday');
+            dateInput.showPicker();
+        });
+
+        document.querySelector('#birthday').addEventListener('change', function() {
+            const dateInput = this.value;
+            const [year, month, day] = dateInput.split('-');
+            const formattedDate = `${monthNames[parseInt(month, 10) - 1]} ${day}, ${year}`;
+            document.querySelector('#birthday-placeholder').value = formattedDate;
+        });
+
+        document.getElementById('create-account-button').addEventListener('click', async function() {
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const birthday = document.getElementById('birthday').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            // Clear previous error messages
+            document.querySelectorAll('.error-message').forEach(element => element.textContent = '');
+
+            let hasError = false;
+
+            if (!firstName) {
+                document.getElementById('first-name-error').textContent = 'First Name is required.';
+                hasError = true;
+            }
+
+            if (!lastName) {
+                document.getElementById('last-name-error').textContent = 'Last Name is required.';
+                hasError = true;
+            }
+
+            if (!birthday) {
+                document.getElementById('birthday-error').textContent = 'Birthday is required.';
+                hasError = true;
+            }
+
+            if (!email) {
+                document.getElementById('email-error').textContent = 'Email Address is required.';
+                hasError = true;
+            }
+
+            if (!password) {
+                document.getElementById('password-error').textContent = 'Password is required.';
+                hasError = true;
+            }
+
+            if (!confirmPassword) {
+                document.getElementById('confirm-password-error').textContent = 'Please confirm your password.';
+                hasError = true;
+            }
+
+            if (password !== confirmPassword) {
+                document.getElementById('confirm-password-error').textContent = 'Passwords do not match.';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            const response = await fetch('/api/patient/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    birthday,
+                    email,
+                    password
+                }),
+            });
+
+            if (response.ok) {
+                // Redirect to login page on successful account creation
+                window.location.href = "login-patient.html";
+            } else {
+                const result = await response.json();
+                // Use a generic error message if the server response doesn't specify
+                const errorMessage = result.message || 'An error occurred.';
+                document.getElementById('email-error').textContent = errorMessage;
+            }
+        });
+
+    </script>
+</body>
+</html>

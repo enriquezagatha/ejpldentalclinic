@@ -1,0 +1,27 @@
+-config/
+    -db.js
+-controllers/
+    -appointmentController.js
+    -medicalPersonnelController.js
+    -patientController.js
+-middleware/
+    -bodyParser.js
+    -fileUploadMiddleware.js
+-models/
+    -Appointment.js
+    -MedicalPersonnel.js
+    -Patient.js
+    -PatientRecord.js
+-routes/
+    -appointmentRoutes.js
+    -authRoutes.js
+    -fileUpload.js
+    -medicalPersonnelRoutes.js
+    -PatientRoutes.js
+-services/
+    -appointmentService.js
+    -userService.js
+-utils/
+    -dateUtils.js
+    -dbUtils.js
+-server.js

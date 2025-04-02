@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EJPL Dental Clinic - Profile</title>
+    <link rel="stylesheet" href="../main page/profilelogin.css">
+</head>
+<body>
+    <div class="container">
+        <button class="back-button" onclick="goBack()">← Back</button>
+        <div class="logo">
+            <img src="../media/logo/EJPL.png" alt="EJPL Dental Clinic Logo"> <!-- Replace with your logo image -->
+        </div>
+        <h1>LOG IN</h1>
+        <div class="buttons">
+            <button class="btn patient-btn" onclick="goToPatient()">PATIENT</button>
+            <button class="btn personnel-btn" onclick="goToMedicalPersonnel()">MEDICAL PERSONNEL</button>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href="home.html";
+        }
+
+        function goToMedicalPersonnel() {
+        window.location.href = "/Medical Personnel/login-medicalpersonnel.html"; // Replace with the actual file path
+        }
+
+        function goToPatient(){
+            window.location.href = "/Patient/login-patient.html";
+        }
+    </script>
+</body>
+</html>

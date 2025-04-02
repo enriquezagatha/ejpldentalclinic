@@ -1,0 +1,63 @@
+as of Mar 16, 3:22AM
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient - Step2-Appointment</title>
+    <link rel="stylesheet" href="patientscheduling.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="/media/logo/EJPL.png" alt="Logo" class="logo">
+            <div class="nav-links">
+                <a href="../patient-home.html" class="disabled-link">Home</a>
+                <a href="../patient-aboutus.html" class="disabled-link">About Us</a>
+                <a href="../patient-doctors.html" class="disabled-link">Doctors</a>
+                <a href="../patient-services.html" class="disabled-link">Services</a>
+                <a href="../patient-contact.html" class="disabled-link">Contact Us</a>
+                <a href="../patient-location.html" class="disabled-link">Location</a>
+            </div>
+            <a href="../patient-profile.html" class="disabled-link">
+                <img src="/media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <main>
+        <button class="appointment-back-button" onclick="goToAppointmentBack()">&larr; Back</button>
+        <button class="appointment-next-button" onclick="goToAppointmentNext()">Next &rarr;</button>
+        <div class="content">
+            <h1>EJPL Dental Clinic Appointment Form</h1>
+            <h2>Step 2: Schedule Your Appointment</h2>
+            <form class="schedule-form" id="schedule-form">
+                <div class="date-picker-container">
+                    <input type="text" placeholder="Preferred Date" class="input-field date-placeholder" readonly>
+                    <input type="date" class="input-field date-input" id="dateInput" style="display: none;">
+                    <span class="calendar-icon">&#x1F4C5;</span> <!-- Unicode for calendar icon -->
+                </div>
+                
+                <!-- Custom Calendar UI -->
+                <div class="custom-calendar" id="customCalendar">
+                    <div class="calendar-header">
+                        <span id="prev-month">&#9665;</span> 
+                        <span id="calendar-month-year"></span>
+                        <span id="next-month">&#9655;</span>
+                    </div>
+                    <div class="calendar-grid"></div>
+                </div>
+                
+                <select class="input-field time-select">
+                    <option value="" disabled selected>Preferred Time</option>
+                </select>
+                <select class="input-field typeoftreatment-select" id="treatment-select">
+                    <option value="" disabled selected>Select Treatment</option>
+                </select>
+                <p id="treatment-price"></p>
+            </form>
+        </div>
+    </main>
+    <script src="scheduleappointment.js"></script>
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Profile</title>
+    <link rel="stylesheet" href="patientstyle.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo">
+            <div class="nav-links">
+                <a href="../Patient/patient-home.html">Home</a>
+                <a href="../Patient/patient-aboutus.html">About Us</a>
+                <a href="../Patient/patient-doctors.html">Doctors</a>
+                <a href="../Patient/patient-services.html">Services</a>
+                <a href="../Patient/patient-contact.html">Contact Us</a>
+                <a href="../Patient/patient-location.html">Location</a>
+                <a href="../Patient/patient-records.html">Records</a>
+            </div>
+            <a href="../Patient/patient-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <main>
+        <h1>Patient Profile</h1>
+        <div id="profile-picture-container">
+            <img src="../media/logo/default-profile.png?nocache=1"
+            id="profile-picture"  
+            alt="Profile Picture" 
+            class="profile-picture"
+            onclick ="openPictureModal()">
+            <div id="profile-info">
+                <p id="full-name"></p>
+                <p id="birthday-info"></p>
+                <p id="email-info"></p>        
+            </div>
+        </div>
+
+        <!-- Picture Picture Modal -->
+        <div id="picture-options-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <button class="closepic-button" onclick="closePictureModal()">X</button>
+                <h2>Profile Picture</h2>
+                <img id="profile-preview" src="" alt="Preview" class="profile-preview">
+                <label for="upload-picture">Change Profile Picture:</label>
+                <input type="file" id="upload-picture" name="profilePicture" accept="image/*">
+                <div class="image-controls">
+                    <button class="confirm-upload-button" onclick="showUploadConfirmation()">Upload</button>
+                    <button class="confirm-delete-button" onclick="showDeleteConfirmation()">Delete</button>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div id="delete-confirmation-modal" class="deletemodal" style="display: none;">
+                    <div class="modal-content">
+                        <h3>Confirm Delete</h3>
+                        <p>Are you sure you want to delete your profile picture?</p>
+                        <button onclick="confirmDelete(true)">Yes</button>
+                        <button onclick="confirmDelete(false)">No</button>
+                        <button onclick="closeDeleteConfirmation()">X</button>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div id="modal-success-message" style="display: none; color: green; text-align: center; margin-top: 10px;">
+                    Profile picture uploaded successfully.
+                </div>
+
+                <!-- Error Message -->
+                <div id="modal-error-message" style="display: none; color: red; text-align: center; margin-top: 10px;">
+                    Profile picture cancelled.
+                </div>
+
+                <!-- Upload Confirmation Modal -->
+                <div id="upload-confirmation-modal" class="uploadmodal" style="display: none;">
+                    <div class="modal-content">
+                        <h3>Confirm Upload</h3>
+                        <p>Are you sure you want to upload this picture as your profile picture?</p>
+                        <button onclick="confirmUpload(true)">Yes</button>
+                        <button onclick="confirmUpload(false)">No</button>
+                        <button onclick="closeUploadConfirmation()">X</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="edit-button" onclick="toggleEditForm()">Edit</button>
+        <div class="overlay" id="overlay" style="display:none;"></div>
+        <div class="form-container" id="form-container" style="display:none;">
+            <button class="close-button" onclick="toggleEditForm()">✖</button>
+            <form id="edit-form">
+                <label for="edit-email">Email:</label>
+                <input type="email" id="edit-email" name="email" required>
+                
+                <label for="current-password">Current Password:</label>
+                <input type="password" id="current-password" name="currentPassword" required>
+                
+                <label for="new-password">New Password:</label>
+                <input type="password" id="new-password" name="newPassword">
+                
+                <input type="checkbox" id="toggle-password" onclick="togglePasswordVisibility()"> Show Password
+                
+                <div id="edit-error-message" style="color: red; display: none;"></div>
+                <div id="edit-success-message" style="color: green; display: none;"></div>
+                <button class="save-button" type="button" onclick="confirmSave()">Save</button>
+
+                <div class="profileconfirmation-modal" id="profileconfirmation-modal" style="display:none;">
+                    <div class="modal-content">
+                        <h2>Confirm Changes</h2>
+                        <p>Do you want to save the changes?</p>
+                        <button type="button" onclick="confirmChanges(true)">Yes</button>
+                        <button type="button" onclick="confirmChanges(false)">No</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- PAYMENT MODAL -->
+        <div id="paymentModal" class="paymentmodal">
+            <div class="paymentmodal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h2>PayMongo Payment Link</h2>
+
+                <label for="patientName">Enter Patient Name:</label>
+                <input type="text" id="patientName" placeholder="Enter patient name" required><br><br>
+
+                <label for="patientEmail">Enter Patient Email:</label>
+                <input type="email" id="patientEmail" placeholder="Enter patient email" required><br><br>
+
+                <label for="treatmentType">Enter Type of Treatment:</label>
+                <input type="text" id="treatmentType" placeholder="Enter type of treatment" required><br><br>
+
+                <!-- Senior Discount Checkbox -->
+                <label>
+                    <input type="checkbox" id="seniorDiscount"> Apply Senior Discount (20%)
+                </label>
+                <br><br>
+
+                <!-- Senior Discount Form (Initially Hidden) -->
+                <div id="seniorDiscountForm" style="display: none;">
+                    <label for="seniorName">Name on Card:</label>
+                    <input type="text" id="seniorName" placeholder="Enter name on card"><br><br>
+
+                    <label for="seniorID">Senior ID No:</label>
+                    <input type="text" id="seniorID" placeholder="Enter senior ID number"><br><br>
+                </div>
+
+
+                <label for="amount">Enter Amount (PHP):</label>
+                <input type="number" id="amount" placeholder="Enter amount in PHP" min="1" required><br><br>
+
+                <button id="submitPayment">Submit Payment</button>
+
+                <p id="paymentLink"></p>
+                <p id="validationMessage" style="color: red; display: none;"></p>
+            </div>
+        </div>
+
+        <!-- APPOINTMENTS TABLE -->
+        <div id="appointments-container">
+            <h2>Your Appointments</h2>
+            <table id="appointments" border="1">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Reference Number</th>
+                        <th>Name</th>
+                        <th>Contact Number</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Treatment Type</th>
+                        <th>Treatment Price</th>
+                        <th>Action</th> <!-- NEW COLUMN for Payment Button -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Appointments will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <div id="pagination" class="pagination-container"></div>
+        </div>
+
+        <button class="logout-button" onclick="showLogoutModal()">Logout</button>
+        <div class="logout-overlay" id="logout-overlay">
+            <div class="logout-modal">
+                <h2>Are you sure you want to log out?</h2>
+                <button class="confirm-btn" onclick="confirmLogout(true)">Yes</button>
+                <button class="cancel-btn" onclick="confirmLogout(false)">No</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="patientprofile.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fetchAppointments();
+        });
+
+        function displayAppointments(appointments) {
+            const appointmentsTableBody = document.querySelector('#appointments tbody');
+            const paginationContainer = document.getElementById('pagination');
+            const appointmentsPerPage = 5;
+            let currentPage = 1;
+
+            appointmentsTableBody.innerHTML = '';
+            paginationContainer.innerHTML = '';
+
+            if (appointments.length === 0) {
+                appointmentsTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No appointments found</td></tr>';
+                return;
+            }
+
+            function renderPage(page) {
+                appointmentsTableBody.innerHTML = '';
+                const startIndex = (page - 1) * appointmentsPerPage;
+                const endIndex = Math.min(startIndex + appointmentsPerPage, appointments.length);
+
+                for (let i = startIndex; i < endIndex; i++) {
+                    const appointment = appointments[i];
+                    const row = document.createElement('tr');
+                    let statusClass = '';
+
+                    if (appointment.status === 'Confirmed') {
+                        statusClass = 'status-confirmed';
+                    } else if (appointment.status === 'Cancelled') {
+                        statusClass = 'status-canceled';
+                    } else if (appointment.status === 'Pending') {
+                        statusClass = 'status-pending';
+                    }
+
+                    const formattedDate = formatDate(appointment.preferredDate);
+
+                    row.innerHTML = `
+                        <td class="${statusClass}">${appointment.status}</td>
+                        <td>${appointment.referenceNumber}</td>
+                        <td>${appointment.firstName} ${appointment.lastName}</td>
+                        <td>${appointment.contactNumber}</td>
+                        <td>${formattedDate}</td>
+                        <td>${appointment.preferredTime}</td>
+                        <td>${appointment.treatmentType}</td>
+                        <td>${appointment.treatmentPrice}</td>
+                        <td>
+                            <button class="payButton" 
+                                data-name="${appointment.firstName} ${appointment.lastName}"
+                                data-email="${appointment.emailAddress}"
+                                data-treatment="${appointment.treatmentType}"
+                                data-amount="${appointment.treatmentPrice}">
+                                Generate Payment
+                            </button>
+                        </td>
+                    `;
+
+                    appointmentsTableBody.appendChild(row);
+                }
+
+                attachPaymentEventListeners();
+            }
+
+            renderPage(currentPage);
+        }
+
+        function attachPaymentEventListeners() {
+            document.querySelectorAll('.payButton').forEach(button => {
+                button.addEventListener('click', function () {
+                    const patientName = this.getAttribute('data-name');
+                    const patientEmail = this.getAttribute('data-email');
+                    const treatmentType = this.getAttribute('data-treatment');
+                    const treatmentPrice = this.getAttribute('data-amount').replace(/,/g, '');
+
+                    console.log("Debugging - Button Clicked:");
+                    console.log("Patient Name:", patientName);
+                    console.log("Patient Email:", patientEmail);
+                    console.log("Treatment Type:", treatmentType);
+                    console.log("Treatment Price (string):", treatmentPrice);
+
+                    document.getElementById('patientName').value = patientName;
+                    document.getElementById('patientEmail').value = patientEmail;
+                    document.getElementById('treatmentType').value = treatmentType;
+
+                    // Convert treatmentPrice to a number before assigning (if necessary)
+                    document.getElementById('amount').value = treatmentPrice.trim(); // Trim any spaces
+
+                    document.getElementById('seniorDiscount').checked = false;
+                    document.getElementById('seniorDiscountForm').style.display = "none";
+
+                    modal.style.display = "block";
+                });
+            });
+
+
+        }
+
+        const modal = document.getElementById("paymentModal");
+        const closeModal = document.getElementById("closeModal");
+        const seniorDiscountCheckbox = document.getElementById("seniorDiscount");
+        const seniorDiscountForm = document.getElementById("seniorDiscountForm");
+        const amountInput = document.getElementById("amount");
+
+        closeModal.onclick = function () {
+            modal.style.display = "none";
+        };
+
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            let amountInput = document.getElementById("amount");
+            let seniorDiscountCheckbox = document.getElementById("seniorDiscount");
+            let seniorDiscountForm = document.getElementById("seniorDiscountForm");
+            let submitPayment = document.getElementById("submitPayment");
+
+            let discountPercentage = 0; // Default to 0%
+
+            // Fetch discount from API
+            async function fetchDiscount() {
+                try {
+                    const response = await fetch("http://localhost:3000/api/discounts");
+                    if (!response.ok) throw new Error("Failed to fetch discounts");
+
+                    const discounts = await response.json();
+                    
+                    // Assume "Senior Discount" is the one applied for seniors
+                    const seniorDiscount = discounts.find(d => d.name.toLowerCase() === "senior discount");
+                    
+                    if (seniorDiscount) {
+                        discountPercentage = seniorDiscount.percentage; // Set discount value
+                    }
+                } catch (error) {
+                    console.error("Error fetching discount:", error);
+                }
+            }
+
+            // Apply Discount to the Amount
+            function applyDiscount() {
+                if (!amountInput) {
+                    console.error("amountInput is not found.");
+                    return;
+                }
+
+                // Store the original amount if not already stored
+                if (!amountInput.dataset.originalAmount) {
+                    amountInput.dataset.originalAmount = amountInput.value;
+                }
+
+                let originalAmount = parseFloat(amountInput.dataset.originalAmount.replace(/,/g, "")) || 0;
+
+                if (seniorDiscountCheckbox.checked) {
+                    const discountedAmount = originalAmount * ((100 - discountPercentage) / 100);
+                    amountInput.value = discountedAmount.toFixed(2);
+                    seniorDiscountForm.style.display = "block";
+                } else {
+                    amountInput.value = originalAmount.toFixed(2);
+                    seniorDiscountForm.style.display = "none";
+                }
+            }
+
+            // Fetch discount before allowing interaction
+            await fetchDiscount();
+
+            // Attach event listener to senior discount checkbox
+            seniorDiscountCheckbox.addEventListener("change", applyDiscount);
+
+            // Payment submission logic (unchanged)
+            submitPayment.addEventListener("click", async function () {
+                const patientName = document.getElementById("patientName").value;
+                const patientEmail = document.getElementById("patientEmail").value;
+                const treatmentType = document.getElementById("treatmentType").value;
+                const amountInPHP = document.getElementById("treatmentPrice").value;
+                const validationMessage = document.getElementById("validationMessage");
+
+                if (!patientName || !patientEmail || !treatmentType || !amountInPHP || isNaN(amountInPHP) || amountInPHP <= 0) {
+                    validationMessage.innerText = "Please fill out all fields with valid information.";
+                    validationMessage.style.display = "block";
+                } else if (amountInPHP < 100) {
+                    validationMessage.innerText = "The minimum payment amount is PHP 100.";
+                    validationMessage.style.display = "block";
+                } else {
+                    validationMessage.style.display = "none";
+
+                    const amountInCents = amountInPHP * 100;
+                    const paymentData = { patientName, patientEmail, treatmentType, amount: amountInCents };
+
+                    const response = await fetch("http://localhost:3000/api/payment/create-payment-link", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(paymentData)
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error("Server Error: ", errorText);
+                        alert("An error occurred while processing the payment link.");
+                    } else {
+                        const result = await response.json();
+                        console.log("API Response:", result);
+
+                        if (result.paymentLink) {
+                            const paymentUrl = result.paymentLink;
+                            document.getElementById("paymentLink").innerHTML = `<a href="${paymentUrl}" target="_blank">Click here to pay</a>`;
+                        } else {
+                            console.error("Invalid response structure:", result);
+                            alert("Failed to generate payment link. Please try again.");
+                        }
+                    }
+                }
+            });
+        });
+
+
+    </script>        
+</body>
+</html>

@@ -1,0 +1,280 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("/media/background/bgpatient.jfif") no-repeat center center/cover;
+    opacity: 0.5; /* Adjust the opacity here (0.0 to 1.0) */
+    z-index: -1; /* Ensure the image stays behind other content */
+}
+
+header {
+    background-color: #82C3FF;
+    color: white;
+    padding: 0;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0px 20px;
+    height: 80px;
+}
+
+.logo {
+    height: 150%;
+    width: auto;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 60px;  /* Adjust width as needed */
+    height: 60px; /* Adjust height as needed */
+    object-fit: cover; /* Ensure the image maintains aspect ratio and covers the area */
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 20px;
+    position: relative;
+}
+
+.nav-links a:first-child {
+    margin-left: 0;
+}
+
+.nav-links a:hover {
+    color: #1db7de;
+}
+
+.nav-links a.active {
+    border-bottom: 5px solid #080000; /* Underline for active links */
+}
+
+footer {
+    background-color: #82C3FF;
+    color: white;
+    text-align: center;
+    height: 30px; /* Set fixed height */
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    line-height: 15px; /* Reduce line height */
+    font-size: 12px; /* Keep font size */
+    padding-top: 5px; /* Add top padding */
+}
+
+main {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.appointment-cancel-button,
+.appointment-next-button,
+.appointment-back-button {
+    position: absolute;
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.appointment-cancel-button:hover,
+.appointment-next-button:hover,
+.appointment-back-button:hover {
+    background-color: #16A085;
+}
+
+.appointment-back-button {
+    top: 20px;
+    left: 20px;
+}
+
+.appointment-next-button {
+    top: 20px;
+    right: 20px;
+}
+
+.appointment-cancel-button {
+    top: 20px;
+    left: 20px;
+}
+
+.next-button {
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    align-items: center;
+}
+
+
+.next-button:hover {
+    background-color: #16A085;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.container {
+    text-align: center;
+}
+
+.disabled-link {
+    pointer-events: none; /* Disables clicking */
+    cursor: default; /* Changes the cursor to default */
+    color: #777; /* Optional: Change the color to indicate it's disabled */
+}
+
+.content {
+    margin: 50px auto;
+    margin-bottom: 100px;
+    max-width: 800px;
+    background-color: #2C3E50; /* Optional: Add background color for better text visibility */
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.content h1 {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+/*Schedule Appointment*/
+.schedule-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Reduced gap to bring fields closer together */
+    width: 100%;
+}
+
+.input-field {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.input-field:focus {
+    outline: none;
+    box-shadow: 0 0 5px #1ABC9C;
+}
+
+/* Placeholder styles for input fields with the input-field class */
+.input-field::placeholder {
+    color: black; /* Gray color for the placeholder */
+    font-size: 14px; /* Font size */
+    opacity: 1; /* Make sure the color is fully opaque */
+}
+
+.doctor-select,
+.time-select {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: white;
+    color: #333;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+.input-field::placeholder {
+    color: #333; /* Placeholder text color */
+    opacity: 1;  /* Ensure full opacity for placeholder text */
+}
+.date-picker-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-placeholder {
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.date-input {
+    width: 100%;
+    background-color: transparent;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #999;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.calendar-icon {
+    position: absolute;
+    top: 40%;
+    right: 10px;
+    transform: translateY(-1%);
+    font-size: 20px;
+    color: black;
+    z-index: 3;
+    cursor: pointer;
+}
+
+.input-field:focus + .calendar-icon,
+.calendar-icon:hover {
+    color: #1ABC9C;
+}

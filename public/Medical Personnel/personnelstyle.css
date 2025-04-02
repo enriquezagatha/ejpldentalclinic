@@ -1,0 +1,315 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    text-align: center;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../media/background/bgpersonnel.jpeg");
+    background-position: center center;
+    background-size: cover;
+    opacity: 0.7; /* Opacity for the first image */
+    z-index: -2; /* Behind the second image */
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../media/EJPL.png");
+    background-position: center center;
+    background-size: contain; /* Or 'cover' based on your requirement */
+    background-repeat: no-repeat;
+    z-index: -1; /* Above the first image but below other content */
+}
+
+header {
+    background-color: #82C3FF;
+    color: white;
+    padding: 0;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0px 20px;
+    height: 80px;
+}
+
+.logo {
+    height: 150%;
+    width: auto;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 60px;  /* Adjust width as needed */
+    height: 60px; /* Adjust height as needed */
+    object-fit: cover; /* Ensure the image maintains aspect ratio and covers the area */
+}
+
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 20px;
+    position: relative; /* Ensure that dropdown positioning is relative to this link */
+}
+
+.nav-links a:first-child {
+    margin-left: 0;
+}
+
+.nav-links a:hover {
+    color: #1db7de;
+}
+
+.nav-links a.active {
+    border-bottom: 5px solid #080000; /* Underline for active links */
+}
+
+footer {
+    background-color: #82C3FF;
+    color: white;
+    text-align: center;
+    height: 30px; /* Set fixed height */
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    line-height: 15px; /* Reduce line height */
+    font-size: 12px; /* Keep font size */
+    padding-top: 5px; /* Add top padding */
+}
+
+.logout-button {
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    position: fixed; /* Fixes the button to the viewport */
+    bottom: 100px; /* Distance from the bottom of the viewport */
+    right: 100px; /* Distance from the right side of the viewport */
+}
+
+.logout-button:hover {
+    background-color: #16A085;
+}
+
+/* Profile Section */
+.personnel-profile-info-grid {
+    display: grid;
+    grid-template-columns: 300px 400px; 
+    gap: 10px 20px; 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 20px;
+    border-radius: 5px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.personnel-profile-label {
+    font-weight: bold;
+    text-align: right; 
+    font-size: 25px;
+}
+
+.personnel-profile-value {
+    text-align: left; 
+    padding-left: 10px; 
+    font-size: 25px;
+}
+
+/* Patient Profile Information */
+#personnel-profile-info p {
+    font-size: 24px; 
+    line-height: 1.5; 
+    margin: 8px 0; 
+    color: #040000; 
+}
+
+#personnel-profile-info p strong {
+    font-weight: bold; 
+    color: #00070e; 
+}
+
+/* Edit Profile Information */
+main {
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding-bottom: 100px; 
+}
+
+.edit-button {
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 20px; 
+}
+
+.edit-button:hover {
+    background-color: #16A085;
+}
+
+/* Logout Button */
+.logout-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.logout-modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logout-modal h2 {
+    margin-bottom: 10px;
+}
+
+.logout-modal button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-modal .confirm-btn {
+    background-color: #d9534f;
+    color: white;
+}
+
+.logout-modal .cancel-btn {
+    background-color: #5bc0de;
+    color: white;
+}
+
+/* Overlay to cover the entire screen */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    display: none;
+}
+
+input[type="email"],
+input[type="password"],
+button.save-button {
+    width: 100%; /* Full width */
+    padding: 15px; /* Increased padding for larger fields */
+    font-size: 18px; /* Larger font */
+    margin: 10px 0; /* Add margin for spacing */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Standard border */
+}
+
+
+/* Form container is fixed and centered */
+.form-container {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 40px;
+    border-radius: 5px;
+    width: calc(100% - 60px);
+    max-width: 700px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 2; /* Higher than overlay */
+    display: none;
+    box-sizing: border-box;
+}
+
+.save-button {
+    margin-top: 20px;
+    background-color: #075646;
+    color: #FFFFFF;
+}
+
+.save-button:hover{
+    background-color: #16A085;
+
+}
+
+/* Close button positioned on top-right of the form */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button:hover {
+    color: red;
+}
+
+.profileconfirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.modal-content {
+    background-color: #075646;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}

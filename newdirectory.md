@@ -1,0 +1,51 @@
+-config/
+    -db.js
+-controllers/
+    -appointmentController.js
+    -contactController.js
+    -doctorController.js
+    -medicalPersonnelController.js
+    -patientController.js
+    -patientRecordController.js
+    -paymentController.js
+    -serviceController.js
+    -treatmentController.js
+-middleware/
+    -authMiddleware.js
+    -bodyParser.js
+    -fileUploadMiddleware.js
+-models/
+    -Appointment.js
+    -Contact.js
+    -Doctor.ks
+    -MedicalPersonnel.js
+    -Patient.js
+    -PatientRecord.js
+    -Payment.js
+    -Service.js
+    -Treatment.js
+-node_modules/
+-public/
+-routes/
+    -appointmentRoutes.js
+    -authRoutes.js
+    -contactRoutes.js
+    -doctorRoutes.js
+    -fileUpload.js
+    -medicalPersonnelRoutes.js
+    -PatientRoutes.js
+    -paymentRoutes.js
+    -serviceRoutes.js
+    -treatmentRoutes.js
+-services/
+    -appointmentService.js
+    -paymongoService.js
+    -userService.js
+-uploads/
+-utils/
+    -dateUtils.js
+    -dbUtils.js
+-.env
+-package.lock.json
+-package.json
+-server.js

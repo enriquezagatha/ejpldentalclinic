@@ -1,0 +1,296 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("/media/background/bgpatient.jfif") no-repeat center center/cover;
+    opacity: 0.5; /* Adjust the opacity here (0.0 to 1.0) */
+    z-index: -1; /* Ensure the image stays behind other content */
+}
+
+header {
+    background-color: #82C3FF;
+    color: white;
+    padding: 0;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0px 20px;
+    height: 80px;
+}
+
+.logo {
+    height: 150%;
+    width: auto;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 60px;  /* Adjust width as needed */
+    height: 60px; /* Adjust height as needed */
+    object-fit: cover; /* Ensure the image maintains aspect ratio and covers the area */
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 20px;
+    position: relative;
+}
+
+.nav-links a:first-child {
+    margin-left: 0;
+}
+
+.nav-links a:hover {
+    color: #1db7de;
+}
+
+.nav-links a.active {
+    border-bottom: 5px solid #080000; /* Underline for active links */
+}
+
+footer {
+    background-color: #82C3FF;
+    color: white;
+    text-align: center;
+    height: 30px; /* Set fixed height */
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    line-height: 15px; /* Reduce line height */
+    font-size: 12px; /* Keep font size */
+    padding-top: 5px; /* Add top padding */
+}
+
+main {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.appointment-cancel-button,
+.appointment-next-button,
+.appointment-back-button {
+    position: absolute;
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.appointment-cancel-button:hover,
+.appointment-next-button:hover,
+.appointment-back-button:hover {
+    background-color: #16A085;
+}
+
+.appointment-back-button {
+    top: 20px;
+    left: 20px;
+}
+
+.appointment-next-button {
+    top: 20px;
+    right: 20px;
+}
+
+.appointment-cancel-button {
+    top: 20px;
+    left: 20px;
+}
+
+.next-button {
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    align-items: center;
+}
+
+
+.next-button:hover {
+    background-color: #16A085;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.container {
+    text-align: center;
+}
+
+.disabled-link {
+    pointer-events: none; /* Disables clicking */
+    cursor: default; /* Changes the cursor to default */
+    color: #777; /* Optional: Change the color to indicate it's disabled */
+}
+
+.content {
+    margin: 50px auto;
+    margin-bottom: 100px;
+    max-width: 800px;
+    background-color: #2C3E50; /* Optional: Add background color for better text visibility */
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.content h1 {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+/*Patient Details*/
+/* Styling for the form container */
+.details-form {
+    gap: 20px; /* Adjusted gap to bring fields closer together */
+    width: 100%;
+}
+
+/* Styling for input fields */
+.input-field, .select-field, .dropdown-btn {
+    width: 100%; /* Make input fields take full width */
+    padding: 10px; /* Add padding inside the input fields */
+    margin: 0; /* Remove any margin */
+    border: 1px solid #333; /* Dark border color for better visibility */
+    border-radius: 4px; /* Rounded corners for inputs */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    font-size: 18px; /* Font size inside inputs */
+    background-color: white; /* Ensure consistent background color */
+    margin-bottom: 20px;
+}
+
+/* Input field focus styling */
+.input-field:focus, .select-field:focus, .dropdown-btn:focus {
+    outline: none;
+    border-color: #1ABC9C; /* Change border color on focus */
+    box-shadow: 0 0 5px #1ABC9C; /* Add shadow on focus */
+}
+
+/* Placeholder text styling */
+.input-field::placeholder, .select-field::placeholder {
+    font-size: 16px; /* Font size */
+    font-family: 'Arial', sans-serif; /* Font family */
+    font-weight: normal; /* Font weight */
+    opacity: 1; /* Opacity of the placeholder text */
+}
+
+/* Dropdown styling */
+.dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-btn{
+    width: 100%; /* Make input fields take full width */
+    padding: 10px; /* Add padding inside the input fields */
+    margin: 0; /* Remove any margin */
+    border: 1px solid #333; /* Dark border color for better visibility */
+    border-radius: 4px; /* Rounded corners for inputs */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    font-size: 16px; /* Font size inside inputs */
+    font-family: 'Arial', sans-serif;
+    background-color: white; /* Ensure consistent background color */
+    margin-bottom: 20px;
+    color: #333;
+    cursor: pointer;
+    text-align: left;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #2C3E50;
+    width: 100%;
+    border: 1px solid #ddd;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 4px;
+    overflow-y: auto; /* Add scroll if needed */
+    max-height: 200px; /* Set a max height for scrolling */
+}
+
+.dropdown-content label {
+    display: block;
+    padding: 10px;
+    cursor: pointer;
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.dropdown-content label:hover {
+    background-color: #2ECC71;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.selected-medical-history {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Styling for warning messages */
+.warning-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.error {
+    border: 2px solid red; /* Highlight field with red border */
+}
+
+.patient-button {
+    padding: 15px 30px;
+    margin: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}

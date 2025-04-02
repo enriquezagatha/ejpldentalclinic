@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Records</title>
+    <link rel="stylesheet" href="../Patient/patientstyle.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='patient-home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../Patient/patient-home.html">Home</a>
+                <a href="../Patient/patient-aboutus.html">About Us</a>
+                <a href="../Patient/patient-doctors.html">Doctors</a>
+                <a href="../Patient/patient-services.html">Services</a>
+                <a href="../Patient/patient-contact.html">Contact Us</a>
+                <a href="../Patient/patient-location.html">Location</a>
+                <a href="../Patient/patient-records.html" class="active">Records</a>
+            </div>
+            <a href="../Patient/patient-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Patient Records</h2>
+        <table id="patient-table">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                </tr>
+            </thead>
+            <tbody id="patient-table-body">
+                <tr><td>Loading records...</td></tr>
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+       document.addEventListener("DOMContentLoaded", async function () {
+            const tableBody = document.getElementById("patient-table-body");
+
+            try {
+                const response = await fetch("/api/patient/records", { method: "GET", credentials: "include" });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch patient records");
+                }
+
+                const patient = await response.json();
+                console.log("API Response:", patient); // Debugging
+
+                tableBody.innerHTML = ""; // Clear loading message
+
+                if (!patient || !patient._id) {
+                    tableBody.innerHTML = "<tr><td>No records found.</td></tr>";
+                    return;
+                }
+
+                // Display the single patient record
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>
+                        <a href="patient-recorddetails.html?id=${patient._id}" class="patient-link">
+                            ${patient.firstName} ${patient.lastName}
+                        </a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+
+            } catch (error) {
+                tableBody.innerHTML = `<tr><td style="color: red;">Error: ${error.message}</td></tr>`;
+            }
+        });
+
+    </script>
+
+</body>
+</html>

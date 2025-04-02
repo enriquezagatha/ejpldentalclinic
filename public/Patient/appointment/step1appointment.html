@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient - Home</title>
+    <link rel="stylesheet" href="patientappointment.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="/media/logo/EJPL.png" alt="Logo" class="logo">
+            <div class="nav-links">
+                <a href="../patient-home.html" class="disabled-link">Home</a>
+                <a href="../patient-aboutus.html" class="disabled-link">About Us</a>
+                <a href="../patient-doctors.html" class="disabled-link">Doctors</a>
+                <a href="../patient-services.html" class="disabled-link">Services</a>
+                <a href="../patient-contact.html" class="disabled-link">Contact Us</a>
+                <a href="../patient-location.html" class="disabled-link">Location</a>
+            </div>
+            <a href="../patient-profile.html" class="disabled-link">
+                <img src="/media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <main>
+        <button class="appointment-cancel-button" onclick="goBackAppointment()">← Back</button>
+        <button class="appointment-next-button" onclick="goNextAppointment()">Next →</button>
+        <div class="content">
+            <h1>EJPL Dental Clinic Appointment Form</h1>
+            <h2>Step 2: Patient Details</h2>
+            <form id="contact-form">
+                <div class="details-form">
+                    <input type="text" placeholder="First Name" class="input-field" id="first-name" required>
+                    <input type="text" placeholder="Last Name" class="input-field" id="last-name" required>
+                    <input type="number" placeholder="Age" class="input-field" id="age" min="0" max="120" required>
+                    <select class="input-field select-field" id="gender" required>
+                        <option value="" disabled selected>Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Preferred Not To Say">Preferred Not To Say</option>
+                    </select>
+                    <input type="text" placeholder="Address" class="input-field" id="address" required>
+                    <input type="number" placeholder="Contact Number" class="input-field" id="contact-number" required>
+                    <input type="email" placeholder="Email Address" class="input-field" id="email-address" required>
+                    <div class="dropdown">
+                        <button type="button" class="dropdown-btn">Select Medical History ▼</button>
+                        <div class="dropdown-content">
+                            <label><input type="checkbox" name="medical_history" value="Allergy"> Allergy</label>
+                            <label><input type="checkbox" name="medical_history" value="Arthritis"> Arthritis</label>
+                            <label><input type="checkbox" name="medical_history" value="Asthma"> Asthma</label>
+                            <label><input type="checkbox" name="medical_history" value="Autoimmune Disorders"> Autoimmune Disorders (e.g., Lupus, Multiple Sclerosis)</label>
+                            <label><input type="checkbox" name="medical_history" value="Blood Disease"> Blood Disease</label>
+                            <label><input type="checkbox" name="medical_history" value="Cancer"> Cancer</label>
+                            <label><input type="checkbox" name="medical_history" value="Chronic Kidney Disease"> Chronic Kidney Disease</label>
+                            <label><input type="checkbox" name="medical_history" value="Diabetes"> Diabetes</label>
+                            <label><input type="checkbox" name="medical_history" value="Epilepsy"> Epilepsy or Seizure Disorders</label>
+                            <label><input type="checkbox" name="medical_history" value="Gastrointestinal Disorders"> Gastrointestinal Disorders (e.g., GERD, Crohn's Disease, Ulcers)</label>
+                            <label><input type="checkbox" name="medical_history" value="Head Injuries"> Head Injuries</label>
+                            <label><input type="checkbox" name="medical_history" value="Heart Disease"> Heart Disease</label>
+                            <label><input type="checkbox" name="medical_history" value="Hepatitis"> Hepatitis</label>
+                            <label><input type="checkbox" name="medical_history" value="High Blood Pressure"> High Blood Pressure</label>
+                            <label><input type="checkbox" name="medical_history" value="HIV/AIDS"> HIV/AIDS</label>
+                            <label><input type="checkbox" name="medical_history" value="Hyperthyroidism"> Hyperthyroidism or Hypothyroidism</label>
+                            <label><input type="checkbox" name="medical_history" value="Liver Disease"> Liver Disease</label>
+                            <label><input type="checkbox" name="medical_history" value="Osteoporosis"> Osteoporosis</label>
+                            <label><input type="checkbox" name="medical_history" value="Respiratory Disease"> Respiratory Disease</label>
+                            <label><input type="checkbox" name="medical_history" value="Rheumatic Fever"> Rheumatic Fever</label>
+                            <label><input type="checkbox" name="medical_history" value="Stroke"> Stroke</label>
+                            <label><input type="checkbox" name="medical_history" value="Tuberculosis"> Tuberculosis</label>
+                            <label><input type="checkbox" id="others" name="medical_history" value="Others"> Others (please specify):</label>
+                            <input type="text" name="other-condition" id="other-condition" class="input-field" style="display: none;">
+                            <label><input type="checkbox" name="medical_history" value="None"> None</label>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selected-history" name="medical_history">
+
+                    <input type="text" placeholder="Emergency Contact Person" class="input-field" id="emergency-contact" required>
+                    <input type="number" placeholder="Emergency Contact Person Number" class="input-field" id="emergency-contact-number" required>
+                    <input type="text" placeholder="Relationship to the Patient" class="input-field" id="emergency-contact-relationship" required>
+                    <!-- Warning messages -->
+                    <div id="contact-warning" class="warning-message" style="display: none;">Contact number must be exactly 11 digits.</div>
+                    <div id="emergency-contact-warning" class="warning-message" style="display: none;">Emergency contact number must be exactly 11 digits.</div>
+                    <div id="form-warning" class="warning-message" style="display: none;">All required fields should be completed.</div>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script src="appointment.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personnel - Tracking Balance</title>
+    <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='personnel-home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../Medical Personnel/personnel-home.html">Home</a>
+                <a href="../Medical Personnel/personnel-records.html">Patient Records</a>
+                <a href="../Medical Personnel/personnel-balance.html" class="active">Tracking Balance</a>
+                <a href="../Medical Personnel/personnel-appointment.html">Appointment Data</a>
+                <a href="../Medical Personnel/personnel-management.html">Management</a>
+            </div>
+            <a href="../Medical Personnel/personnel-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Payment History</h1>
+
+        <!-- ✅ Table for Payment History -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Email</th>
+                    <th>Treatment</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th> <!-- ✅ New Column for Delete Button -->
+                </tr>
+            </thead>            
+            <tbody id="payment-table">
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- ✅ Pagination Controls -->
+        <div id="pagination-controls" style="margin-top: 20px; text-align: center;">
+            <button onclick="prevPage()">⬅ Prev</button>
+            <span id="page-info"> Page 1 of 1 </span>
+            <button onclick="nextPage()">Next ➡</button>
+        </div>
+    </main>
+
+    <script src="employeepaymentHistory.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Login - EJPL Dental Clinic</title>
+    <link rel="stylesheet" href="../Patient/patientlogin.css">
+</head>
+<body>
+    <div class="container">
+        <button class="patient-back-button" onclick="goPatientBack()">← Back</button>
+        <div class="logo">
+            <img src="../media/logo/EJPL.png" alt="EJPL Dental Clinic Logo">
+        </div>
+        <h1>PATIENT LOG IN</h1>
+        <div class="login-form">
+            <input type="email" id="email" placeholder="Email Address" class="input-field" required>
+            <input type="password" id="password" placeholder="Password" class="input-field" required>
+            <a href="" class="create-account-link"> Forgot Password?</a></p>
+            <p>No Account? <a href="create-patient.html" class="create-account-link">Create an Account</a></p>
+            <center><button class="login-button" onclick="goPatientLogIn()">LOGIN</button></center>
+            <p id="notification"></p>
+        </div>
+    </div>
+
+    <script>
+        function goPatientBack() {
+            window.location.href = "/main page/profile.html";
+        }
+
+        async function goPatientLogIn() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const notification = document.getElementById('notification');
+
+        if (!email || !password) {
+            notification.textContent = 'Please fill in both email and password.';
+            notification.style.color = 'red';
+            return;
+        }
+
+        const response = await fetch('/api/patient/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            notification.textContent = 'Login successful.';
+            notification.style.color = 'green';
+            // Store the email in session storage
+            sessionStorage.setItem('userEmail', email);
+            // Redirect to patient profile page
+            window.location.href = 'patient-home.html';
+        } else {
+            if (response.headers.get('content-type')?.includes('application/json')) {
+                const result = await response.json();
+                notification.textContent = result.message;
+            } else {
+                notification.textContent = 'Login failed. Please try again.';
+            }
+            notification.style.color = 'red';
+        }
+    }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,757 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    text-align: center;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../media/background/bgpersonnel.jpeg");
+    background-position: center center;
+    background-size: cover;
+    opacity: 0.7; /* Opacity for the first image */
+    z-index: -2; /* Behind the second image */
+}
+
+body::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../media/EJPL.png");
+    background-position: center;
+    background-size: contain; /* Or 'cover' based on your requirement */
+    background-repeat: no-repeat;
+    z-index: -1; /* Above the first image but below other content */
+}
+
+header {
+    background-color: #82C3FF;
+    color: white;
+    padding: 0;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0px 20px;
+    height: 80px;
+}
+
+.logo {
+    height: 150%;
+    width: auto;
+    margin-right: 20px;
+}
+
+.profile-icon {
+    width: 60px;  /* Adjust width as needed */
+    height: 60px; /* Adjust height as needed */
+    object-fit: cover; /* Ensure the image maintains aspect ratio and covers the area */
+}
+
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 20px;
+    position: relative; /* Ensure that dropdown positioning is relative to this link */
+}
+
+.nav-links a:first-child {
+    margin-left: 0;
+}
+
+.nav-links a:hover {
+    color: #1db7de;
+}
+
+.nav-links a.active {
+    border-bottom: 5px solid #080000; /* Underline for active links */
+}
+
+footer {
+    background-color: #82C3FF;
+    color: white;
+    text-align: center;
+    height: 30px; /* Set fixed height */
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    line-height: 15px; /* Reduce line height */
+    font-size: 12px; /* Keep font size */
+    padding-top: 5px; /* Add top padding */
+}
+
+.logout-button {
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    position: absolute; /* Fixes the button to the viewport */
+    bottom: 100px; /* Distance from the bottom of the viewport */
+    right: 100px; /* Distance from the right side of the viewport */
+}
+
+.logout-button:hover {
+    background-color: #16A085;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    flex-direction: column;
+    padding-bottom: 100px; 
+}
+
+.button-container {
+    position: absolute; /* Absolute positioning for top-left placement */
+    top: 150px; /* Distance from the top of the viewport */
+    left: 30px; /* Distance from the left of the viewport */
+    display: flex;
+    gap: 20px; /* Space between buttons */
+    text-align: center; /* Center the buttons and headers */
+    margin: 10px 0; /* Add some margin for spacing */
+}
+
+/* Profile Section */
+.personnel-profile-info-grid {
+    display: grid;
+    grid-template-columns: 300px 400px; 
+    gap: 10px 20px; 
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 20px;
+    border-radius: 5px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.personnel-profile-label {
+    font-weight: bold;
+    text-align: right; 
+    font-size: 25px;
+}
+
+.personnel-profile-value {
+    text-align: left; 
+    padding-left: 10px; 
+    font-size: 25px;
+}
+
+/* Patient Profile Information */
+#personnel-profile-info p {
+    font-size: 24px; 
+    line-height: 1.5; 
+    margin: 8px 0; 
+    color: #040000; 
+}
+
+#personnel-profile-info p strong {
+    font-weight: bold; 
+    color: #00070e; 
+}
+
+/* Profile picture styling */
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+/* Modal container styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal content styling */
+.modal-content {
+    position: relative;
+    width: 90%; /* Use most of the screen's width */
+    max-width: 600px; /* Limit maximum size */
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Enlarged profile preview inside modal */
+.profile-preview {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 2px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Upload and close button styling */
+.confirm-upload-button , .confirm-delete-button{
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.confirm-upload-button, .confirm-delete-button {
+    background-color: #28a745;
+    color: white;
+    margin-right: 10px;
+}
+
+.closepic-button {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.closepic-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.closepic-button:hover {
+    background-color: #c82333;
+}
+
+/* File input styling */
+input[type="file"] {
+    margin: 15px 0;
+    font-size: 14px;
+    width: 90%;
+}
+
+/* Styling for the label element */
+label[for="upload-picture"] {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+    font-family: Arial, sans-serif;
+}
+
+/* Modal background styling */
+.uploadmodal, .deletemodal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Slightly darker background for confirmation */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Make sure this sits above the picture options modal */
+}
+
+/* Modal content styling for the upload confirmation modal */
+.uploadmodal .modal-content, .deletemodal .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-width: 400px;
+    width: 90%;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal header styling */
+.uploadmodal .modal-content h3, .deletemodal .modal-content h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Modal paragraph styling */
+.uploadmodal .modal-content p, .deletemodal .modal-content p {
+    margin-bottom: 20px;
+    color: #555;
+    font-size: 16px;
+}
+
+/* Buttons inside the modal */
+.uploadmodal .modal-content button, .deletemodal .modal-content button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Yes button styling */
+.uploadmodal .modal-content button:first-child, .deletemodal .modal-content button:first-child {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.uploadmodal .modal-content button:first-child:hover, .deletemodal .modal-content button:first-child:hover{
+    background-color: #45a049;
+}
+
+/* No button styling */
+.uploadmodal .modal-content button:nth-child(2), .deletemodal .modal-content button:nth-child(2) {
+    background-color: #f44336;
+    color: white;
+}
+
+.uploadmodal .modal-content button:nth-child(2):hover, .deletemodal .modal-content button:nth-child(2):hover {
+    background-color: #d32f2f;
+}
+
+/* Close button styling for upload confirmation */
+.uploadmodal .modal-content button:last-child, .deletemodal .modal-content button:last-child{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+.uploadmodal .modal-content button:last-child:hover, .deletemodal .modal-content button:last-child(hover) {
+    color: red;
+}
+
+/* Modal animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.edit-button {
+    background-color: #075646;
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px; 
+}
+
+.edit-button:hover {
+    background-color: #16A085;
+}
+
+/* Logout Button */
+.logout-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.logout-modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logout-modal h2 {
+    margin-bottom: 10px;
+}
+
+.logout-modal button {
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-modal .confirm-btn {
+    background-color: #d9534f;
+    color: white;
+}
+
+.logout-modal .cancel-btn {
+    background-color: #5bc0de;
+    color: white;
+}
+
+/* Overlay to cover the entire screen */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    display: none;
+}
+
+input[type="email"],
+input[type="password"],
+button.save-button {
+    width: 100%; /* Full width */
+    padding: 15px; /* Increased padding for larger fields */
+    font-size: 18px; /* Larger font */
+    margin: 10px 0; /* Add margin for spacing */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Standard border */
+}
+
+
+/* Form container is fixed and centered */
+.form-container {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 40px;
+    border-radius: 5px;
+    width: calc(100% - 60px);
+    max-width: 700px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 2; /* Higher than overlay */
+    display: none;
+    box-sizing: border-box;
+}
+
+.save-button {
+    margin-top: 20px;
+    background-color: #075646;
+    color: #FFFFFF;
+}
+
+.save-button:hover{
+    background-color: #16A085;
+
+}
+
+/* Close button positioned on top-right of the form */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.close-button:hover {
+    color: red;
+}
+
+.profileconfirmation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.modal-content {
+    background-color: #075646;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.balance-button,
+.records-button,
+.pending-button,
+.confirm-button,
+.cancel-button,
+.all-button {
+    background-color: #4C79A2;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.balance-button:hover,
+.records-button:hover,
+.confirm-button:hover {
+    background-color: #218130;
+}
+
+.cancel-button:hover{
+    background-color: #F44336;
+}
+
+.pending-button:hover{
+    background-color: #FF4500;
+}
+
+/* APPOINTMENT DATA */
+.status-confirmed {
+    background-color: green;
+    color: white;
+}
+
+.status-cancelled {
+    background-color: red;
+    color: white;
+}
+
+.status-pending {
+    background-color: orangered;
+    color: white;
+    margin: 10px 0; /* Add some margin for spacing */
+}
+
+.header {
+    margin: 0;
+    font-size: 20px;
+    color: black;
+    text-align: center;
+    margin-top: 2px;
+}
+
+#appointments-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    /* Center the table horizontally */
+}
+
+#appointments-table {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+#appointments-table th {
+    padding: 10px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+#appointments-table td {
+    padding: 10px;
+    text-align: left;
+    background-color: white;
+}
+
+#appointments-table caption {
+    font-weight: bold;
+    font-size: 20px;
+    color: black;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.message-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: none;
+    background-color: #fefefe;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    max-width: 80%;
+}
+
+.message-box.error {
+    border-color: red;
+    background-color: #ffe6e6;
+    color: red;
+}
+
+.message-box.success {
+    border-color: green;
+    background-color: #e6ffe6;
+    color: green;
+}
+
+.status-cell {
+    position: relative;
+}
+
+/* Initially hide the appointments container */
+#appointments-container {
+    display: none;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.4); /* Transparent black background */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+    max-width: 600px; /* Prevents the modal from being too wide */
+    max-height: 80vh;
+    overflow: auto; /* Enable scrolling if content exceeds max height */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*PERSONNEL-RECORDS.HTML*/
+#records-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+    display: none; /* Hide table initially */
+}
+
+#records-table th, #records-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    word-wrap: break-word;  /* Prevents long content from overflowing */
+}
+
+#records-table th {
+    background-color: #f2f2f2;
+}
+
+#records-table th:nth-child(1), #records-table td:nth-child(1) {
+    width: 60%;  /* Adjusted width to fit two columns properly */
+}
+
+#records-table th:nth-child(2), #records-table td:nth-child(2) {
+    width: 40%;  /* Adjusted width */
+}
+
+#appointments-tbody {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+}
+
+.loading {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.2em;
+}
+
+/*Balance*/
+#appointmentsTableContainer {
+    display: none; /* Hide table initially */
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f4f4f4;
+}

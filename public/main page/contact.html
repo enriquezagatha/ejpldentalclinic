@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EJPL Dental Clinic - Contact Us</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../main page/home.html">Home</a>
+                <a href="../main page/aboutus.html"> About Us</a>
+                <a href="../main page/doctors.html">Doctors</a>
+                <a href="../main page/services.html">Services</a>
+                <a href="../main page/contact.html" class="active">Contact Us</a>
+                <a href="../main page/location.html">Location</a>
+            </div>
+            <a href="../main page/profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+
+    <div class="contact-container">
+        <section id="contact-content">
+            <p>Searching for a dentist in Queens Row?</p>
+            <p>Give us a call or message us on:</p>
+            <p id="contact-landline">Landline: Loading...</p>
+            <p id="contact-phone">Phone: Loading...</p>
+
+            <p>Or message us on our Facebook Page:</p>
+            <a href="#" id="contact-facebook-link" target="_blank" class="facebook-link">
+                <img src="../media/logo/facebook.png" width="40" height="40" alt="Facebook">
+                <span id="contact-facebook-text">Loading...</span>
+            </a>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                const response = await fetch("http://localhost:3000/api/contact/first");
+                const contact = await response.json();
+
+                if (!contact) throw new Error("No contact details available.");
+
+                const landlineEl = document.getElementById("contact-landline");
+                const phoneEl = document.getElementById("contact-phone");
+                const facebookLinkEl = document.getElementById("contact-facebook-link");
+                const facebookTextEl = document.getElementById("contact-facebook-text");
+
+                if (landlineEl) landlineEl.textContent = `Landline: ${contact.landline || "Not Available"}`;
+                if (phoneEl) phoneEl.textContent = `Phone: ${contact.phone || "Not Available"}`;
+                if (facebookLinkEl) facebookLinkEl.href = contact.facebook_page || "#";
+                if (facebookTextEl) facebookTextEl.textContent = contact.facebook_text || "Facebook Page";
+
+            } catch (error) {
+                console.error("Error fetching contact details:", error);
+            }
+        });
+    </script>
+</body>
+</html>

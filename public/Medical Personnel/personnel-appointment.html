@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personnel - Home</title>
+    <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='personnel-home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../Medical Personnel/personnel-home.html">Home</a>
+                <a href="../Medical Personnel/personnel-records.html">Patient Records</a>
+                <a href="../Medical Personnel/personnel-balance.html">Tracking Balance</a>
+                <a href="../Medical Personnel/personnel-appointment.html" class="active">Appointment Data</a>
+                <a href="../Medical Personnel/personnel-management.html">Management</a>
+            </div>
+            <a href="../Medical Personnel/personnel-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <main>        
+        <div class="button-container">
+            <button class="all-button" onclick="filterAppointments('All')">ALL</button>
+            <button class="pending-button" onclick="filterAppointments('Pending')">PENDING</button>
+            <button class="confirm-button" onclick="filterAppointments('Confirmed')">CONFIRMED</button>
+            <button class="cancel-button" onclick="filterAppointments('Cancelled')">CANCELLED</button>
+        </div>
+    
+        <div id="appointments-container">
+            <table id="appointments-table" border="1">
+                <caption class="header" id="appointments-header">APPOINTMENTS</caption>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Reference Number</th>
+                        <th>Name</th>
+                        <th>Contact Number</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Treatment Type</th>
+                        <th>Assigned Dentist</th>
+                    </tr>
+                </thead>
+                <tbody id="appointments-tbody">
+                    <!-- Appointments will be displayed here -->
+                </tbody>
+            </table>
+        </div>        
+    </main>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modal-message"></p>
+            <button id="confirm-button">Yes</button>
+            <button id="cancel-button" onclick="closeModal()">No</button>
+        </div>
+    </div>
+    
+    <style>
+        .message-box {
+            display: none;
+            color: white;
+            background: green;
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        .message-box.error {
+            background: red;
+        }
+    </style>
+    
+    <script>
+        let allAppointments = [];
+        let pendingUpdate = null;
+        let currentFilter = 'All';
+    
+        async function fetchAppointments() {
+            const response = await fetch('/api/appointments');
+            if (response.ok) {
+                allAppointments = await response.json();
+                displayAppointments(allAppointments);
+            } else {
+                console.error('Failed to fetch appointments:', response.status, response.statusText);
+            }
+        }
+
+        function filterAppointments(status) {
+            currentFilter = status; // Store the current filter status
+
+            let filteredAppointments;
+            if (status === 'All') {
+                filteredAppointments = allAppointments; // Show all appointments
+                document.getElementById('appointments-header').innerText = 'APPOINTMENTS';
+            } else {
+                filteredAppointments = allAppointments.filter(appointment => appointment.status === status);
+                document.getElementById('appointments-header').innerText = `${status.toUpperCase()} APPOINTMENTS`;
+            }
+
+            // Show appointments container
+            document.getElementById('appointments-container').style.display = 'block';
+
+            displayAppointments(filteredAppointments);
+        }
+
+        async function fetchDentists() {
+            try {
+                const response = await fetch('/api/dentists'); // Fetch dentists from API
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    console.error('Failed to fetch dentists:', response.statusText);
+                    return [];
+                }
+            } catch (error) {
+                console.error('Error fetching dentists:', error);
+                return [];
+            }
+        }
+
+        async function displayAppointments(appointments) {
+            const tbody = document.getElementById('appointments-tbody');
+            tbody.innerHTML = '';
+
+            const dentists = await fetchDentists(); // Fetch dentists once
+
+            if (appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No appointments found.</td></tr>';
+                return;
+            }
+
+            appointments.forEach(appointment => {
+                const row = document.createElement('tr');
+                let statusClass = '';
+                if (appointment.status === 'Confirmed') statusClass = 'status-confirmed';
+                else if (appointment.status === 'Cancelled') statusClass = 'status-cancelled';
+                else if (appointment.status === 'Pending') statusClass = 'status-pending';
+
+                row.innerHTML = `
+                    <td class="status-cell ${statusClass}">
+                        <select onchange="updateStatus('${appointment._id}', this.value, this)"
+                            data-original-status="${appointment.status}" 
+                            data-appointment-id="${appointment._id}">
+                            <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Confirmed" ${appointment.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                            <option value="Cancelled" ${appointment.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                            <option value="Completed" ${appointment.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
+                    <td>${appointment.referenceNumber}</td>
+                    <td>${appointment.firstName} ${appointment.lastName}</td>
+                    <td>${appointment.contactNumber}</td>
+                    <td>${appointment.preferredDate}</td>                    
+                    <td>${appointment.preferredTime}</td>
+                    <td>${appointment.treatmentType}</td>
+                    <td>
+                        <select onchange="assignDentist('${appointment._id}', this.value)">
+                            <option value="">Select Dentist</option>
+                            ${dentists.map(dentist => `
+                                <option value="${dentist._id}" ${appointment.assignedDentist && appointment.assignedDentist._id === dentist._id ? 'selected' : ''}>
+                                    ${dentist.name}
+                                </option>
+                            `).join('')}
+                        </select>
+                    </td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+    
+        function updateStatus(appointmentId, newStatus, selectElement) {
+            const currentStatus = selectElement.dataset.originalStatus;
+            if (currentStatus === newStatus) return;
+            openModal(`Are you sure you want to change the status to ${newStatus}?`, appointmentId, newStatus, selectElement);
+        }
+    
+        function openModal(message, appointmentId, newStatus, selectElement) {
+            document.getElementById('modal-message').innerText = message;
+            document.getElementById('confirmation-modal').style.display = 'block';
+            pendingUpdate = { appointmentId, newStatus, selectElement };
+        }
+    
+        function closeModal() {
+            if (pendingUpdate) {
+                pendingUpdate.selectElement.value = pendingUpdate.selectElement.dataset.originalStatus;
+                pendingUpdate = null;
+            }
+            document.getElementById('confirmation-modal').style.display = 'none';
+        }
+    
+        document.getElementById('confirm-button').onclick = async function () {
+            if (pendingUpdate) {
+                const { appointmentId, newStatus, selectElement } = pendingUpdate;
+                const response = await fetch(`/api/appointments/${appointmentId}/status`, { 
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus }),
+                });
+    
+                if (response.ok) {
+                    selectElement.dataset.originalStatus = newStatus;
+                    selectElement.value = newStatus;
+                    showMessage(selectElement, 'Status updated successfully!', 'success');
+                } else {
+                    showMessage(selectElement, 'Failed to update status.', 'error');
+                }
+                closeModal();
+            }
+        };
+    
+        function showMessage(selectElement, message, type) {
+            const messageBox = document.getElementById(`message-${selectElement.dataset.appointmentId}`);
+            if (!messageBox) {
+                console.error("Message box not found for appointment:", selectElement.dataset.appointmentId);
+                return;
+            }
+            messageBox.innerText = message;
+            messageBox.className = `message-box ${type}`;
+            messageBox.style.display = 'block';
+            setTimeout(() => { messageBox.style.display = 'none'; }, 3000);
+        }
+
+        async function assignDentist(appointmentId, dentistId) {
+            if (!dentistId) return; // Prevent empty selection
+
+            const response = await fetch(`/api/appointments/${appointmentId}/assign-dentist`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ assignedDentist: dentistId }),
+            });
+
+            if (response.ok) {
+                alert('Dentist assigned successfully!');
+                fetchAppointments(); // Refresh appointments
+            } else {
+                alert('Failed to assign dentist. Please try again.');
+            }
+        }
+
+    
+        window.onload = fetchAppointments;
+        window.onclick = function (event) {
+            const modal = document.getElementById('confirmation-modal');
+            if (event.target === modal) closeModal();
+        }
+    </script>    
+</body>
+</html>

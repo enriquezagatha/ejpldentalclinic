@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Appointment</title>
+    <link rel="stylesheet" href="patientscheduling.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="/media/logo/EJPL.png" alt="Logo" class="logo">
+            <div class="nav-links">
+                <a href="../patient-home.html">Home</a>
+                <a href="../patient-aboutus.html">About Us</a>
+                <a href="../patient-doctors.html">Doctors</a>
+                <a href="../patient-services.html">Services</a>
+                <a href="../patient-contact.html">Contact Us</a>
+                <a href="../patient-location.html">Location</a>
+            </div>
+            <a href="../patient-profile.html">
+                <img src="/media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <main>
+        <button class="appointment-back-button" onclick="goBack()">&larr; Back</button>
+        <button class="appointment-next-button" onclick="submitAppointment()">Confirm Appointment</button>
+        <div class="content">
+            <h1>EJPL Dental Clinic Appointment Form</h1>
+            <h2>Step 3: Confirm Your Appointment</h2>
+            <div class="login-form">
+                <div class="confirmation-info"></div>
+
+                <div id="confirmation-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal()">&times;</span>
+                        <p id="confirmation-text"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="appointment-receipt" style="display: none;">
+                <h2>Appointment Confirmation Receipt</h2>
+                <p><strong>Clinic Name:</strong> EJPL Dental Clinic</p>
+                <div class="receipt-info"></div>
+                <p><strong>Date of Confirmation:</strong> <span id="confirmation-date"></span></p>
+                <p>Please bring this receipt to the clinic on the day of your appointment.</p>
+            </div>
+        </div>
+    </main>
+    <script>
+        function goBack() {
+            window.location.href = "existingpatient.html";
+        }
+
+        function openModal(message) {
+            document.getElementById('confirmation-text').innerText = message;
+            document.getElementById('confirmation-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('confirmation-modal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById("confirmation-modal");
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        function loadConfirmationData() {
+            const savedFormData = JSON.parse(sessionStorage.getItem('existingPatientFormData')) || {}; 
+
+            if (savedFormData) {
+                const confirmationHTML = `
+                    <p><strong>Name:</strong> ${savedFormData.firstName || 'N/A'} ${savedFormData.lastName || ''}</p>
+                    <p><strong>Contact Number:</strong> ${savedFormData.contactNumber || 'N/A'}</p>
+                    <p><strong>Preferred Date:</strong> ${localStorage.getItem('preferredDate') || 'N/A'}</p>
+                    <p><strong>Preferred Time:</strong> ${localStorage.getItem('preferredTime') || 'N/A'}</p>
+                    <p><strong>Type of Consultation:</strong> ${localStorage.getItem('treatmentType') || 'N/A'}</p>
+                `;
+                document.querySelector('.confirmation-info').innerHTML = confirmationHTML;
+                document.querySelector('.receipt-info').innerHTML = confirmationHTML;
+                document.getElementById('confirmation-date').innerText = new Date().toLocaleDateString();
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadConfirmationData);
+
+        function submitAppointment() {
+            const savedFormData = JSON.parse(sessionStorage.getItem('existingPatientFormData')) || {}; 
+            const savedScheduleData = {
+                preferredDate: localStorage.getItem('preferredDate'),
+                preferredTime: localStorage.getItem('preferredTime'),
+                treatmentType: localStorage.getItem('treatmentType'),
+            };
+
+            const appointmentData = {
+                firstName: savedFormData.firstName || "N/A",
+                lastName: savedFormData.lastName || "N/A",
+                contactNumber: savedFormData.contactNumber || "N/A",
+                preferredDate: savedScheduleData.preferredDate || "N/A",
+                preferredTime: savedScheduleData.preferredTime || "N/A",
+                treatmentType: savedScheduleData.treatmentType || "N/A",
+            };
+
+            fetch('/api/appointments/patient/appointments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(appointmentData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = `existing-receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
+                    
+                    sessionStorage.removeItem('existingPatientFormData');
+                    localStorage.removeItem('preferredDate');
+                    localStorage.removeItem('preferredTime');
+                    localStorage.removeItem('treatmentType');
+
+                    document.querySelector('.confirmation-info').innerHTML = '';
+                } else {
+                    displayError(data.message || 'Error confirming appointment');
+                }
+            })
+            .catch(error => displayError('Request failed: ' + error));
+        }
+
+        function displayError(message) {
+            openModal(message);
+        }
+
+        function printReceipt() {
+            const receiptSection = document.getElementById('appointment-receipt');
+            receiptSection.style.display = 'block'; 
+
+            const originalContent = document.body.innerHTML;
+            document.body.innerHTML = receiptSection.innerHTML;
+            
+            window.print();
+
+            document.body.innerHTML = originalContent;
+            location.reload();
+        }
+    </script>
+</body>
+</html>

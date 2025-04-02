@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Patient</title>
+    <link rel="stylesheet" href="editpatient.css">
+</head>
+<body>
+    <button onclick="window.history.back();">Back</button>
+    <h2>Edit Patient Details</h2>
+
+    <div class="patient-details-container">
+        <div class="patient-details-title">Patient Details</div>
+        
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" readonly>
+        
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" readonly>
+        
+        <label for="age">Age:</label>
+        <input type="text" id="age" readonly>
+        
+        <label for="gender">Gender:</label>
+        <input type="text" id="gender" readonly>
+        
+        <label for="address">Address:</label>
+        <input type="text" id="address" readonly>
+        
+        <label for="contactNumber">Contact Number:</label>
+        <input type="text" id="contactNumber" readonly>
+
+        <label for="emailAddress">Email Address:</label>
+        <input type="text" id="emailAddress" readonly>
+        
+        <label for="emergencyContact">Emergency Contact:</label>
+        <input type="text" id="emergencyContact" readonly>
+
+        <label for="emergencyContactNumber">Emergency Contact Number:</label>
+        <input type="text" id="emergencyContactNumber" readonly>
+
+        <label for="emergencyContactRelationship">Relationship:</label>
+        <input type="text" id="emergencyContactRelationship" readonly>
+
+        <label for="selectedHistory">Medical History:</label>
+        <input type="text" id="selectedHistory" readonly>
+
+        <h3>Treatment History</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Treatment Type</th>
+                    <th>Treatment Date</th>
+                </tr>
+            </thead>
+            <tbody id="treatmentTableBody">
+                <!-- Treatment rows will be added dynamically here -->
+            </tbody>
+        </table>        
+    </div>
+    <div id="message" style="display: none; color: red;"></div>
+
+    <script>
+        async function fetchPatientDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const appointmentId = urlParams.get('appointmentId'); 
+            const messageDiv = document.getElementById('message');
+
+            // ✅ Hide any previous error messages
+            messageDiv.style.display = 'none';
+
+            if (!appointmentId) {
+                messageDiv.textContent = 'No appointment selected.';
+                messageDiv.style.color = 'red';
+                messageDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/appointments/details?appointmentId=${encodeURIComponent(appointmentId)}`);
+                
+                if (!response.ok) throw new Error('Error fetching appointment details.');
+
+                const patient = await response.json();
+                displayPatientDetails(patient, appointmentId);
+            } catch (error) {
+                messageDiv.textContent = error.message;
+                messageDiv.style.color = 'red';
+                messageDiv.style.display = 'block';
+            }
+        }
+
+        function formatDateToLongDate(date) {
+            if (!date) return "Pending"; // ✅ Handle missing date
+            const d = new Date(date);
+            if (isNaN(d.getTime())) return "Invalid Date"; // ✅ Handle invalid date
+            return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function displayPatientDetails(patient, appointmentId) { 
+            document.getElementById('firstName').value = patient.firstName || '';
+            document.getElementById('lastName').value = patient.lastName || '';
+            document.getElementById('age').value = patient.age || '';
+            document.getElementById('gender').value = patient.gender || '';
+            document.getElementById('address').value = patient.address || '';
+            document.getElementById('contactNumber').value = patient.contactNumber || '';
+            document.getElementById('emailAddress').value = patient.emailAddress || '';
+            document.getElementById('emergencyContact').value = patient.emergencyContact || '';
+            document.getElementById('emergencyContactNumber').value = patient.emergencyContactNumber || '';
+            document.getElementById('emergencyContactRelationship').value = patient.emergencyContactRelationship || '';
+            document.getElementById('selectedHistory').value = patient.selectedHistory || '';
+
+            const treatmentTable = document.getElementById('treatmentTableBody');
+            treatmentTable.innerHTML = '';
+
+            // ✅ Ensure treatments exist and are in an array before looping
+            if (!Array.isArray(patient.treatments) || patient.treatments.length === 0) {
+                treatmentTable.innerHTML = '<tr><td colspan="2">No treatments found.</td></tr>';
+                return;
+            }
+
+            patient.treatments.forEach((treatment, index) => {
+                const formattedDate = formatDateToLongDate(treatment.treatmentDate);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${treatment.treatmentType || 'N/A'}</td>
+                    <td>${formattedDate}</td>
+                `;
+
+                // ✅ Make row clickable only if appointmentId exists
+                if (appointmentId) {
+                    row.style.cursor = "pointer";
+                    row.addEventListener('click', () => {
+                        window.location.href = `personnel-treatmentdetails.html?appointmentId=${appointmentId}&treatmentIndex=${index}`;
+                    });
+                }
+
+                treatmentTable.appendChild(row);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchPatientDetails);
+    </script>
+</body>
+</html>

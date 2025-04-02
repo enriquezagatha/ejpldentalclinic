@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personnel - Home</title>
+    <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
+    <link rel="stylesheet" href="../Medical Personnel/reports.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='personnel-home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../Medical Personnel/personnel-home.html" class="active">Home</a>
+                <a href="../Medical Personnel/personnel-records.html">Patient Records</a>
+                <a href="../Medical Personnel/personnel-balance.html">Tracking Balance</a>
+                <a href="../Medical Personnel/personnel-appointment.html">Appointment Data</a>
+                <a href="../Medical Personnel/personnel-management.html">Management</a>
+            </div>
+            <a href="../Medical Personnel/personnel-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="main-container">
+            <div class="main-content">
+                <h1>Welcome, Medical Personnel</h1>
+            </div>
+        </div>
+
+        <!-- Report Navigation Buttons -->
+        <div class="report-buttons">
+            <button class="tab-btn" onclick="showSection('patient-record')">Patient Appointment Report</button>
+            <button class="tab-btn" onclick="showSection('patient-treatment')">Treatment Report</button>
+            <button class="tab-btn" onclick="showSection('payment-report')">Payment Report</button>
+        </div>
+
+        <!-- ✅ Patient Record Report Section -->
+        <section id="patient-record" class="report-section">
+            <div class="container">
+                <h2>Patient Appointment Report</h2>
+
+                <label for="patientstartDate">Start Date:</label>
+                <input type="date" id="patientstartDate">
+                
+                <label for="patientendDate">End Date:</label>
+                <input type="date" id="patientendDate">
+                
+                <button id="patientfilterButton">Filter</button>
+
+                <p><strong>Total Patients:</strong> <span id="totalPatients">0</span></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Contact Number</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientList">
+                        <tr><td colspan="4">Loading...</td></tr>
+                    </tbody>
+                </table>
+
+                <button id="patientdownloadPdfBtn">Download Patient Report</button>
+            </div>
+        </section>             
+
+        <!-- ✅ Patient Treatment Report Section -->
+        <section id="patient-treatment" class="report-section" style="display: none;">
+            <div class="container">
+                <h2>Treatment Report</h2>
+                
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="startDate">
+
+                <label for="endDate">End Date:</label>
+                <input type="date" id="endDate">
+
+                <div class="custom-dropdown">
+                    <div class="dropdown-btn" id="dropdownBtn">Select Treatment</div>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <input type="text" id="dropdownSearch" placeholder="Search Treatment...">
+                        <div data-value="">All Treatments</div>
+                        <div data-value="consultation">Consultation</div>
+                        <div data-value="mild">Mild</div>
+                        <div data-value="moderate">Moderate</div>
+                        <div data-value="severe">Severe</div>
+                        <div data-value="deep_scalping">Deep scalping (per quadrant)</div>
+                        <div data-value="diastema_closure">Diastema closure</div>
+                        <div data-value="temporary_dressing">Temporary dressing</div>
+                        <div data-value="composite_filling">Composite filling (per surface)</div>
+                        <div data-value="inlay_onlay_composite">Inlay | onlay (composite)</div>
+                        <div data-value="simple_extraction">Simple extraction</div>
+                        <div data-value="complicated_case">Complicated case</div>
+                        <div data-value="acrylic_plastic">Acrylic | plastic</div>
+                        <div data-value="pfm_crown">PFM crown</div>
+                        <div data-value="pfm_crown_tilite">PFM crown (tilite)</div>
+                        <div data-value="all_ceramic_porcelain">All ceramic porcelain</div>
+                        <div data-value="zirconia_ceramic_brown">Zirconia ceramic brown</div>
+                        <div data-value="metal_brackets">Metal brackets</div>
+                        <div data-value="ceramic_brackets">Ceramic brackets</div>
+                        <div data-value="self_ligating_metal_brackets">Self-ligating metal brackets</div>
+                        <div data-value="self_ligating_ceramic_brackets">Self-ligating ceramic brackets</div>
+                        <div data-value="clear_aligners">Clear aligners</div>
+                        <div data-value="functional_appliance">Functional appliance</div>
+                        <div data-value="hawleys_retainer">Hawley's retainer (u/l)</div>
+                        <div data-value="essix_retainers">Essix retainers</div>
+                        <div data-value="fixed_retainers">Fixed retainers</div>
+                        <div data-value="temporary_anchorage_device">Temporary anchorage device</div>
+                        <div data-value="bracket_recementation">Bracket recementation</div>
+                        <div data-value="bracket_removal">Bracket removal</div>
+                        <div data-value="downpayment">Downpayment</div>
+                        <div data-value="odontectomy">Odontectomy</div>
+                        <div data-value="apicoectomy">Apicoectomy</div>
+                        <div data-value="frenectomy">Frenectomy</div>
+                        <div data-value="gingivectomy">Gingivectomy (per arch)</div>
+                        <div data-value="in_office_teeth_whitening">In-office teeth whitening (u/l)</div>
+                        <div data-value="at_home_whitening">At-home whitening (u/l)</div>
+                        <div data-value="direct_composite">Direct composite</div>
+                        <div data-value="indirect_composite">Indirect composite</div>
+                        <div data-value="indirect_porcelain">Indirect porcelain</div>
+                        <div data-value="new_ace">New ace (u/l)</div>
+                        <div data-value="new_ace_fx">New ace fx</div>
+                        <div data-value="natura_tone">Natura tone (u/l)</div>
+                        <div data-value="new_ace_us">New ace (us) (u/l)</div>
+                        <div data-value="biotone">Biotone (u/l)</div>
+                        <div data-value="bioform">Bioform (u/l)</div>
+                        <div data-value="inocap">Inocap (u/l)</div>
+                        <div data-value="thermosens">Thermosens (u/l)</div>
+                        <div data-value="stayplate">Stayplate (2 pontics)</div>
+                        <div data-value="assembled_casted_clasp">Assembled casted clasp</div>
+                        <div data-value="flexible_uni">Flexible uni</div>
+                        <div data-value="flexible_bil">Flexible bil</div>
+                        <div data-value="goldmesh">Goldmesh (additional)</div>
+                        <div data-value="lucitone">Lucitone (add in)</div>
+                        <div data-value="one_piece_uni">One piece uni</div>
+                        <div data-value="one_piece_bila">One piece bila</div>
+                        <div data-value="flexi_combi">Flexi combi (bilateral)</div>
+                        <div data-value="reline">Reline (laboratory)</div>
+                        <div data-value="rebase">Rebase (laboratory)</div>
+                        <div data-value="chairside_reline">Chairside reline</div>
+                        <div data-value="recementation_of_crown">Recementation of crown</div>
+                        <div data-value="night_guard">Night guard (per arch)</div>
+                    </div>
+                </div>
+
+                <button id="treatmentfilterButton">Filter</button>
+
+                <p><strong>Total Treatments:</strong> <span id="totalTreatments">0</span></p>
+                <p><strong>Most Popular Treatment:</strong> <span id="popularTreatment">Loading...</span></p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Treatment Name</th>
+                            <th>Treatment Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="treatmentList">
+                        <tr><td colspan="3">No data available</td></tr>
+                    </tbody>
+                </table>
+
+                <button id="downloadTreatmentPdfBtn">Download PDF</button>
+            </div>
+        </section>
+
+         <!-- ✅ Payment Report Section -->
+        <section id="payment-report" class="report-section">
+            <div class="container">
+                <h2>Payment Report</h2>
+
+                <label for="startDate">Start Date:</label>
+                <input type="date" id="paymentstartDate">
+
+                <label for="endDate">End Date:</label>
+                <input type="date" id="paymentendDate">
+
+                <!-- ✅ Custom Dropdown for Payment Status -->
+                <div class="paymentcustom-dropdown">
+                    <div class="paymentdropdown-btn" id="paymentdropdownBtn">Select Status</div>
+                    <div class="paymentdropdown-content" id="paymentdropdownContent">
+                        <div data-value="">All Treatments</div>
+                        <div data-value="consultation">Consultation</div>
+                        <div data-value="mild">Mild</div>
+                        <div data-value="moderate">Moderate</div>
+                        <div data-value="severe">Severe</div>
+                        <div data-value="deep_scalping">Deep scalping (per quadrant)</div>
+                        <div data-value="diastema_closure">Diastema closure</div>
+                        <div data-value="temporary_dressing">Temporary dressing</div>
+                        <div data-value="composite_filling">Composite filling (per surface)</div>
+                        <div data-value="inlay_onlay_composite">Inlay | onlay (composite)</div>
+                        <div data-value="simple_extraction">Simple extraction</div>
+                        <div data-value="complicated_case">Complicated case</div>
+                        <div data-value="acrylic_plastic">Acrylic | plastic</div>
+                        <div data-value="pfm_crown">PFM crown</div>
+                        <div data-value="pfm_crown_tilite">PFM crown (tilite)</div>
+                        <div data-value="all_ceramic_porcelain">All ceramic porcelain</div>
+                        <div data-value="zirconia_ceramic_brown">Zirconia ceramic brown</div>
+                        <div data-value="metal_brackets">Metal brackets</div>
+                        <div data-value="ceramic_brackets">Ceramic brackets</div>
+                        <div data-value="self_ligating_metal_brackets">Self-ligating metal brackets</div>
+                        <div data-value="self_ligating_ceramic_brackets">Self-ligating ceramic brackets</div>
+                        <div data-value="clear_aligners">Clear aligners</div>
+                        <div data-value="functional_appliance">Functional appliance</div>
+                        <div data-value="hawleys_retainer">Hawley's retainer (u/l)</div>
+                        <div data-value="essix_retainers">Essix retainers</div>
+                        <div data-value="fixed_retainers">Fixed retainers</div>
+                        <div data-value="temporary_anchorage_device">Temporary anchorage device</div>
+                        <div data-value="bracket_recementation">Bracket recementation</div>
+                        <div data-value="bracket_removal">Bracket removal</div>
+                        <div data-value="downpayment">Downpayment</div>
+                        <div data-value="odontectomy">Odontectomy</div>
+                        <div data-value="apicoectomy">Apicoectomy</div>
+                        <div data-value="frenectomy">Frenectomy</div>
+                        <div data-value="gingivectomy">Gingivectomy (per arch)</div>
+                        <div data-value="in_office_teeth_whitening">In-office teeth whitening (u/l)</div>
+                        <div data-value="at_home_whitening">At-home whitening (u/l)</div>
+                        <div data-value="direct_composite">Direct composite</div>
+                        <div data-value="indirect_composite">Indirect composite</div>
+                        <div data-value="indirect_porcelain">Indirect porcelain</div>
+                        <div data-value="new_ace">New ace (u/l)</div>
+                        <div data-value="new_ace_fx">New ace fx</div>
+                        <div data-value="natura_tone">Natura tone (u/l)</div>
+                        <div data-value="new_ace_us">New ace (us) (u/l)</div>
+                        <div data-value="biotone">Biotone (u/l)</div>
+                        <div data-value="bioform">Bioform (u/l)</div>
+                        <div data-value="inocap">Inocap (u/l)</div>
+                        <div data-value="thermosens">Thermosens (u/l)</div>
+                        <div data-value="stayplate">Stayplate (2 pontics)</div>
+                        <div data-value="assembled_casted_clasp">Assembled casted clasp</div>
+                        <div data-value="flexible_uni">Flexible uni</div>
+                        <div data-value="flexible_bil">Flexible bil</div>
+                        <div data-value="goldmesh">Goldmesh (additional)</div>
+                        <div data-value="lucitone">Lucitone (add in)</div>
+                        <div data-value="one_piece_uni">One piece uni</div>
+                        <div data-value="one_piece_bila">One piece bila</div>
+                        <div data-value="flexi_combi">Flexi combi (bilateral)</div>
+                        <div data-value="reline">Reline (laboratory)</div>
+                        <div data-value="rebase">Rebase (laboratory)</div>
+                        <div data-value="chairside_reline">Chairside reline</div>
+                        <div data-value="recementation_of_crown">Recementation of crown</div>
+                        <div data-value="night_guard">Night guard (per arch)</div>
+                    </div>
+                </div>
+
+                <!-- ✅ Custom Dropdown for Treatment -->
+                <div class="paymentcustom-dropdown">
+                    <div class="treatmentdropdown-btn" id="treatmentdropdownBtn">Select Treatment</div>
+                    <div class="treatmentdropdown-content" id="treatmentdropdownContent">
+                        <div data-value="">All Treatments</div>
+                        <div data-value="cleaning">Cleaning</div>
+                        <div data-value="whitening">Whitening</div>
+                        <div data-value="filling">Filling</div>
+                        <div data-value="extraction">Extraction</div>
+                    </div>
+                </div>
+
+                <button id="paymentfilterButton">Filter</button>
+
+                <p><strong>Total Transactions:</strong> <span id="totalPayments">0</span></p>
+                <p><strong>Total Revenue:</strong> <span id="totalRevenue">₱0.00</span></p>
+                <p><strong>Total Paid Amount:</strong> <span id="totalPaid">₱0.00</span></p>
+
+                <!-- ✅ Added Loading Indicator -->
+                <div id="loadingIndicator" style="display: none;">Loading...</div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Email</th>
+                            <th>Treatment</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentList">
+                        <tr><td colspan="6">No data available</td></tr>
+                    </tbody>
+                </table>
+
+                <button id="downloadPaymentPdfBtn">Download PDF</button>
+
+                <!-- ✅ Added Pagination Controls -->
+                <div id="pagination-controls"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="employeePatientReport.js"></script>
+    <script src="employeeTreatmentReport.js"></script>
+    <script src="employeePaymentReport.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.report-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show the selected section
+            document.getElementById(sectionId).style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

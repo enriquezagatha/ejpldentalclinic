@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EJPL Dental Clinic - Doctors and Staff</title>
+    <link rel="stylesheet" href="../main page/styles.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../main page/home.html">Home</a>
+                <a href="../main page/aboutus.html">About Us</a>
+                <a href="../main page/doctors.html" class="active">Doctors</a>
+                <a href="../main page/services.html">Services</a>
+                <a href="../main page/contact.html">Contact Us</a>
+                <a href="../main page/location.html">Location</a>
+            </div>
+            <a href="../main page/profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+
+    <div class="doctors-container">
+        <center><h2 class="section-title">Meet Our Doctors</h2></center>
+        <section id="doctors-content">
+            <center>
+                <div class="team" id="doctors-list">
+                    <!-- Doctors will be dynamically loaded here -->
+                </div>
+            </center>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
+    </footer>
+
+    <script src="doctors.js"></script>
+</body>
+</html>

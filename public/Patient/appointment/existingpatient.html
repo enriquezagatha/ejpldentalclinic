@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Existing Patient - Appointment</title>
+    <link rel="stylesheet" href="patientappointment.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="/media/logo/EJPL.png" alt="Logo" class="logo">
+            <div class="nav-links">
+                <a href="../patient-home.html" class="disabled-link">Home</a>
+                <a href="../patient-aboutus.html" class="disabled-link">About Us</a>
+                <a href="../patient-doctors.html" class="disabled-link">Doctors</a>
+                <a href="../patient-services.html" class="disabled-link">Services</a>
+                <a href="../patient-contact.html" class="disabled-link">Contact Us</a>
+                <a href="../patient-location.html" class="disabled-link">Location</a>
+            </div>
+            <a href="../patient-profile.html" class="disabled-link">
+                <img src="/media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    
+    <main>
+        <button class="appointment-cancel-button" onclick="goBackAppointment()">← Back</button>
+        <button class="appointment-next-button" onclick="goNextAppointment()">Next →</button>
+        <div class="content">
+            <h1>EJPL Dental Clinic - Existing Patient</h1>
+            <h2>Step 2: Verify Your Details</h2>
+            <form id="existing-patient-form">
+                <div class="details-form">
+                    <input type="text" placeholder="Full Name" class="input-field" id="full-name" required>
+                    <input type="number" placeholder="Contact Number" class="input-field" id="contact-number" required>
+                    
+                    <!-- Warning messages -->
+                    <div id="contact-warning" class="warning-message" style="display: none;">
+                        Contact number must be exactly 11 digits.
+                    </div>
+                    <div id="form-warning" class="warning-message" style="display: none;">
+                        All required fields should be completed.
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <script src="existing-appointment.js"></script>
+    
+    <footer>
+        <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
+    </footer>
+</body>
+</html>
