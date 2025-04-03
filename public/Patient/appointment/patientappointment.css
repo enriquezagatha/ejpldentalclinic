@@ -74,6 +74,34 @@ header {
     display: none; /* Hide initially if there are no notifications */
 }
 
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    width: 250px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    z-index: 1000;
+}
+.notification-dropdown.active {
+    display: block;
+}
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+}
+.notification-item:last-child {
+    border-bottom: none;
+}
+.notification-item:hover {
+    background: #f7f7f7;
+}
+
 .nav-links {
     display: flex;
     align-items: center;

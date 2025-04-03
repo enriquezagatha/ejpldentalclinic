@@ -5,7 +5,7 @@ step 3
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm Appointment</title>
-    <link rel="stylesheet" href="patientappointment.css">
+    <link rel="stylesheet" href="patientscheduling.css">
     <style>
         /* Modal styles */
         .modal {
@@ -57,12 +57,15 @@ step 3
                 <a href="../patient-contact.html" class="disabled-link">Contact Us</a>
                 <a href="../patient-location.html" class="disabled-link">Location</a>
             </div>
+            <a href="../Patient/patient-notifications.html" class="notification-icon">
+                <img src="../media/logo/notif.png" alt="Notification Icon">
+                <span class="notification-badge"></span>
+            </a>
             <a href="../patient-profile.html" class="disabled-link">
                 <img src="/media/logo/profile.png" alt="Profile Icon" class="profile-icon">
             </a>
         </nav>
     </header>
-
         <main>
             <button class="appointment-back-button" onclick="goToAppointmentBack()">← Back</button>
             <button class="appointment-next-button" onclick="confirmAppointment()">Confirm Appointment</button>
@@ -79,19 +82,20 @@ step 3
                         <div class="modal-content">
                             <span class="close" onclick="closeModal()">&times;</span>
                             <p id="confirmation-text"></p>
-                            <!-- <button onclick="goToReceipt()">Go to Receipt</button> -->
                         </div>
                     </div>
-
-            <!-- Receipt Section -->
-            <div id="appointment-receipt" style="display: none;">
-                <h2>Appointment Confirmation Receipt</h2>
-                <p><strong>Clinic Name:</strong> EJPL Dental Clinic</p>
-                <div class="receipt-info">
-                    <!-- Receipt details will be dynamically inserted here -->
                 </div>
-                <p><strong>Date of Confirmation:</strong> <span id="confirmation-date"></span></p>
-                <p>Please bring this receipt to the clinic on the day of your appointment.</p>
+
+                <!-- Receipt Section -->
+                <div id="appointment-receipt" style="display: none;">
+                    <h2>Appointment Confirmation Receipt</h2>
+                    <p><strong>Clinic Name:</strong> EJPL Dental Clinic</p>
+                    <div class="receipt-info">
+                        <!-- Receipt details will be dynamically inserted here -->
+                    </div>
+                    <p><strong>Date of Confirmation:</strong> <span id="confirmation-date"></span></p>
+                    <p>Please bring this receipt to the clinic on the day of your appointment.</p>
+                </div>
             </div>
             <script>
                 const monthNames = [
@@ -99,7 +103,7 @@ step 3
                     "July", "August", "September", "October", "November", "December"
                 ];
 
-                const bookingRecords = JSON.parse(localStorage.getItem('bookingRecords')) || {}; // Load from localStorage or initialize as empty object
+                const appointmentRecords = JSON.parse(localStorage.getItem('appointmentRecords')) || {}; // Load from localStorage or initialize as empty object
 
                 function formatDate(dateStr) {
                     const [year, month, day] = dateStr.split('-');
@@ -114,6 +118,7 @@ step 3
                         preferredDate: localStorage.getItem('preferredDate'),
                         preferredTime: localStorage.getItem('preferredTime'),
                         treatmentType: localStorage.getItem('treatmentType'),
+                        treatmentPrice: localStorage.getItem('treatmentPrice'),
                     };
 
                     console.log('Saved Form Data:', savedFormData);
@@ -134,6 +139,7 @@ step 3
                             <p><strong>Preferred Date:</strong> ${savedScheduleData.preferredDate ? formatDate(savedScheduleData.preferredDate) : 'N/A'}</p>
                             <p><strong>Preferred Time:</strong> ${savedScheduleData.preferredTime || 'N/A'}</p>
                             <p><strong>Type of Treatment:</strong> ${savedScheduleData.treatmentType || 'N/A'}</p>
+                            <p><strong>Treatment Price:</strong> ${savedScheduleData.treatmentPrice || 'N/A'}</p>
                         `;
                         document.querySelector('.confirmation-info').innerHTML = confirmationHTML;
                         document.querySelector('.receipt-info').innerHTML = confirmationHTML;
@@ -143,28 +149,8 @@ step 3
 
                 document.addEventListener('DOMContentLoaded', loadConfirmationData);
 
-                function generateReferenceNumber() {
-                    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                    const numbers = '0123456789';
-                    let randomString = '';
-                    
-                    // Generate random letters
-                    for (let i = 0; i < 4; i++) {
-                        randomString += letters.charAt(Math.floor(Math.random() * letters.length));
-                    }
-                    
-                    // Generate random numbers
-                    for (let i = 0; i < 5; i++) {
-                        randomString += numbers.charAt(Math.floor(Math.random() * numbers.length));
-                    }
-
-                    const timePart = Date.now().toString(36).toUpperCase(); // Current timestamp in base 36
-
-                    return `REF-${randomString}-${timePart}`;
-                }
-
                 function goToAppointmentBack() {
-                    window.location.href = "step2appointment.html";
+                    window.location.href = "step1appointment.html";
                 }
 
                 function openModal(message) {
@@ -176,33 +162,20 @@ step 3
                     document.getElementById('confirmation-modal').style.display = 'none';
                 }
 
-                /*function goToReceipt() {
-                    const referenceNumber = document.getElementById('confirmation-text').innerText.split(': ')[1]; // Get reference number from the text
-                    const bookingData = {
-                        firstName: JSON.parse(sessionStorage.getItem('formData')).firstName || 'N/A',
-                        lastName: JSON.parse(sessionStorage.getItem('formData')).lastName || 'N/A',
-                        age: JSON.parse(sessionStorage.getItem('formData')).age || 'N/A',
-                        preferredDate: localStorage.getItem('preferredDate') || 'N/A',
-                        preferredTime: localStorage.getItem('preferredTime') || 'N/A',
-                        treatmentType: localStorage.getItem('treatmentType') || 'N/A'
-                    };
-                    const receiptUrl = `receipt.html?referenceNumber=${referenceNumber}&receiptDetails=${encodeURIComponent(JSON.stringify(bookingData))}`;
-                    window.location.href = receiptUrl;
-                }*/
-
                 function confirmAppointment() {
                     const preferredTime = localStorage.getItem('preferredTime');
-                    
-                    // Prepare the booking details
+
+                    // Prepare the appointment details
                     const savedFormData = JSON.parse(sessionStorage.getItem('formData')) || {};
                     const savedScheduleData = {
                         preferredDate: localStorage.getItem('preferredDate'),
                         preferredTime: preferredTime,
                         treatmentType: localStorage.getItem('treatmentType'),
+                        treatmentPrice: localStorage.getItem('treatmentPrice'),
                     };
 
                     // Data to send to the backend
-                    const bookingData = {
+                    const appointmentData = {
                         firstName: savedFormData.firstName || 'N/A',
                         lastName: savedFormData.lastName || 'N/A',
                         age: savedFormData.age || 'N/A',
@@ -210,48 +183,64 @@ step 3
                         address: savedFormData.address || 'N/A',
                         contactNumber: savedFormData.contactNumber || 'N/A',
                         emailAddress: savedFormData.emailAddress || 'N/A',
+                        selectedHistory: savedFormData.selectedHistory || 'N/A',
                         emergencyContact: savedFormData.emergencyContact || 'N/A',
                         preferredDate: savedScheduleData.preferredDate || 'N/A',
                         preferredTime: savedScheduleData.preferredTime || 'N/A',
-                        treatmentType: savedScheduleData.treatmentType || 'N/A'
+                        treatmentType: savedScheduleData.treatmentType || 'N/A',
+                        treatmentPrice: savedScheduleData.treatmentPrice || 'N/A',
+                        emergencyContactNumber: savedFormData.emergencyContactNumber || 'N/A',
+                        emergencyContactRelationship: savedFormData.emergencyContactRelationship || 'N/A',
                     };
 
                     // Send a POST request to the backend API
-                    fetch('/api/appointments', { // Update with your actual API endpoint
+                    fetch('/api/appointments/patient/appointments', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(bookingData)
+                        body: JSON.stringify(appointmentData)
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Appointment confirmed
-                            const referenceNumber = data.referenceNumber; // Assuming your API sends back a reference number
-                            /*const confirmationMessage = `Your appointment has been confirmed! Your Reference Number is: ${referenceNumber}`;
-                            openModal(confirmationMessage); // Open the modal with the confirmation message*/
-
-                            // Redirect to the receipt page with the reference number
-                            const receiptUrl = `receipt.html?referenceNumber=${referenceNumber}&receiptDetails=${encodeURIComponent(JSON.stringify(bookingData))}`;
-                            window.location.href = receiptUrl;
-
-                            sessionStorage.removeItem('formData'); // Clear form data
-                            localStorage.removeItem('preferredDate'); // Clear preferred date
-                            localStorage.removeItem('preferredTime'); // Clear preferred time
-                            localStorage.removeItem('treatmentType'); // Clear treatment type
-
-                            // Optionally, clear the confirmation display area
-                            document.querySelector('.confirmation-info').innerHTML = '';
-                            document.getElementById('confirmation-message').style.display = 'none';
-                            document.getElementById('confirmation-text').innerText = '';
+                    .then(response => {
+                        if (response.status === 401) {
+                            displayError('Unauthorized. Please log in to confirm your appointment.');
+                        } else if (response.status === 400) { // Check for appointment slot full error
+                            response.json().then(errorData => {
+                                displayError(errorData.message || 'Appointment slot is full for this time.');
+                            });
+                        } else if (!response.ok) {
+                            response.json().then(errorData => {
+                                displayError(errorData.message || 'Network response was not ok');
+                            });
                         } else {
-                                const errorMessage = data.message || 'An error occurred. Please try again.';
-                                openModal(errorMessage);
+                            return response.json(); // Proceed to the next promise
+                        }
+                    })
+                    .then(data => {
+                        if (data) {
+                            if (data.success) { // Check if 'data.success' is true
+                                const receiptUrl = `receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
+                                window.location.href = receiptUrl;
+
+                                // Clear session and local storage
+                                sessionStorage.removeItem('formData');
+                                localStorage.removeItem('preferredDate');
+                                localStorage.removeItem('preferredTime');
+                                localStorage.removeItem('treatmentType');
+                                localStorage.removeItem('treatmentPrice');
+
+                                // Clear confirmation display area if needed
+                                document.querySelector('.confirmation-info').innerHTML = '';
+                                document.getElementById('confirmation-message').style.display = 'none';
+                                document.getElementById('confirmation-text').innerText = '';
                             }
+                        }
                     });
                 }
 
+                function displayError(message) {
+                    openModal(message); // Show the error message in the modal
+                }
 
                 function printReceipt() {
                     const receiptSection = document.getElementById('appointment-receipt').innerHTML;
@@ -272,9 +261,6 @@ step 3
                 }
 
             </script>
-            <footer>
-                <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
-            </footer>
         </main>
     </body>
 </html>

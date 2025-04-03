@@ -19,10 +19,15 @@
                 <a href="../Patient/patient-location.html">Location</a>
                 <a href="../Patient/patient-records.html">Records</a>
             </div>
-            <a href="../Patient/patient-notifications.html" class="notification-icon">
+            <div class="notification-icon" onclick="toggleNotifications()">
                 <img src="../media/logo/notif.png" alt="Notification Icon">
-                <span class="notification-badge"></span>
-            </a>            
+                <span class="notification-badge" id="notifBadge"></span>
+                <div class="notification-dropdown" id="notifDropdown">
+                    <div id="notifList">
+                        <div class="notification-item">No new notifications</div>
+                    </div>
+                </div>
+            </div>            
             <a href="../Patient/patient-profile.html">
                 <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
             </a>
@@ -35,42 +40,101 @@
         </div>
     </main>
     <script>
-        function goNextAppointment(){
-            window.location.href = "../Patient/appointment/typeofpatient.html"
+        function goNextAppointment() {
+            window.location.href = "../Patient/appointment/typeofpatient.html";
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            // Fetch notification count from backend
-            function fetchNotificationCount() {
-                return fetch('/api/notifications/count', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('authToken') // Assuming the token is stored in localStorage
-                    }
-                })
-                .then(response => response.json())
-                .then(data => data.count) // Assuming the API returns { count: X }
-                .catch(error => 0); // In case of an error, return 0
+        async function fetchNotifications() {
+            try {
+                const response = await fetch("http://localhost:3000/api/notifications", {
+                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } // Ensure user authentication
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch notifications");
+
+                const data = await response.json();
+                updateNotifications(data.notifications);
+            } catch (error) {
+                console.error("Error fetching notifications:", error);
             }
+        }
 
-            function updateNotificationBadge() {
-                fetchNotificationCount().then(count => {
-                    let badge = document.querySelector(".notification-badge");
+        async function fetchNotificationCount() {
+            try {
+                const response = await fetch("http://localhost:3000/api/notifications/count", {
+                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+                });
 
-                    if (count > 0) {
-                        badge.textContent = count;
-                        badge.style.display = "block"; // Show badge if count > 0
-                    } else {
-                        badge.style.display = "none"; // Hide badge if count == 0
+                if (!response.ok) throw new Error("Failed to fetch notification count");
+
+                const data = await response.json();
+                updateNotificationBadge(data.count);
+            } catch (error) {
+                console.error("Error fetching notification count:", error);
+            }
+        }
+
+        function updateNotifications(notifications) {
+            const badge = document.getElementById("notifBadge");
+            const notifList = document.getElementById("notifList");
+            notifList.innerHTML = "";
+
+            if (notifications.length > 0) {
+                badge.textContent = notifications.length;
+                badge.style.display = "flex";
+
+                notifications.forEach((notif) => {
+                    let item = document.createElement("div");
+                    item.className = "notification-item";
+                    item.textContent = notif.message;
+                    item.onclick = () => markNotificationAsRead(notif._id);
+                    notifList.appendChild(item);
+                });
+            } else {
+                badge.style.display = "none";
+                notifList.innerHTML = '<div class="notification-item">No new notifications</div>';
+            }
+        }
+
+        function updateNotificationBadge(count) {
+            const badge = document.getElementById("notifBadge");
+
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = "flex";
+            } else {
+                badge.style.display = "none";
+            }
+        }
+
+        async function markNotificationAsRead(notificationId) {
+            try {
+                await fetch(`http://localhost:3000/api/notifications/${notificationId}/mark-read`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
                     }
                 });
+
+                fetchNotifications(); // Refresh notifications after marking as read
+                fetchNotificationCount();
+            } catch (error) {
+                console.error("Error marking notification as read:", error);
             }
+        }
 
-            updateNotificationBadge(); // Run once on load
+        function toggleNotifications() {
+            document.getElementById("notifDropdown").classList.toggle("active");
+        }
 
-            // Refresh notification count every 10 seconds
-            setInterval(updateNotificationBadge, 10000);
-        });
+        // Initial fetch
+        fetchNotifications();
+        fetchNotificationCount();
+
+        // Fetch notifications every 10 seconds
+        setInterval(fetchNotifications, 10000);
+        setInterval(fetchNotificationCount, 10000);
     </script>
 </body>
 </html>

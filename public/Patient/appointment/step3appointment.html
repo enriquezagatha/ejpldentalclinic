@@ -56,10 +56,13 @@
                 <a href="../patient-contact.html" class="disabled-link">Contact Us</a>
                 <a href="../patient-location.html" class="disabled-link">Location</a>
             </div>
+    
+            <!-- Notification Icon with Dynamic Badge -->
             <a href="../Patient/patient-notifications.html" class="notification-icon">
-                <img src="../media/logo/notif.png" alt="Notification Icon">
-                <span class="notification-badge"></span>
+                <img src="/media/logo/notif.png" alt="Notification Icon">
+                <span class="notification-badge" id="notifBadge" style="display: none;"></span>
             </a>
+    
             <a href="../patient-profile.html" class="disabled-link">
                 <img src="/media/logo/profile.png" alt="Profile Icon" class="profile-icon">
             </a>
@@ -161,6 +164,30 @@
                     document.getElementById('confirmation-modal').style.display = 'none';
                 }
 
+                document.addEventListener("DOMContentLoaded", function () {
+                    loadConfirmationData();
+                    fetchNotificationCount(); // Fetch notification count on page load
+                });
+
+                function fetchNotificationCount() {
+                    fetch('/api/notifications/count', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const notificationBadge = document.getElementById('notifBadge');
+                        if (data.count > 0) {
+                            notificationBadge.textContent = data.count;
+                            notificationBadge.style.display = 'block';
+                        } else {
+                            notificationBadge.style.display = 'none';
+                        }
+                    })
+                    .catch(error => console.error('Error fetching notifications:', error));
+                }
+
                 function confirmAppointment() {
                     const preferredTime = localStorage.getItem('preferredTime');
 
@@ -192,7 +219,7 @@
                         emergencyContactRelationship: savedFormData.emergencyContactRelationship || 'N/A',
                     };
 
-                    // Send a POST request to the backend API
+                    // Send a POST request to the backend API for appointment creation
                     fetch('/api/appointments/patient/appointments', {
                         method: 'POST',
                         headers: {
@@ -221,6 +248,9 @@
                                 const receiptUrl = `receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
                                 window.location.href = receiptUrl;
 
+                                // Send a notification to the patient after appointment confirmation
+                                createNotification(savedFormData.patientId, "Your appointment has been successfully confirmed!");
+
                                 // Clear session and local storage
                                 sessionStorage.removeItem('formData');
                                 localStorage.removeItem('preferredDate');
@@ -235,6 +265,36 @@
                             }
                         }
                     });
+                }
+
+                // Function to create a notification for the patient
+                function createNotification(patientId, message) {
+                    fetch('/api/notifications/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email:email,
+                            message: message
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log("Notification created successfully!");
+                            // Optionally, refresh notification count or UI
+                            fetchNotificationCount(); // Update notification count
+                        } else {
+                            console.error("Failed to create notification:", data);
+                        }
+                    })
+                    .catch(error => console.error("Error creating notification:", error));
+                }
+
+                // Function to display error messages
+                function displayError(message) {
+                    openModal(message); // Show the error message in the modal
                 }
 
                 function displayError(message) {
@@ -258,7 +318,6 @@
                     location.reload();
 
                 }
-
             </script>
         </main>
     </body>
