@@ -5,6 +5,7 @@
     -contactController.js
     -doctorController.js
     -medicalPersonnelController.js
+    -notificationController.js
     -patientController.js
     -patientRecordController.js
     -paymentController.js
@@ -19,6 +20,7 @@
     -Contact.js
     -Doctor.ks
     -MedicalPersonnel.js
+    -Notification.js
     -Patient.js
     -PatientRecord.js
     -Payment.js
@@ -33,6 +35,7 @@
     -doctorRoutes.js
     -fileUpload.js
     -medicalPersonnelRoutes.js
+    -notificationRoutes.js
     -PatientRoutes.js
     -paymentRoutes.js
     -serviceRoutes.js

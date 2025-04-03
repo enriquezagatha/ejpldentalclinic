@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = await User.findById(decoded.id).select("-password");
+        req.user = await Patient.findById(decoded.id).select("-password"); // Use Patient model here
 
         if (!req.user) {
             return res.status(401).json({ message: "User not found" });

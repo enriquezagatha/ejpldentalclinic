@@ -2,8 +2,23 @@ const Appointment = require('../models/Appointment');
 const { generateReferenceNumber } = require('../services/appointmentService');
 const PatientRecord = require('../models/PatientRecord');
 const fs = require('fs');
+const Notification = require('../models/Notification');
 const { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } = require("date-fns");
 const Dentist = require('../models/Dentist');
+
+// Function to send a notification to the patient
+const sendNotification = async (patientId, message) => {
+    try {
+        const notification = new Notification({
+            patientId,
+            message,
+            isRead: false, // By default, new notifications are unread
+        });
+        await notification.save();
+    } catch (error) {
+        console.error('Error sending notification:', error);
+    }
+};
 
 exports.createAppointment = async (req, res) => {
     if (!req.session.user) {
@@ -60,7 +75,10 @@ exports.createAppointment = async (req, res) => {
         status: "Pending", // Always start as "Pending"
     };
 
-    await new Appointment(appointmentData).save();
+    const newAppointment = await new Appointment(appointmentData).save();
+
+    // Send notification to the patient after creating the appointment
+    await sendNotification(req.session.user.id, `Your appointment with reference number ${referenceNumber} has been successfully created.`);
 
     return res.status(201).json({
         success: true,
@@ -220,6 +238,9 @@ exports.updateAppointmentStatus = async (req, res) => {
         }
 
         await patientRecord.save(); // ✅ Save the updated record
+
+        // Notify the patient about the completed status
+        await sendNotification(updatedAppointment.patient, `Your appointment with reference number ${updatedAppointment.referenceNumber} has been marked as completed.`);
     }
 
     res.json({ message: 'Appointment status updated successfully', appointment: updatedAppointment });
@@ -280,6 +301,8 @@ exports.updateAppointment = async (req, res) => {
 
         await existingRecord.save();
 
+        await sendNotification(appointment.patient, `Your appointment details have been updated.`);
+
         return res.status(200).json({ message: 'Patient details updated successfully.', files: existingRecord.uploadedFiles });
     } else {
         // ✅ Create a new PatientRecord if it doesn't exist
@@ -305,6 +328,10 @@ exports.updateAppointment = async (req, res) => {
         });
 
         await newPatientRecord.save();
+
+        // Notify the patient about the completed status
+        await sendNotification(appointment.patient, `Your appointment details have been successfully updated and saved.`);        
+        
         return res.status(200).json({ message: 'Patient details updated successfully.', files: newPatientRecord.uploadedFiles });
     }
 };

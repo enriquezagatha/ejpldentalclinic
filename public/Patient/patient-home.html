@@ -19,6 +19,10 @@
                 <a href="../Patient/patient-location.html">Location</a>
                 <a href="../Patient/patient-records.html">Records</a>
             </div>
+            <a href="../Patient/patient-notifications.html" class="notification-icon">
+                <img src="../media/logo/notif.png" alt="Notification Icon">
+                <span class="notification-badge"></span>
+            </a>            
             <a href="../Patient/patient-profile.html">
                 <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
             </a>
@@ -35,9 +39,38 @@
             window.location.href = "../Patient/appointment/typeofpatient.html"
         }
 
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch notification count from backend
+            function fetchNotificationCount() {
+                return fetch('/api/notifications/count', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('authToken') // Assuming the token is stored in localStorage
+                    }
+                })
+                .then(response => response.json())
+                .then(data => data.count) // Assuming the API returns { count: X }
+                .catch(error => 0); // In case of an error, return 0
+            }
+
+            function updateNotificationBadge() {
+                fetchNotificationCount().then(count => {
+                    let badge = document.querySelector(".notification-badge");
+
+                    if (count > 0) {
+                        badge.textContent = count;
+                        badge.style.display = "block"; // Show badge if count > 0
+                    } else {
+                        badge.style.display = "none"; // Hide badge if count == 0
+                    }
+                });
+            }
+
+            updateNotificationBadge(); // Run once on load
+
+            // Refresh notification count every 10 seconds
+            setInterval(updateNotificationBadge, 10000);
+        });
     </script>
-    <footer>
-        <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
-    </footer>
 </body>
 </html>
