@@ -2,32 +2,11 @@ const Appointment = require('../models/Appointment');
 const { generateReferenceNumber } = require('../services/appointmentService');
 const PatientRecord = require('../models/PatientRecord');
 const fs = require('fs');
-const Notification = require('../models/Notification');
 const { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } = require("date-fns");
 const Dentist = require('../models/Dentist');
-const Patient = require('../models/Patient');
 
-
-// Helper function to send notification
-const sendNotification = async (email, message) => {
-    try {
-        // Create the notification for the patient
-        const newNotification = new Notification({
-            email,  // Use the patient's email
-            message,
-            read: false  // Initially unread
-        });
-        
-        // Save the notification to the database
-        await newNotification.save();
-    } catch (error) {
-        console.error("Error sending notification:", error);
-    }
-};
-
-// Create an appointment for a patient
 exports.createAppointment = async (req, res) => {
-    if (!req.user) {
+    if (!req.session.user) {
         return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
@@ -52,7 +31,6 @@ exports.createAppointment = async (req, res) => {
 
     const referenceNumber = generateReferenceNumber();
 
-    // Check if there are already appointments for this time slot
     const existingAppointments = await Appointment.find({ preferredDate, preferredTime });
 
     if (existingAppointments.length >= 2) {
@@ -61,7 +39,7 @@ exports.createAppointment = async (req, res) => {
 
     // Create appointment WITHOUT adding to PatientRecord yet
     const appointmentData = {
-        patientEmail: req.user.email,  // Use the authenticated user's email instead of ID
+        patient: req.session.user.id,
         referenceNumber,
         firstName,
         lastName,
@@ -82,10 +60,7 @@ exports.createAppointment = async (req, res) => {
         status: "Pending", // Always start as "Pending"
     };
 
-    const newAppointment = await new Appointment(appointmentData).save();
-
-    // Send notification to the patient after creating the appointment
-    await sendNotification(req.user.email, `Your appointment with reference number ${referenceNumber} has been successfully created.`);
+    await new Appointment(appointmentData).save();
 
     return res.status(201).json({
         success: true,
@@ -245,9 +220,6 @@ exports.updateAppointmentStatus = async (req, res) => {
         }
 
         await patientRecord.save(); // ✅ Save the updated record
-
-        // Notify the patient about the completed status
-        await sendNotification(updatedAppointment.patient, `Your appointment with reference number ${updatedAppointment.referenceNumber} has been marked as completed.`);
     }
 
     res.json({ message: 'Appointment status updated successfully', appointment: updatedAppointment });
@@ -308,8 +280,6 @@ exports.updateAppointment = async (req, res) => {
 
         await existingRecord.save();
 
-        await sendNotification(appointment.patient, `Your appointment details have been updated.`);
-
         return res.status(200).json({ message: 'Patient details updated successfully.', files: existingRecord.uploadedFiles });
     } else {
         // ✅ Create a new PatientRecord if it doesn't exist
@@ -335,10 +305,6 @@ exports.updateAppointment = async (req, res) => {
         });
 
         await newPatientRecord.save();
-
-        // Notify the patient about the completed status
-        await sendNotification(appointment.patient, `Your appointment details have been successfully updated and saved.`);        
-        
         return res.status(200).json({ message: 'Patient details updated successfully.', files: newPatientRecord.uploadedFiles });
     }
 };

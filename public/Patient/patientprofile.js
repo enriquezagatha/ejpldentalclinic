@@ -228,9 +228,15 @@ async function confirmUpload(isConfirmed) {
                 showMessageInModal(false, "An error occurred during the upload.");
             } else if (response.ok) {
                 const result = await response.json();
+                const uploadedImageUrl = `/uploads/${result.filename}`;  // Construct the uploaded image URL
+
                 document.getElementById("profile-picture").src = `/uploads/${result.filename}`;
                 document.getElementById("profile-preview").src = `/uploads/${result.filename}`;
                 pictureInput.value = ""; // Clear the file input field
+
+                //Save the uploaded image URL to localStorage
+                localStorage.setItem("profilePicture", uploadedImageUrl);
+
                 showMessageInModal(true, "Profile picture uploaded successfully.");
             } else {
                 showMessageInModal(false, "Failed to upload profile picture.");
@@ -267,21 +273,32 @@ async function uploadProfilePicture() {
 
 // Function to delete the profile picture
 async function deleteProfilePicture() {
-    const response = await fetch('/api/patient/delete-profile-picture', {
-        method: 'DELETE'
-    });
+    try {
+        const response = await fetch('/api/patient/delete-profile-picture', {
+            method: 'DELETE'
+        });
 
-    if (response.ok) {
-        // Reset the profile picture to the default image
-        const defaultPicture = "../media/default-profile.png";
-        document.getElementById("profile-picture").src = defaultPicture;
-        document.getElementById("profile-preview").src = defaultPicture;
+        if (response.ok) {
+            // Reset the profile picture to the default image
+            const defaultPicture = "../media/logo/default-profile.png";
+            
+            // Add a cache-busting query parameter
+            const cacheBuster = `?t=${new Date().getTime()}`;
+            document.getElementById("profile-picture").src = defaultPicture + cacheBuster;
+            document.getElementById("profile-preview").src = defaultPicture + cacheBuster;
 
-        // Show success message
-        showMessageInModal(true, "Profile picture deleted successfully.");
-    } else {
-        // Show error message
-        showMessageInModal(false, "Failed to delete profile picture.");
+            // Remove the profile picture URL from localStorage
+            localStorage.removeItem("profilePicture");
+
+            // Show success message
+            showMessageInModal(true, "Profile picture deleted successfully.");
+        } else {
+            console.error("Failed to delete profile picture on the server:", response.statusText);
+            showMessageInModal(false, "Failed to delete profile picture.");
+        }
+    } catch (error) {
+        console.error("Error during profile picture deletion:", error);
+        showMessageInModal(false, "An error occurred while deleting the profile picture.");
     }
 }
 
@@ -314,6 +331,8 @@ async function confirmDelete(isConfirmed) {
             document.getElementById("profile-picture").src = defaultPicture;
             document.getElementById("profile-preview").src = defaultPicture;
 
+            localStorage.removeItem("profilePicture");
+
             // Show success message
             showMessageInModal(true, "Profile picture deleted successfully.");
         } else {
@@ -322,3 +341,30 @@ async function confirmDelete(isConfirmed) {
         }
     }
 }
+
+window.onload = async function () {
+    const savedImageUrl = localStorage.getItem("profilePicture");
+
+    if (savedImageUrl) {
+        // Verify if the saved image exists on the server
+        try {
+            const response = await fetch(savedImageUrl, { method: 'HEAD' });
+            if (response.ok) {
+                document.getElementById("profile-picture").src = savedImageUrl;
+                document.getElementById("profile-preview").src = savedImageUrl;
+                return;
+            }
+        } catch (error) {
+            console.error("Error verifying saved profile picture:", error);
+        }
+
+        // If the image doesn't exist, fallback to the default image
+        localStorage.removeItem("profilePicture");
+    }
+
+    else{
+        const defaultImage = "../media/logo/default-profile.png";
+        document.getElementById("profile-picture").src = defaultImage;
+        document.getElementById("profile-preview").src = defaultImage;
+    }
+};

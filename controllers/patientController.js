@@ -5,6 +5,8 @@ const { findUserByEmail } = require('../utils/dbUtils');
 const bcrypt = require('bcrypt');
 const Appointment = require('../models/Appointment');
 const PatientRecord = require('../models/PatientRecord');
+const fs = require('fs');
+const path = require('path');
 
 // Create a new patient account
 exports.createPatient = async (req, res) => {
@@ -148,6 +150,22 @@ exports.deleteProfilePicture = async (req, res) => {
         return res.status(404).json({ message: 'Patient not found.' });
     }
 
+    // Get the current profile picture path
+    const profilePicturePath = patient.profilePicture 
+        ? path.join(__dirname, '..', 'public', patient.profilePicture) 
+        : null;
+
+    // Delete the file if it exists
+    if (profilePicturePath && fs.existsSync(profilePicturePath)) {
+        try {
+            fs.unlinkSync(profilePicturePath);
+        } catch (error) {
+            console.error('Error deleting profile picture:', error);
+            return res.status(500).json({ message: 'Failed to delete profile picture file.' });
+        }
+    }
+
+    // Set the profilePicture field to null in the database
     patient.profilePicture = null;
     const saveResult = await patient.save().catch(() => null);
 

@@ -5,6 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient - Doctors</title>
     <link rel="stylesheet" href="../Patient/patientstyle.css">
+    <style>
+        /* Notification bell styles */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-bell img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            font-size: 12px;
+            border-radius: 50%;
+            padding: 2px 6px;
+            display: none;
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            z-index: 1000;
+            color: black;
+        }
+
+        .notification-dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .notification-dropdown li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .notification-dropdown li:last-child {
+            border-bottom: none;
+        }
+
+        .notification-dropdown li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -18,6 +74,15 @@
                 <a href="../Patient/patient-contact.html">Contact Us</a>
                 <a href="../Patient/patient-location.html">Location</a>
                 <a href="../Patient/patient-records.html">Records</a>
+            </div>
+            <div class="notification-bell" onclick="toggleNotificationDropdown()">
+                <img src="../media/logo/notif.png" alt="Notification Bell">
+                <span id="notification-count" class="notification-count">0</span>
+                <div id="notification-dropdown" class="notification-dropdown">
+                    <ul id="notification-list">
+                        <!-- Notifications will be dynamically added here -->
+                    </ul>
+                </div>
             </div>
             <a href="../Patient/patient-profile.html">
                 <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
@@ -72,6 +137,102 @@
                 credentials.style.display = "none";
             }
         }
+
+        function loadNotifications() {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            const notificationList = document.getElementById('notification-list');
+            const notificationCount = document.getElementById('notification-count');
+
+            // Clear existing notifications in the DOM
+            notificationList.innerHTML = '';
+
+            // Populate the notification list
+            notifications.forEach((message, index) => {
+                const notificationItem = document.createElement('li');
+                notificationItem.style.display = 'flex';
+                notificationItem.style.justifyContent = 'space-between';
+                notificationItem.style.alignItems = 'center';
+
+                // Create a container for the message
+                const messageContainer = document.createElement('span');
+                messageContainer.textContent = message;
+
+                // Create the remove button
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Delete';
+                removeButton.style.marginLeft = '10px';
+                removeButton.onclick = () => removeNotification(index);
+
+                notificationItem.appendChild(messageContainer);
+                notificationItem.appendChild(removeButton);
+                notificationList.appendChild(notificationItem);
+            });
+
+            // Update the notification count
+            notificationCount.textContent = notifications.length;
+            notificationCount.style.display = notifications.length > 0 ? 'inline' : 'none';
+        }
+
+        function addNotification(message) {
+            const notificationList = document.getElementById('notification-list');
+            const notificationCount = document.getElementById('notification-count');
+
+            // Create a new notification item
+            const notificationItem = document.createElement('li');
+            notificationItem.style.display = 'flex';
+            notificationItem.style.justifyContent = 'space-between';
+            notificationItem.style.alignItems = 'center';
+
+            // Create a container for the message
+            const messageContainer = document.createElement('span');
+            messageContainer.textContent = message;
+
+            // Create the remove button
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.style.marginLeft = '10px';
+            removeButton.onclick = () => removeNotification(notificationList.children.length);
+
+            notificationItem.appendChild(messageContainer);
+            notificationItem.appendChild(removeButton);
+            notificationList.appendChild(notificationItem);
+
+            // Update the notification count
+            const currentCount = parseInt(notificationCount.textContent, 10) || 0;
+            notificationCount.textContent = currentCount + 1;
+            notificationCount.style.display = 'inline';
+
+            // Save the notification to localStorage
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            notifications.push(message);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+        }
+
+        function removeNotification(index) {
+            const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+            if (index >= 0 && index < notifications.length) {
+                // Show confirmation dialog
+                const confirmRemoval = confirm("Are you sure you want to delete this notification?");
+                if (confirmRemoval) {
+                    notifications.splice(index, 1); // Remove the notification at the specified index
+                    localStorage.setItem('notifications', JSON.stringify(notifications));
+                    loadNotifications(); // Reload the notifications to update the DOM
+                }
+            }
+        }
+
+        function toggleNotificationDropdown() {
+            const dropdown = document.getElementById('notification-dropdown');
+            if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotifications(); // Ensure this only loads notifications from localStorage
+        });
     </script>
 </body>
 </html>

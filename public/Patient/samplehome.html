@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient - Home</title>
+    <link rel="stylesheet" href="../Patient/appointment/patientappointment.css">
+</head>
+<body>
+    <header>
+        <nav class="nav-container">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='patient-home.html';" style="cursor: pointer;">
+            <div class="nav-links">
+                <a href="../Patient/patient-home.html" class="active">Home</a>
+                <a href="../Patient/patient-aboutus.html">About Us</a>
+                <a href="../Patient/patient-doctors.html">Doctors</a>
+                <a href="../Patient/patient-services.html">Services</a>
+                <a href="../Patient/patient-contact.html">Contact Us</a>
+                <a href="../Patient/patient-location.html">Location</a>
+                <a href="../Patient/patient-records.html">Records</a>
+            </div>
+            <a href="../Patient/patient-profile.html">
+                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
+            </a>
+        </nav>
+    </header>
+    <main>
+        <div class="content">
+            <h1>WANT TO BOOK AN APPOINTMENT?</h1>
+            <button class="next-button" onclick="goNextAppointment()">Next → </button>
+        </div>
+    </main>
+    <script>
+        function goNextAppointment(){
+            window.location.href = "../Patient/appointment/typeofpatient.html"
+        }
+
+    </script>
+    <footer>
+        <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
+    </footer>
+</body>
+</html>

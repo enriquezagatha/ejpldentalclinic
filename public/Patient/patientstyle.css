@@ -930,3 +930,9 @@ main {
     text-align: center;
     padding-left: 20px; /* Optional: For some left padding */
 }
+
+.notification-icon {
+    width: 40px; /* Set the width of the icon */
+    height: 40px; /* Set the height of the icon */
+    object-fit: contain; /* Keeps the aspect ratio of the image */
+}

@@ -42,6 +42,86 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        /* Notification styles */
+        .notification {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .notification.show {
+            display: block;
+            animation: fadeInOut 4s;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Notification bell styles */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-bell img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: red;
+            color: white;
+            font-size: 12px;
+            border-radius: 50%;
+            padding: 2px 6px;
+            display: none;
+        }
+
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            z-index: 1000;
+        }
+
+        .notification-dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .notification-dropdown li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .notification-dropdown li:last-child {
+            border-bottom: none;
+        }
+
+        .notification-dropdown li:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -56,13 +136,15 @@
                 <a href="../patient-contact.html" class="disabled-link">Contact Us</a>
                 <a href="../patient-location.html" class="disabled-link">Location</a>
             </div>
-    
-            <!-- Notification Icon with Dynamic Badge -->
-            <a href="../Patient/patient-notifications.html" class="notification-icon">
-                <img src="/media/logo/notif.png" alt="Notification Icon">
-                <span class="notification-badge" id="notifBadge" style="display: none;"></span>
-            </a>
-    
+            <div class="notification-bell" onclick="toggleNotificationDropdown()">
+                <img src="/media/logo/notif.png" alt="Notification Bell">
+                <span id="notification-count" class="notification-count">0</span>
+                <div id="notification-dropdown" class="notification-dropdown">
+                    <ul id="notification-list">
+                        <!-- Notifications will be dynamically added here -->
+                    </ul>
+                </div>
+            </div>
             <a href="../patient-profile.html" class="disabled-link">
                 <img src="/media/logo/profile.png" alt="Profile Icon" class="profile-icon">
             </a>
@@ -98,6 +180,7 @@
                     <p><strong>Date of Confirmation:</strong> <span id="confirmation-date"></span></p>
                     <p>Please bring this receipt to the clinic on the day of your appointment.</p>
                 </div>
+                <div id="notification" class="notification">Appointment confirmed successfully!</div>
             </div>
             <script>
                 const monthNames = [
@@ -149,10 +232,7 @@
                     }
                 }
 
-                document.addEventListener('DOMContentLoaded', () => {
-                    loadConfirmationData();
-                    fetchNotificationCount();
-                });
+                document.addEventListener('DOMContentLoaded', loadConfirmationData);
 
                 function goToAppointmentBack() {
                     window.location.href = "step1appointment.html";
@@ -165,25 +245,6 @@
 
                 function closeModal() {
                     document.getElementById('confirmation-modal').style.display = 'none';
-                }
-
-                function fetchNotificationCount() {
-                    fetch('/api/notifications/count', {
-                        method: 'GET',
-                        headers: { 'Content-Type': 'application/json' },
-                        credentials: 'include'
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        const notificationBadge = document.getElementById('notifBadge');
-                        if (data.count > 0) {
-                            notificationBadge.textContent = data.count;
-                            notificationBadge.style.display = 'block';
-                        } else {
-                            notificationBadge.style.display = 'none';
-                        }
-                    })
-                    .catch(error => console.error('Error fetching notifications:', error));
                 }
 
                 function confirmAppointment() {
@@ -217,7 +278,7 @@
                         emergencyContactRelationship: savedFormData.emergencyContactRelationship || 'N/A',
                     };
 
-                    // Send a POST request to the backend API for appointment creation
+                    // Send a POST request to the backend API
                     fetch('/api/appointments/patient/appointments', {
                         method: 'POST',
                         headers: {
@@ -243,11 +304,22 @@
                     .then(data => {
                         if (data) {
                             if (data.success) { // Check if 'data.success' is true
+                                const referenceNumber = localStorage.getItem('referenceNumber'); // Retrieve reference number
+                                const notificationMessage = `Your appointment has been confirmed! Reference Number: ${referenceNumber}`;
+
+                                // Save notification to localStorage
+                                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+                                notifications.push(notificationMessage);
+                                localStorage.setItem('notifications', JSON.stringify(notifications));
+
+                                // Show success notification
+                                showNotification(notificationMessage);
+
+                                // Add notification to the bell
+                                addNotification(notificationMessage);
+
                                 const receiptUrl = `receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
                                 window.location.href = receiptUrl;
-
-                                // Send a notification to the patient after appointment confirmation
-                                createNotification("Your appointment has been successfully confirmed!");
 
                                 // Clear session and local storage
                                 sessionStorage.removeItem('formData');
@@ -265,42 +337,15 @@
                     });
                 }
 
-                // Function to create notification after appointment confirmation
-                function createNotification(message) {
-                    const user = JSON.parse(localStorage.getItem('user')) || {}; // Get logged-in user's data from localStorage
-                    const email = user.email; // Logged-in user's email
+                function showNotification(message) {
+                    const notification = document.getElementById('notification');
+                    notification.innerText = message;
+                    notification.classList.add('show');
 
-                    if (!email) {
-                        console.error("User email not found. Notification not sent.");
-                        return;
-                    }
-
-                    fetch('/api/notifications/create', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: email, // Use the logged-in user's email for the notification
-                            message: message
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success || data.message === "Notification created successfully") {
-                            console.log("Notification created successfully!");
-                            fetchNotificationCount();  // Update notification count
-                        } else {
-                            console.error("Failed to create notification:", data);
-                        }
-                    })
-                    .catch(error => console.error("Error creating notification:", error));
-                }
-
-
-                // Function to display error messages
-                function displayError(message) {
-                    openModal(message); // Show the error message in the modal
+                    // Hide the notification after 4 seconds
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 4000);
                 }
 
                 function displayError(message) {
@@ -324,6 +369,27 @@
                     location.reload();
 
                 }
+
+                function addNotification(message) {
+                    const notificationList = document.getElementById('notification-list');
+                    const notificationCount = document.getElementById('notification-count');
+
+                    // Create a new notification item
+                    const notificationItem = document.createElement('li');
+                    notificationItem.textContent = message;
+                    notificationList.appendChild(notificationItem);
+
+                    // Update the notification count
+                    const currentCount = parseInt(notificationCount.textContent, 10) || 0;
+                    notificationCount.textContent = currentCount + 1;
+                    notificationCount.style.display = 'inline';
+                }
+
+                function toggleNotificationDropdown() {
+                    const dropdown = document.getElementById('notification-dropdown');
+                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                }
+
             </script>
         </main>
     </body>

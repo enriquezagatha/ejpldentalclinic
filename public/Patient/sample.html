@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dental Clinic Management System</title>
+  <style>
+    /* Basic Styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    /* Notification Bell Styles */
+    .notification-bell {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 36px;
+      cursor: pointer;
+      color: #333;
+      position: relative;
+    }
+
+    /* Bell Icon */
+    .notification-bell:before {
+      content: '\1F514'; /* Unicode bell icon */
+    }
+
+    /* Unread Notifications Count */
+    .notification-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #F44336;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 50%;
+      padding: 5px 10px;
+    }
+
+    /* Notification Container */
+    .notifications-container {
+      display: none;
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      width: 300px;
+      z-index: 9999;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      border-radius: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 15px;
+    }
+
+    .notification {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .notification .close-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .notification.hide {
+      opacity: 0;
+    }
+
+    /* Different notification types */
+    .notification.success {
+      background-color: #4CAF50; /* Green */
+    }
+
+    .notification.error {
+      background-color: #F44336; /* Red */
+    }
+
+    .notification.info {
+      background-color: #2196F3; /* Blue */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Dental Clinic</h1>
+    <button onclick="addNotification('New appointment scheduled!', 'success')">Add Success Notification</button>
+    <button onclick="addNotification('Error in appointment booking.', 'error')">Add Error Notification</button>
+    <button onclick="addNotification('Patient check-in reminder.', 'info')">Add Info Notification</button>
+  </div>
+
+  <!-- Notification Bell -->
+  <div id="notificationBell" class="notification-bell">
+    <div id="notificationCount" class="notification-count">0</div>
+  </div>
+
+  <!-- Notifications Container -->
+  <div id="notificationsContainer" class="notifications-container">
+    <!-- Notifications will appear here -->
+  </div>
+
+  <script>
+    let notificationCount = 0;
+
+    // Function to add a new notification
+    function addNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.classList.add('notification', type);
+      notification.innerHTML = `
+        <span>${message}</span>
+        <button class="close-btn" onclick="removeNotification(this)">X</button>
+      `;
+
+      // Append the notification to the notifications container
+      const notificationsContainer = document.getElementById('notificationsContainer');
+      notificationsContainer.appendChild(notification);
+
+      // Update notification count
+      notificationCount++;
+      updateNotificationCount();
+
+      // Automatically hide the notification after 5 seconds
+      setTimeout(() => {
+        notification.classList.add('hide');
+        setTimeout(() => {
+          notificationsContainer.removeChild(notification);
+          notificationCount--;
+          updateNotificationCount();
+        }, 300);
+      }, 5000);
+    }
+
+    // Function to remove a notification immediately
+    function removeNotification(button) {
+      const notification = button.parentElement;
+      notification.classList.add('hide');
+      setTimeout(() => {
+        notification.remove();
+        notificationCount--;
+        updateNotificationCount();
+      }, 300);
+    }
+
+    // Function to update the notification count on the bell
+    function updateNotificationCount() {
+      const notificationCountElement = document.getElementById('notificationCount');
+      if (notificationCount > 0) {
+        notificationCountElement.textContent = notificationCount;
+        notificationCountElement.style.display = 'block';
+      } else {
+        notificationCountElement.style.display = 'none';
+      }
+    }
+
+    // Toggle the notifications container when the bell is clicked
+    document.getElementById('notificationBell').addEventListener('click', function() {
+      const notificationsContainer = document.getElementById('notificationsContainer');
+      notificationsContainer.style.display = notificationsContainer.style.display === 'block' ? 'none' : 'block';
+    });
+  </script>
+</body>
+</html>
