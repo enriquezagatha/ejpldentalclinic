@@ -1,18 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const notificationController = require('../controllers/notificationController');
-const authMiddleware = require('../middleware/authMiddleware'); // Assuming you have auth middleware
 
 // Route to fetch notification count
-router.get('/count', authMiddleware, notificationController.getNotificationCount);
+router.get('/count', notificationController.getNotificationCount);
 
 // Route to fetch all notifications
-router.get('/', authMiddleware, notificationController.getNotifications);
+router.get('/', notificationController.getNotifications);
 
 // Route to create a new notification
-router.post('/create', authMiddleware, notificationController.createNotification);
+router.post('/create', notificationController.createNotification);
 
 // Route to mark a notification as read
-router.patch('/:notificationId/mark-read', authMiddleware, notificationController.markNotificationAsRead);
+router.patch('/:notificationId/mark-read', notificationController.markNotificationAsRead);
 
 module.exports = router;

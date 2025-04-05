@@ -5,13 +5,8 @@ const notificationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email: {  // This will store the email of the patient or medical personnel
+    email: {
         type: String,
-        required: true
-    },
-    userType: {  // Indicates whether the notification is for a patient or medical personnel
-        type: String,
-        enum: ['patient', 'medicalPersonnel'],
         required: true
     },
     read: {

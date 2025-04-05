@@ -32,11 +32,12 @@
             alt="Profile Picture" 
             class="profile-picture"
             onclick ="openPictureModal()">
-            <div id="profile-info">
-                <p id="full-name"></p>
-                <p id="birthday-info"></p>
-                <p id="email-info"></p>        
-            </div>
+        </div>
+
+        <div id="profile-info">
+            <p id="full-name"></p>
+            <p id="birthday-info"></p>
+            <p id="email-info"></p>        
         </div>
 
         <!-- Picture Picture Modal -->
@@ -192,9 +193,9 @@
         </div>
     </main>
 
-    <script src="patientprofile.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            await fetchProfile();
             await fetchAppointments();
         });
 
@@ -410,8 +411,7 @@
                 }
             });
         });
-
-
-    </script>        
+    </script>
+    <script src="patientprofile.js"></script>        
 </body>
 </html>

@@ -34,7 +34,7 @@ exports.getNotifications = async (req, res) => {
 // Create a new notification for the patient (Appointment Confirmation)
 exports.createNotification = async (req, res) => {
     try {
-        const { email, message, userType } = req.body;
+        const { email, message } = req.body;  // Removed userType
 
         // Check if email exists (either for patient or medical personnel)
         const user = await Patient.findOne({ email }) || await MedicalPersonnel.findOne({ email });
@@ -47,7 +47,6 @@ exports.createNotification = async (req, res) => {
         const newNotification = new Notification({
             email, // Use the email
             message,
-            userType, // 'patient' or 'medicalPersonnel'
             read: false,  // Initially unread
         });
 
@@ -76,5 +75,5 @@ exports.markNotificationAsRead = async (req, res) => {
     }
 };
 
-//Export the controller functions
+// Export the controller functions
 module.exports = exports;

@@ -4,6 +4,16 @@ function displayProfileInfo(data) {
     document.getElementById('email-info').innerText = `Email: ${data.email}`;
 }
 
+async function fetchProfile() {
+    const response = await fetch('/api/patient/profile');
+    if (response.ok) {
+        const data = await response.json();
+        displayProfileInfo(data);
+    } else {
+        console.error('Error fetching profile data');
+    }
+}
+
 async function fetchAppointments() {
     const appointmentsResponse = await fetch('/api/appointments/patient/appointments'); // Call new endpoint
     if (appointmentsResponse.ok) {

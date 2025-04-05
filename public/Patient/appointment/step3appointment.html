@@ -149,7 +149,10 @@
                     }
                 }
 
-                document.addEventListener('DOMContentLoaded', loadConfirmationData);
+                document.addEventListener('DOMContentLoaded', () => {
+                    loadConfirmationData();
+                    fetchNotificationCount();
+                });
 
                 function goToAppointmentBack() {
                     window.location.href = "step1appointment.html";
@@ -163,11 +166,6 @@
                 function closeModal() {
                     document.getElementById('confirmation-modal').style.display = 'none';
                 }
-
-                document.addEventListener("DOMContentLoaded", function () {
-                    loadConfirmationData();
-                    fetchNotificationCount(); // Fetch notification count on page load
-                });
 
                 function fetchNotificationCount() {
                     fetch('/api/notifications/count', {
@@ -249,7 +247,7 @@
                                 window.location.href = receiptUrl;
 
                                 // Send a notification to the patient after appointment confirmation
-                                createNotification(savedFormData.patientId, "Your appointment has been successfully confirmed!");
+                                createNotification("Your appointment has been successfully confirmed!");
 
                                 // Clear session and local storage
                                 sessionStorage.removeItem('formData');
@@ -267,30 +265,38 @@
                     });
                 }
 
-                // Function to create a notification for the patient
-                function createNotification(patientId, message) {
+                // Function to create notification after appointment confirmation
+                function createNotification(message) {
+                    const user = JSON.parse(localStorage.getItem('user')) || {}; // Get logged-in user's data from localStorage
+                    const email = user.email; // Logged-in user's email
+
+                    if (!email) {
+                        console.error("User email not found. Notification not sent.");
+                        return;
+                    }
+
                     fetch('/api/notifications/create', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            email:email,
+                            email: email, // Use the logged-in user's email for the notification
                             message: message
                         })
                     })
                     .then(response => response.json())
                     .then(data => {
-                        if (data.success) {
+                        if (data.success || data.message === "Notification created successfully") {
                             console.log("Notification created successfully!");
-                            // Optionally, refresh notification count or UI
-                            fetchNotificationCount(); // Update notification count
+                            fetchNotificationCount();  // Update notification count
                         } else {
                             console.error("Failed to create notification:", data);
                         }
                     })
                     .catch(error => console.error("Error creating notification:", error));
                 }
+
 
                 // Function to display error messages
                 function displayError(message) {

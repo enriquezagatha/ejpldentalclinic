@@ -5,23 +5,29 @@ const fs = require('fs');
 const Notification = require('../models/Notification');
 const { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } = require("date-fns");
 const Dentist = require('../models/Dentist');
+const Patient = require('../models/Patient');
 
-// Function to send a notification to the patient
-const sendNotification = async (patientId, message) => {
+
+// Helper function to send notification
+const sendNotification = async (email, message) => {
     try {
-        const notification = new Notification({
-            patientId,
+        // Create the notification for the patient
+        const newNotification = new Notification({
+            email,  // Use the patient's email
             message,
-            isRead: false, // By default, new notifications are unread
+            read: false  // Initially unread
         });
-        await notification.save();
+        
+        // Save the notification to the database
+        await newNotification.save();
     } catch (error) {
-        console.error('Error sending notification:', error);
+        console.error("Error sending notification:", error);
     }
 };
 
+// Create an appointment for a patient
 exports.createAppointment = async (req, res) => {
-    if (!req.session.user) {
+    if (!req.user) {
         return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
@@ -46,6 +52,7 @@ exports.createAppointment = async (req, res) => {
 
     const referenceNumber = generateReferenceNumber();
 
+    // Check if there are already appointments for this time slot
     const existingAppointments = await Appointment.find({ preferredDate, preferredTime });
 
     if (existingAppointments.length >= 2) {
@@ -54,7 +61,7 @@ exports.createAppointment = async (req, res) => {
 
     // Create appointment WITHOUT adding to PatientRecord yet
     const appointmentData = {
-        patient: req.session.user.id,
+        patientEmail: req.user.email,  // Use the authenticated user's email instead of ID
         referenceNumber,
         firstName,
         lastName,
@@ -78,7 +85,7 @@ exports.createAppointment = async (req, res) => {
     const newAppointment = await new Appointment(appointmentData).save();
 
     // Send notification to the patient after creating the appointment
-    await sendNotification(req.session.user.id, `Your appointment with reference number ${referenceNumber} has been successfully created.`);
+    await sendNotification(req.user.email, `Your appointment with reference number ${referenceNumber} has been successfully created.`);
 
     return res.status(201).json({
         success: true,
