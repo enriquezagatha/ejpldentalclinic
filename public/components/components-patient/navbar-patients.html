@@ -4,7 +4,7 @@
         <button id="mobile-open-button" class="text-3xl md:hidden focus:outline-none mr-4">
             &#9776;
         </button>
-        <nav id="navbar" class="hidden md:flex space-x-12 text-l mr-0 lg:mr-20 font-inter items-center justify-center" aria-label="main">
+        <nav id="navbar" class="hidden md:flex space-x-12 text-l mr-0 lg:mr-8 font-inter items-center justify-center" aria-label="main">
             <a href="../Patient/patient-home.html" class="active">Home</a>
             <div class="relative group h-10">
                 <a href="../Patient/patient-aboutus.html" class="flex items-center mt-2 group-hover:text-gray-300">
@@ -30,7 +30,11 @@
                 </div>
             </div>
             <a href="../Patient/patient-doctors.html" class="">Dentists</a>
-            <div class="flex items-center bg-[#223E57] text-white pl-6 pr-3 py-2 rounded-lg ml-4 cursor-pointer relative group" onclick="toggleDropdown('desktop-profile-dropdown')">
+            <a href="#" class="relative">
+                <i class="fas fa-bell text-white text-xl hover:text-gray-300"></i>  
+                <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full px-1"></span>
+            </a>
+            <div class="flex items-center bg-[#223E57] text-white pl-6 pr-3 py-2 rounded-lg cursor-pointer relative group" onclick="toggleDropdown('desktop-profile-dropdown')">
                 <img src="../media/profile/default-profile.png" alt="Profile Picture" class="w-8 h-8 rounded-full mr-3">
                 <div class="text-left">
                     <span id="profile-name" class="block font-semibold">Loading...</span>
