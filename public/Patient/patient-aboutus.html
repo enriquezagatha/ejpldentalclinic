@@ -4,28 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient - About Us</title>
-    <link rel="stylesheet" href="../Patient/patientstyle.css">
+    <!-- <link rel="stylesheet" href="../Patient/patientstyle.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-patient/navbarfetch-patients.js"></script>
+    <script src="../components/footerfetch.js"></script>    
 </head>
-<body>
+<body class="min-h-screen bg-slate-50">
     <header>
-        <nav class="nav-container">
-            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='patient-home.html';" style="cursor: pointer;">
-            <div class="nav-links">
-                <a href="../Patient/patient-home.html">Home</a>
-                <a href="../Patient/patient-aboutus.html" class="active"> About Us</a>
-                <a href="../Patient/patient-doctors.html">Doctors</a>
-                <a href="../Patient/patient-services.html">Services</a>
-                <a href="../Patient/patient-contact.html">Contact Us</a>
-                <a href="../Patient/patient-location.html">Location</a>
-                <a href="../Patient/patient-records.html">Records</a>
-            </div>
-            <a href="../Patient/patient-profile.html">
-                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
-            </a>
-        </nav>
+        <div id="navbar-container"></div>
     </header>
     
-    <div class="aboutus-container">
+    <div class="aboutus-container min-h-screen">
         <section id="aboutus-content">
             <p>Established in 2018 by Dr. Ely Jesse P. Legaspi, the EJPL Dental Clinic embodies a commitment 
                 to quality dental care and community service. Driven by a passion to serve his hometown of 
@@ -42,7 +33,7 @@
         </section>
     </div>    
     <footer>
-        <p>&copy; 2024 EJPL Dental Clinic. All rights reserved.</p>
+        <div id="footer-container"></div>
     </footer>
 </body>
 </html>

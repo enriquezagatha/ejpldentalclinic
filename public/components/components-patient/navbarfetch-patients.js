@@ -24,11 +24,16 @@ fetch('../components/components-patient/navbar-patients.html')
 
     function displayProfileInfo(data) {
         const profileName = document.getElementById('profile-name');
-        if (data.firstName && data.lastName) {
-            profileName.innerText = `${data.firstName} ${data.lastName}`;  // Display full name after fetching data
-        } else {
-            profileName.innerText = 'Guest';  // Fallback in case the data is missing
-        }
+        const mobileProfileName = document.getElementById('mobile-profile-name');
+        const profileImage = document.querySelector('.desktop-profile');
+        const mobileProfileImage = document.querySelector('.mobile-profile');
+        const firstName = data.firstName || 'Guest';
+        const profilePic = data.profilePic || '../media/logo/default-profile.png';
+
+        if (profileName) profileName.innerText = firstName;
+        if (mobileProfileName) mobileProfileName.innerText = firstName;
+        if (profileImage) profileImage.src = profilePic;
+        if (mobileProfileImage) mobileProfileImage.src = profilePic;
     }
 
     async function fetchProfile() {
@@ -36,18 +41,20 @@ fetch('../components/components-patient/navbar-patients.html')
         if (response.ok) {
             const data = await response.json();
             displayProfileInfo(data);
-        } else {
-            console.error('Error fetching profile data');
         }
     }
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        const profileName = document.getElementById('profile-name');
-        
-        // Set the initial profile name from sessionStorage (fallback to 'Guest')
-        const userName = sessionStorage.getItem('firstName') || 'Loading...';
-        profileName.textContent = userName;  // Display 'Loading...' until the data is fetched
-        
-        await fetchProfile();  // Fetch the profile data once the page is ready
-    });
+    const profileName = document.getElementById('profile-name');
+    const mobileProfileName = document.getElementById('mobile-profile-name');
+    const profileImage = document.querySelector('.desktop-profile');
+    const mobileProfileImage = document.querySelector('.mobile-profile');
+    const userName = sessionStorage.getItem('firstName') || 'Loading...';
+    const defaultPic = '../media/logo/default-profile.png';
+
+    if (profileName) profileName.textContent = userName;
+    if (mobileProfileName) mobileProfileName.textContent = userName;
+    if (profileImage) profileImage.src = defaultPic;
+    if (mobileProfileImage) mobileProfileImage.src = defaultPic;
+
+    fetchProfile();
 });
