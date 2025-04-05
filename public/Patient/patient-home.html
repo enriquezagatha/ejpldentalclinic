@@ -4,137 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient - Home</title>
-    <link rel="stylesheet" href="../Patient/appointment/patientappointment.css">
+    <!-- <link rel="stylesheet" href="../Patient/appointment/patientappointment.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-patient/navbarfetch-patients.js"></script>
+    <script src="../components/footerfetch.js"></script>    
 </head>
 <body>
     <header>
-        <nav class="nav-container">
-            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='patient-home.html';" style="cursor: pointer;">
-            <div class="nav-links">
-                <a href="../Patient/patient-home.html" class="active">Home</a>
-                <a href="../Patient/patient-aboutus.html">About Us</a>
-                <a href="../Patient/patient-doctors.html">Doctors</a>
-                <a href="../Patient/patient-services.html">Services</a>
-                <a href="../Patient/patient-contact.html">Contact Us</a>
-                <a href="../Patient/patient-location.html">Location</a>
-                <a href="../Patient/patient-records.html">Records</a>
-            </div>
-            <div class="notification-icon" onclick="toggleNotifications()">
-                <img src="../media/logo/notif.png" alt="Notification Icon">
-                <span class="notification-badge" id="notifBadge"></span>
-                <div class="notification-dropdown" id="notifDropdown">
-                    <div id="notifList">
-                        <div class="notification-item">No new notifications</div>
-                    </div>
-                </div>
-            </div>            
-            <a href="../Patient/patient-profile.html">
-                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
-            </a>
-        </nav>
+        <div id="navbar-container"></div>
     </header>
     <main>
-        <div class="content">
+        <div class="content min-h-screen">
             <h1>WANT TO BOOK AN APPOINTMENT?</h1>
             <button class="next-button" onclick="goNextAppointment()">Next → </button>
         </div>
     </main>
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
     <script>
         function goNextAppointment() {
             window.location.href = "../Patient/appointment/typeofpatient.html";
         }
 
-        async function fetchNotifications() {
-            try {
-                const response = await fetch("http://localhost:3000/api/notifications", {
-                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } // Ensure user authentication
-                });
+        const mobileOpenButton = document.getElementById('mobile-open-button');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-                if (!response.ok) throw new Error("Failed to fetch notifications");
+        mobileOpenButton.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('opacity-0');
+            mobileMenu.classList.toggle('opacity-0', !isHidden);
+            mobileMenu.classList.toggle('pointer-events-none', !isHidden);
+            mobileMenu.classList.toggle('translate-y-0', isHidden);
+            mobileMenu.classList.toggle('-translate-y-4', !isHidden);
+            mobileOpenButton.innerHTML = isHidden ? '&#10005;' : '&#9776;';
+        });
 
-                const data = await response.json();
-                updateNotifications(data.notifications);
-            } catch (error) {
-                console.error("Error fetching notifications:", error);
-            }
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('hidden');
         }
 
-        async function fetchNotificationCount() {
-            try {
-                const response = await fetch("http://localhost:3000/api/notifications/count", {
-                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-                });
+        window.toggleDropdown = toggleDropdown;
 
-                if (!response.ok) throw new Error("Failed to fetch notification count");
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileName = document.getElementById('profile-name');
+            const userName = sessionStorage.getItem('firstName') || 'Guest';
+            profileName.textContent = userName;
+        });
 
-                const data = await response.json();
-                updateNotificationBadge(data.count);
-            } catch (error) {
-                console.error("Error fetching notification count:", error);
-            }
-        }
+        // async function fetchNotifications() {
+        //     try {
+        //         const response = await fetch("http://localhost:3000/api/notifications", {
+        //             headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } // Ensure user authentication
+        //         });
 
-        function updateNotifications(notifications) {
-            const badge = document.getElementById("notifBadge");
-            const notifList = document.getElementById("notifList");
-            notifList.innerHTML = "";
+        //         if (!response.ok) throw new Error("Failed to fetch notifications");
 
-            if (notifications.length > 0) {
-                badge.textContent = notifications.length;
-                badge.style.display = "flex";
+        //         const data = await response.json();
+        //         updateNotifications(data.notifications);
+        //     } catch (error) {
+        //         console.error("Error fetching notifications:", error);
+        //     }
+        // }
 
-                notifications.forEach((notif) => {
-                    let item = document.createElement("div");
-                    item.className = "notification-item";
-                    item.textContent = notif.message;
-                    item.onclick = () => markNotificationAsRead(notif._id);
-                    notifList.appendChild(item);
-                });
-            } else {
-                badge.style.display = "none";
-                notifList.innerHTML = '<div class="notification-item">No new notifications</div>';
-            }
-        }
+        // async function fetchNotificationCount() {
+        //     try {
+        //         const response = await fetch("http://localhost:3000/api/notifications/count", {
+        //             headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+        //         });
 
-        function updateNotificationBadge(count) {
-            const badge = document.getElementById("notifBadge");
+        //         if (!response.ok) throw new Error("Failed to fetch notification count");
 
-            if (count > 0) {
-                badge.textContent = count;
-                badge.style.display = "flex";
-            } else {
-                badge.style.display = "none";
-            }
-        }
+        //         const data = await response.json();
+        //         updateNotificationBadge(data.count);
+        //     } catch (error) {
+        //         console.error("Error fetching notification count:", error);
+        //     }
+        // }
 
-        async function markNotificationAsRead(notificationId) {
-            try {
-                await fetch(`http://localhost:3000/api/notifications/${notificationId}/mark-read`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
+        // function updateNotifications(notifications) {
+        //     const badge = document.getElementById("notifBadge");
+        //     const notifList = document.getElementById("notifList");
+        //     notifList.innerHTML = "";
 
-                fetchNotifications(); // Refresh notifications after marking as read
-                fetchNotificationCount();
-            } catch (error) {
-                console.error("Error marking notification as read:", error);
-            }
-        }
+        //     if (notifications.length > 0) {
+        //         badge.textContent = notifications.length;
+        //         badge.style.display = "flex";
 
-        function toggleNotifications() {
-            document.getElementById("notifDropdown").classList.toggle("active");
-        }
+        //         notifications.forEach((notif) => {
+        //             let item = document.createElement("div");
+        //             item.className = "notification-item";
+        //             item.textContent = notif.message;
+        //             item.onclick = () => markNotificationAsRead(notif._id);
+        //             notifList.appendChild(item);
+        //         });
+        //     } else {
+        //         badge.style.display = "none";
+        //         notifList.innerHTML = '<div class="notification-item">No new notifications</div>';
+        //     }
+        // }
 
-        // Initial fetch
-        fetchNotifications();
-        fetchNotificationCount();
+        // function updateNotificationBadge(count) {
+        //     const badge = document.getElementById("notifBadge");
 
-        // Fetch notifications every 10 seconds
-        setInterval(fetchNotifications, 10000);
-        setInterval(fetchNotificationCount, 10000);
+        //     if (count > 0) {
+        //         badge.textContent = count;
+        //         badge.style.display = "flex";
+        //     } else {
+        //         badge.style.display = "none";
+        //     }
+        // }
+
+        // async function markNotificationAsRead(notificationId) {
+        //     try {
+        //         await fetch(`http://localhost:3000/api/notifications/${notificationId}/mark-read`, {
+        //             method: "PATCH",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //                 "Authorization": `Bearer ${localStorage.getItem("token")}`
+        //             }
+        //         });
+
+        //         fetchNotifications(); // Refresh notifications after marking as read
+        //         fetchNotificationCount();
+        //     } catch (error) {
+        //         console.error("Error marking notification as read:", error);
+        //     }
+        // }
+
+        // function toggleNotifications() {
+        //     document.getElementById("notifDropdown").classList.toggle("active");
+        // }
+
+        // // Initial fetch
+        // fetchNotifications();
+        // fetchNotificationCount();
+
+        // // Fetch notifications every 10 seconds
+        // setInterval(fetchNotifications, 10000);
+        // setInterval(fetchNotificationCount, 10000);
     </script>
 </body>
 </html>
