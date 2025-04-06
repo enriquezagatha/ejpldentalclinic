@@ -187,17 +187,16 @@
                     "January", "February", "March", "April", "May", "June",
                     "July", "August", "September", "October", "November", "December"
                 ];
-
+            
                 const appointmentRecords = JSON.parse(localStorage.getItem('appointmentRecords')) || {}; // Load from localStorage or initialize as empty object
-
+            
                 function formatDate(dateStr) {
                     const [year, month, day] = dateStr.split('-');
-                    const monthName = monthNames[parseInt(month, 10) - 1]; // Convert month number to month name
+                    const monthName = monthNames[parseInt(month, 10) - 1];
                     return `${monthName}-${day}-${year}`;
                 }
-
+            
                 function loadConfirmationData() {
-                    // Load form data from sessionStorage
                     const savedFormData = JSON.parse(sessionStorage.getItem('formData'));
                     const savedScheduleData = {
                         preferredDate: localStorage.getItem('preferredDate'),
@@ -205,10 +204,7 @@
                         treatmentType: localStorage.getItem('treatmentType'),
                         treatmentPrice: localStorage.getItem('treatmentPrice'),
                     };
-
-                    console.log('Saved Form Data:', savedFormData);
-                    console.log('Saved Schedule Data:', savedScheduleData);
-
+            
                     if (savedFormData) {
                         const confirmationHTML = `
                             <p><strong>Patient Name:</strong> ${savedFormData.firstName || 'N/A'} ${savedFormData.lastName || 'N/A'}</p>
@@ -231,26 +227,25 @@
                         document.getElementById('confirmation-date').innerText = new Date().toLocaleDateString();
                     }
                 }
-
+            
                 document.addEventListener('DOMContentLoaded', loadConfirmationData);
-
+            
                 function goToAppointmentBack() {
                     window.location.href = "step1appointment.html";
                 }
-
+            
                 function openModal(message) {
                     document.getElementById('confirmation-text').innerText = message;
                     document.getElementById('confirmation-modal').style.display = 'block';
                 }
-
+            
                 function closeModal() {
                     document.getElementById('confirmation-modal').style.display = 'none';
                 }
-
+            
                 function confirmAppointment() {
                     const preferredTime = localStorage.getItem('preferredTime');
-
-                    // Prepare the appointment details
+            
                     const savedFormData = JSON.parse(sessionStorage.getItem('formData')) || {};
                     const savedScheduleData = {
                         preferredDate: localStorage.getItem('preferredDate'),
@@ -258,8 +253,7 @@
                         treatmentType: localStorage.getItem('treatmentType'),
                         treatmentPrice: localStorage.getItem('treatmentPrice'),
                     };
-
-                    // Data to send to the backend
+            
                     const appointmentData = {
                         firstName: savedFormData.firstName || 'N/A',
                         lastName: savedFormData.lastName || 'N/A',
@@ -277,8 +271,7 @@
                         emergencyContactNumber: savedFormData.emergencyContactNumber || 'N/A',
                         emergencyContactRelationship: savedFormData.emergencyContactRelationship || 'N/A',
                     };
-
-                    // Send a POST request to the backend API
+            
                     fetch('/api/appointments/patient/appointments', {
                         method: 'POST',
                         headers: {
@@ -289,7 +282,7 @@
                     .then(response => {
                         if (response.status === 401) {
                             displayError('Unauthorized. Please log in to confirm your appointment.');
-                        } else if (response.status === 400) { // Check for appointment slot full error
+                        } else if (response.status === 400) {
                             response.json().then(errorData => {
                                 displayError(errorData.message || 'Appointment slot is full for this time.');
                             });
@@ -298,99 +291,54 @@
                                 displayError(errorData.message || 'Network response was not ok');
                             });
                         } else {
-                            return response.json(); // Proceed to the next promise
+                            return response.json();
                         }
                     })
                     .then(data => {
-                        if (data) {
-                            if (data.success) { // Check if 'data.success' is true
-                                const referenceNumber = localStorage.getItem('referenceNumber'); // Retrieve reference number
-                                const notificationMessage = `Your appointment has been confirmed! Reference Number: ${referenceNumber}`;
-
-                                // Save notification to localStorage
-                                const notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-                                notifications.push(notificationMessage);
-                                localStorage.setItem('notifications', JSON.stringify(notifications));
-
-                                // Show success notification
-                                showNotification(notificationMessage);
-
-                                // Add notification to the bell
-                                addNotification(notificationMessage);
-
-                                const receiptUrl = `receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
-                                window.location.href = receiptUrl;
-
-                                // Clear session and local storage
-                                sessionStorage.removeItem('formData');
-                                localStorage.removeItem('preferredDate');
-                                localStorage.removeItem('preferredTime');
-                                localStorage.removeItem('treatmentType');
-                                localStorage.removeItem('treatmentPrice');
-
-                                // Clear confirmation display area if needed
-                                document.querySelector('.confirmation-info').innerHTML = '';
-                                document.getElementById('confirmation-message').style.display = 'none';
-                                document.getElementById('confirmation-text').innerText = '';
-                            }
+                        if (data && data.success) {
+                            fetch('api/notifications', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    message: 'Appointment confirmed successfully!',
+                                    appointmentData: appointmentData
+                                })
+                            });
+                            
+                            const receiptUrl = `receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
+                            window.location.href = receiptUrl;
+            
+                            sessionStorage.removeItem('formData');
+                            localStorage.removeItem('preferredDate');
+                            localStorage.removeItem('preferredTime');
+                            localStorage.removeItem('treatmentType');
+                            localStorage.removeItem('treatmentPrice');
+            
+                            document.querySelector('.confirmation-info').innerHTML = '';
+                            document.getElementById('confirmation-message').style.display = 'none';
+                            document.getElementById('confirmation-text').innerText = '';
                         }
                     });
                 }
-
-                function showNotification(message) {
-                    const notification = document.getElementById('notification');
-                    notification.innerText = message;
-                    notification.classList.add('show');
-
-                    // Hide the notification after 4 seconds
-                    setTimeout(() => {
-                        notification.classList.remove('show');
-                    }, 4000);
-                }
-
+            
                 function displayError(message) {
-                    openModal(message); // Show the error message in the modal
+                    openModal(message);
                 }
-
+            
                 function printReceipt() {
                     const receiptSection = document.getElementById('appointment-receipt').innerHTML;
                     const originalContent = document.body.innerHTML;
-
-                    // Replace the body content with the receipt
+            
                     document.body.innerHTML = receiptSection;
-
-                    // Print the receipt
                     window.print();
-
-                    // Restore the original content after printing
                     document.body.innerHTML = originalContent;
-
-                    // Reload the page to bring back functionality after print
                     location.reload();
-
                 }
 
-                function addNotification(message) {
-                    const notificationList = document.getElementById('notification-list');
-                    const notificationCount = document.getElementById('notification-count');
-
-                    // Create a new notification item
-                    const notificationItem = document.createElement('li');
-                    notificationItem.textContent = message;
-                    notificationList.appendChild(notificationItem);
-
-                    // Update the notification count
-                    const currentCount = parseInt(notificationCount.textContent, 10) || 0;
-                    notificationCount.textContent = currentCount + 1;
-                    notificationCount.style.display = 'inline';
-                }
-
-                function toggleNotificationDropdown() {
-                    const dropdown = document.getElementById('notification-dropdown');
-                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-                }
-
-            </script>
+                
+            </script>            
         </main>
     </body>
 </html>

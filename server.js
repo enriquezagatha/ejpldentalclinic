@@ -29,7 +29,7 @@ const treatmentRoutes = require('./routes/treatmentRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const dentistRoutes = require('./routes/dentistRoutes');
 const discountRoutes = require('./routes/discountRoutes');
-const patientNotificationRoutes = require('./routes/patientNotificationRoutes'); // Import notification routes
+const notificationRoutes = require('./routes/notificationRoutes'); // Import notification routes
 
 // Initialize Express app
 const app = express();
@@ -104,7 +104,7 @@ app.use('/api/treatments', treatmentRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/dentists', dentistRoutes);
 app.use('/api/discounts', discountRoutes);
-app.use('/api/patientnotifications', patientNotificationRoutes); // Include notification routes
+app.use('/api/notifications', notificationRoutes); // Include notification routes
 
 // Error handling middleware
 app.use((err, req, res, next) => {

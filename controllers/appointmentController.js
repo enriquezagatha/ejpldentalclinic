@@ -4,6 +4,7 @@ const PatientRecord = require('../models/PatientRecord');
 const fs = require('fs');
 const { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } = require("date-fns");
 const Dentist = require('../models/Dentist');
+const Notification = require('../models/Notification');
 
 exports.createAppointment = async (req, res) => {
     if (!req.session.user) {
@@ -60,7 +61,20 @@ exports.createAppointment = async (req, res) => {
         status: "Pending", // Always start as "Pending"
     };
 
-    await new Appointment(appointmentData).save();
+    const appointment = await new Appointment(appointmentData).save();
+
+    // ✅ Create a notification
+    const notification = new Notification({
+        user: req.session.user.id, // or null if it's an admin notification
+        title: "New Appointment Created",
+        message: `Your appointment for ${treatmentType} on ${preferredDate} at ${preferredTime} has been created.`,
+        referenceId: appointment._id, // optional, link it to the appointment
+        type: "Appointment",
+        isRead: false,
+        createdAt: new Date()
+    });
+
+    await notification.save();
 
     return res.status(201).json({
         success: true,
