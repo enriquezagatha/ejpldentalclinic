@@ -29,6 +29,20 @@ exports.markAsRead = async (req, res) => {
     }
 };
 
+// Mark a notification as unread
+exports.markAsUnread = async (req, res) => {
+    try {
+        const notification = await Notification.findByIdAndUpdate(
+            req.params.id,
+            { isRead: false },
+            { new: true }
+        );
+        res.status(200).json({ success: true, notification });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Failed to update notification." });
+    }
+};
+
 // Delete a notification
 exports.deleteNotification = async (req, res) => {
     try {

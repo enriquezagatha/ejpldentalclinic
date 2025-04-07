@@ -57,6 +57,9 @@ require('./config/db');
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Media
+app.use('/media', express.static(path.join(__dirname, 'public/media')));
+
 // Serve pages
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'main page', 'home.html'));

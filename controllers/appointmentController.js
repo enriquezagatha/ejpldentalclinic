@@ -38,6 +38,13 @@ exports.createAppointment = async (req, res) => {
         return res.status(400).json({ success: false, message: "Appointment slots full for this time." });
     }
 
+    // Format preferredDate as "Month, Day. Year"
+    const formattedPreferredDate = new Date(preferredDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    }).replace(/(\d+),/, '$1.');
+
     // Create appointment WITHOUT adding to PatientRecord yet
     const appointmentData = {
         patient: req.session.user.id,
@@ -46,7 +53,7 @@ exports.createAppointment = async (req, res) => {
         lastName,
         contactNumber,
         emailAddress,
-        preferredDate: new Date(preferredDate).toISOString().split("T")[0],
+        preferredDate: formattedPreferredDate,
         preferredTime,
         treatmentType,
         treatmentPrice: String(treatmentPrice),
@@ -67,11 +74,12 @@ exports.createAppointment = async (req, res) => {
     const notification = new Notification({
         user: req.session.user.id, // or null if it's an admin notification
         title: "New Appointment Created",
-        message: `Your appointment for ${treatmentType} on ${preferredDate} at ${preferredTime} has been created.`,
+        message: `Your appointment for ${treatmentType} on ${formattedPreferredDate} at ${preferredTime} has been created.`,
         referenceId: appointment._id, // optional, link it to the appointment
         type: "Appointment",
         isRead: false,
-        createdAt: new Date()
+        createdAt: new Date(),
+        logoUrl: "http://localhost:3000/media/logo/EJPL.png", // ✅ correct way
     });
 
     await notification.save();
@@ -235,6 +243,26 @@ exports.updateAppointmentStatus = async (req, res) => {
 
         await patientRecord.save(); // ✅ Save the updated record
     }
+
+    // ✅ Create a notification for the patient
+    const formattedDate = new Date(updatedAppointment.preferredDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
+
+    const notification = new Notification({
+        user: updatedAppointment.patient,
+        title: `Appointment ${status}`,
+        message: `Your appointment for ${updatedAppointment.treatmentType} on ${formattedDate} has been marked as ${status}.`,
+        referenceId: updatedAppointment._id,
+        type: "Appointment",
+        isRead: false,
+        createdAt: new Date(),
+        logoUrl: "http://localhost:3000/media/logo/EJPL.png", // Adjust if served from different base URL
+    });
+
+    await notification.save();
 
     res.json({ message: 'Appointment status updated successfully', appointment: updatedAppointment });
 };

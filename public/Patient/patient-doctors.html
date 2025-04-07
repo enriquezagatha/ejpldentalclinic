@@ -106,16 +106,21 @@
                 <a href="../Patient/patient-location.html">Location</a>
                 <a href="../Patient/patient-records.html">Records</a>
             </div>
-            <div class="notification-bell" onclick="toggleNotificationDropdown()" style="position: relative;">
+            <div class="notification-bell" style="position: relative;">
                 <img src="../media/logo/notif.png" alt="Notification Bell">
                 <span id="notification-count" class="notification-count">0</span>
-            
+                
                 <div id="notification-dropdown" class="notification-dropdown">
+                    <!-- Controls for marking as read/unread -->
+                    <div id="notification-controls">
+                        <button onclick="markSelectedAsRead()">Mark as Read</button>
+                        <button onclick="markSelectedAsUnread()">Mark as Unread</button>
+                    </div>
                     <ul id="notification-list">
                         <!-- Notifications will be dynamically added here -->
                     </ul>
                 </div>
-            </div>            
+            </div>                   
             <a href="../Patient/patient-profile.html">
                 <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
             </a>
@@ -156,9 +161,35 @@
             let credentials = teamMember.querySelector('.credentials');
             credentials.style.display = credentials.style.display === "none" || credentials.style.display === "" ? "block" : "none";
         }
-
-        document.addEventListener('DOMContentLoaded', loadNotifications);
-
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            // Prevent the dropdown from closing when interacting with checkboxes
+            document.querySelectorAll('.notification-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent event from bubbling up to the bell icon click handler
+                });
+            });
+    
+            // Event listener for the notification bell click
+            const notificationBell = document.querySelector('.notification-bell');
+            const notificationDropdown = document.getElementById('notification-dropdown');
+    
+            notificationBell.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent the event from bubbling up
+                toggleNotificationDropdown(); // Toggle the dropdown visibility
+            });
+    
+            // Load notifications on page load
+            loadNotifications();
+        });
+    
+        // Toggle the visibility of the notification dropdown
+        function toggleNotificationDropdown() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+    
+        // Function to load notifications
         function loadNotifications() {
             fetch('/api/notifications', {
                 credentials: 'same-origin'  // Ensure cookies (session) are sent
@@ -170,34 +201,28 @@
                     const count = notifications.filter(n => !n.isRead).length;
                     const list = document.getElementById('notification-list');
                     const countEl = document.getElementById('notification-count');
-
+    
                     list.innerHTML = '';
                     countEl.style.display = count > 0 ? 'inline-block' : 'none';
                     if (count > 0) countEl.textContent = count;
-
+    
                     notifications.forEach(notification => {
                         const li = document.createElement('li');
                         const date = new Date(notification.createdAt);
                         const timeAgo = getTimeAgo(date);
-
-                        // Default image: clinic logo
-                        let imgSrc = "../media/logo/EJPL.png";
-
-                        // If the message mentions 'profile', use the user's photo if available
-                        if (notification.message.toLowerCase().includes("profile")) {
-                            imgSrc = notification.userPhoto || "../media/logo/default-profile.png";
-                        }
-
+    
+                        // Use the logo from backend if available
+                        const imgSrc = notification.logoUrl || "../media/logo/EJPL.png";
+    
                         li.innerHTML = `
                             <div class="notification-item">
-                                <img src="${imgSrc}" alt="Logo" class="notification-logo">
+                                <input type="checkbox" class="notification-checkbox" data-id="${notification._id}">
+                                <img src="${imgSrc}" alt="Logo" class="notification-logo"
+                                    onerror="this.onerror=null; this.src='../media/logo/EJPL.png';">
                                 <div class="notification-text">
                                     <strong>${notification.message}</strong><br>
                                     <small>${timeAgo}</small>
                                 </div>
-                                <button class="mark-read-btn" onclick="markAsRead(this, '${notification._id}')" ${notification.isRead ? 'disabled' : ''}>
-                                    ${notification.isRead ? 'Read' : 'Mark as Read'}
-                                </button>
                             </div>
                         `;
                         list.appendChild(li);
@@ -209,16 +234,12 @@
                 alert("There was an issue loading your notifications. Please try again later.");
             });
         }
-
-        function toggleNotificationDropdown() {
-            const dropdown = document.getElementById('notification-dropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-
+    
+        // Function to calculate time ago
         function getTimeAgo(date) {
             const now = new Date();
             const seconds = Math.floor((now - date) / 1000);
-
+    
             if (seconds < 60) return `${seconds} second${seconds === 1 ? '' : 's'} ago`;
             const minutes = Math.floor(seconds / 60);
             if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
@@ -227,34 +248,54 @@
             const days = Math.floor(hours / 24);
             return `${days} day${days === 1 ? '' : 's'} ago`;
         }
-
-        function markAsRead(button, notificationId) {
-            fetch(`/api/notifications/${notificationId}/read`, {
+    
+        // Function to mark selected notifications as read
+        function markSelectedAsRead() {
+            const selectedIds = getSelectedNotificationIds();
+            updateNotificationStatus(selectedIds, 'read');
+        }
+    
+        // Function to mark selected notifications as unread
+        function markSelectedAsUnread() {
+            const selectedIds = getSelectedNotificationIds();
+            updateNotificationStatus(selectedIds, 'unread');
+        }
+    
+        // Function to get selected notification IDs
+        function getSelectedNotificationIds() {
+            const checkboxes = document.querySelectorAll('.notification-checkbox:checked');
+            return Array.from(checkboxes).map(checkbox => checkbox.dataset.id);
+        }
+    
+        // Function to update notification status (read/unread)
+        function updateNotificationStatus(notificationIds, status) {
+            if (notificationIds.length === 0) {
+                alert('No notifications selected.');
+                return;
+            }
+    
+            const endpoint = status === 'read' ? 'read' : 'unread';
+    
+            fetch(`/api/notifications/${endpoint}`, {
                 method: 'PATCH',
-                credentials: 'same-origin'
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ notificationIds })
             })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    button.textContent = 'Read';
-                    button.disabled = true;
-                    button.classList.add('read');
-
-                    const countEl = document.getElementById('notification-count');
-                    let current = parseInt(countEl.textContent, 10);
-                    if (current > 1) {
-                        countEl.textContent = current - 1;
-                    } else {
-                        countEl.style.display = 'none';
-                    }
+                    loadNotifications(); // Reload notifications after update
                 } else {
-                    alert("Failed to mark notification as read.");
+                    alert("Failed to update notification status.");
                 }
             })
             .catch(err => {
-                console.error("Error marking notification as read:", err);
+                console.error("Error updating notification status:", err);
             });
         }
-    </script>    
+    </script>     
 </body>
 </html>
