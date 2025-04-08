@@ -18,7 +18,9 @@ function displayProfileInfo(data) {
     document.getElementById('age-info').innerText = `${computeAge(data.birthday)}`;
     document.getElementById('email-info').innerText = `${data.email}`;
     document.getElementById('edit-email').innerText = `${data.email}`;
-    const profilePicture = localStorage.getItem("profilePicture") || "../media/logo/default-profile.png";
+    const profilePicture = data.profilePicture 
+    ? `/uploads/${data.profilePicture}` 
+    : "../media/logo/default-profile.png";    
     document.getElementById('sidebar-profile-picture').src = profilePicture;
 }
 
@@ -141,8 +143,16 @@ async function updateProfile() {
     }
 }
 
+function hideAllModals() {
+    const modals = document.querySelectorAll('.modal'); // Assuming all modals have the class 'modal'
+    modals.forEach(modal => {
+        modal.style.display = 'none';
+    });
+}
+
 // Open picture modal
 function openPictureModal() {
+    hideAllModals(); // Ensure no other modals are visible
     const modal = document.getElementById("picture-options-modal");
     const profilePicture = document.getElementById("profile-picture").src;
     const preview = document.getElementById("profile-preview");
@@ -169,8 +179,9 @@ function previewSelectedImage(event) {
     }
 }
 
-// Show the upload confirmation modal
+// Show the upload confirmation modal and close the picture modal
 function showUploadConfirmation() {
+    hideAllModals(); // Ensure no other modals are visible
     const confirmationModal = document.getElementById("upload-confirmation-modal");
     confirmationModal.style.display = "flex";
 }
@@ -221,20 +232,17 @@ async function confirmUpload(isConfirmed) {
             const response = await fetch("/api/patient/upload-profile-picture", {
                 method: "POST",
                 body: formData,
-            }).catch(() => null); // Handle network errors by returning null
+            }).catch(() => null);
 
             if (!response) {
                 showMessageInModal(false, "An error occurred during the upload.");
             } else if (response.ok) {
                 const result = await response.json();
-                const uploadedImageUrl = `/uploads/${result.filename}`;  // Construct the uploaded image URL
+                const uploadedImageUrl = `/uploads/${result.filename}`;
 
-                document.getElementById("profile-picture").src = `/uploads/${result.filename}`;
-                document.getElementById("profile-preview").src = `/uploads/${result.filename}`;
-                pictureInput.value = ""; // Clear the file input field
-
-                //Save the uploaded image URL to localStorage
-                localStorage.setItem("profilePicture", uploadedImageUrl);
+                document.getElementById("profile-picture").src = uploadedImageUrl;
+                document.getElementById("profile-preview").src = uploadedImageUrl;
+                pictureInput.value = "";
 
                 showMessageInModal(true, "Profile picture uploaded successfully.");
             } else {
@@ -278,18 +286,11 @@ async function deleteProfilePicture() {
         });
 
         if (response.ok) {
-            // Reset the profile picture to the default image
             const defaultPicture = "../media/logo/default-profile.png";
-            
-            // Add a cache-busting query parameter
             const cacheBuster = `?t=${new Date().getTime()}`;
             document.getElementById("profile-picture").src = defaultPicture + cacheBuster;
             document.getElementById("profile-preview").src = defaultPicture + cacheBuster;
 
-            // Remove the profile picture URL from localStorage
-            localStorage.removeItem("profilePicture");
-
-            // Show success message
             showMessageInModal(true, "Profile picture deleted successfully.");
         } else {
             console.error("Failed to delete profile picture on the server:", response.statusText);
@@ -342,29 +343,21 @@ async function confirmDelete(isConfirmed) {
 }
 
 window.onload = async function () {
-    const savedImageUrl = localStorage.getItem("profilePicture");
+    try {
+        const response = await fetch('/api/patient/profile');
+        if (response.ok) {
+            const data = await response.json();
+            const profilePicture = data.profilePicture 
+                ? `/uploads/${data.profilePicture}` 
+                : '../media/logo/default-profile.png';
 
-    if (savedImageUrl) {
-        // Verify if the saved image exists on the server
-        try {
-            const response = await fetch(savedImageUrl, { method: 'HEAD' });
-            if (response.ok) {
-                document.getElementById("profile-picture").src = savedImageUrl;
-                document.getElementById("profile-preview").src = savedImageUrl;
-                return;
-            }
-        } catch (error) {
-            console.error("Error verifying saved profile picture:", error);
+            document.getElementById("profile-picture").src = profilePicture;
+            document.getElementById("profile-preview").src = profilePicture;
+        } else {
+            console.error('Failed to fetch user profile');
         }
-
-        // If the image doesn't exist, fallback to the default image
-        localStorage.removeItem("profilePicture");
-    }
-
-    else{
-        const defaultImage = "../media/logo/default-profile.png";
-        document.getElementById("profile-picture").src = defaultImage;
-        document.getElementById("profile-preview").src = defaultImage;
+    } catch (err) {
+        console.error('Error fetching profile:', err);
     }
 };
 

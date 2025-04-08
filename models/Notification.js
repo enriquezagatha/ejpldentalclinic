@@ -7,6 +7,8 @@ const notificationSchema = new mongoose.Schema({
     referenceId: { type: mongoose.Schema.Types.ObjectId, required: false },
     type: { type: String, default: 'General' },
     isRead: { type: Boolean, default: false },
+    isRestored: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }
 });
 

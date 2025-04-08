@@ -146,12 +146,14 @@
                     const row = document.createElement('tr');
                     let statusClass = '';
 
-                    if (appointment.status === 'Completed') {
+                    if (appointment.status === 'Confirmed') {
                         statusClass = 'text-green-600 font-semibold'; // Corrected Tailwind class for green
                     } else if (appointment.status === 'Pending') {
                         statusClass = 'text-yellow-600 font-semibold'; // Yellow for pending
                     } else if (appointment.status === 'Cancelled') {
                         statusClass = 'text-red-600 font-semibold'; // Red for cancelled
+                    }else if (appointment.status === 'Completed') {
+                        statusClass = 'text-blue-600 font-semibold'; // Blue for completed
                     }
 
                     const formattedDate = formatDate(appointment.preferredDate);

@@ -28,7 +28,9 @@ fetch('../components/components-patient/navbar-patients.html')
         const profileImage = document.querySelector('.desktop-profile');
         const mobileProfileImage = document.querySelector('.mobile-profile');
         const firstName = data.firstName || 'Guest';
-        const profilePic = data.profilePic || '../media/logo/default-profile.png';
+        const profilePic = data.profilePicture 
+            ? `/uploads/${data.profilePicture}` 
+            : '../media/logo/default-profile.png';
 
         if (profileName) profileName.innerText = firstName;
         if (mobileProfileName) mobileProfileName.innerText = firstName;

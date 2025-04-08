@@ -7,6 +7,7 @@ const Appointment = require('../models/Appointment');
 const PatientRecord = require('../models/PatientRecord');
 const fs = require('fs');
 const path = require('path');
+const Notification = require('../models/Notification');
 
 // Create a new patient account
 exports.createPatient = async (req, res) => {
@@ -47,6 +48,23 @@ exports.loginPatient = async (req, res) => {
         const isMatch = await bcrypt.compare(password, patient.password);
         if (isMatch) {
             req.session.user = { id: patient._id, email: patient.email, role: 'patient' };
+
+            // Check if it's the patient's first login
+            if (patient.isFirstLogin) {
+                // Create a "Welcome" notification
+                const notification = new Notification({
+                    user: patient._id,
+                    title: 'Welcome to Our Health Platform!',
+                    message: 'Welcome to EJPL Dental Clinic! Explore our dental services and keep your smile healthy and bright.',
+                    type: 'Welcome'
+                });
+                await notification.save();
+
+                // Update isFirstLogin to false after the first login
+                patient.isFirstLogin = false;
+                await patient.save();
+            }
+
             return res.status(200).json({ message: 'Login successful.' });
         } else {
             return res.status(400).json({ message: 'Incorrect password.' });
@@ -118,6 +136,24 @@ exports.updatePatientProfile = async (req, res) => {
 
     req.session.user.email = email; // Update session email if changed
 
+    // Create notification
+    const updateMessage = emailUpdated && passwordUpdated
+        ? 'Your email and password have been successfully updated.'
+        : emailUpdated
+            ? 'Your email has been successfully updated.'
+            : passwordUpdated
+                ? 'Your password has been successfully updated.'
+                : null;
+
+    if (updateMessage) {
+        await Notification.create({
+            user: patient._id,
+            title: 'Profile Updated',
+            message: updateMessage,
+            type: 'Profile'
+        });
+    }
+
     res.json({ message: 'Profile updated successfully', emailUpdated, passwordUpdated });
 };
 
@@ -151,9 +187,10 @@ exports.deleteProfilePicture = async (req, res) => {
     }
 
     // Get the current profile picture path
-    const profilePicturePath = patient.profilePicture 
-        ? path.join(__dirname, '..', 'public', patient.profilePicture) 
-        : null;
+    patient.profilePicture = null;
+    await patient.save();
+
+    return res.status(200).json({ message: 'Profile picture deleted successfully.' });
 
     // Delete the file if it exists
     if (profilePicturePath && fs.existsSync(profilePicturePath)) {
