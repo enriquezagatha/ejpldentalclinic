@@ -1,7 +1,25 @@
+function computeAge(birthday) {
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    return age;
+}
+
 function displayProfileInfo(data) {
-    document.getElementById('full-name').innerText = `Full Name: ${data.firstName} ${data.lastName}`;
-    document.getElementById('birthday-info').innerText = `Birthday: ${data.birthday}`;
-    document.getElementById('email-info').innerText = `Email: ${data.email}`;
+    document.getElementById('full-name').innerText = `${data.firstName} ${data.lastName}`;
+    document.getElementById('sidebar-full-name').innerText = `${data.firstName} ${data.lastName}`;
+    document.getElementById('birthday-info').innerText = `${data.birthday}`;
+    document.getElementById('age-info').innerText = `${computeAge(data.birthday)}`;
+    document.getElementById('email-info').innerText = `${data.email}`;
+    document.getElementById('edit-email').innerText = `${data.email}`;
+    const profilePicture = localStorage.getItem("profilePicture") || "../media/logo/default-profile.png";
+    document.getElementById('sidebar-profile-picture').src = profilePicture;
 }
 
 async function fetchProfile() {
@@ -11,21 +29,6 @@ async function fetchProfile() {
         displayProfileInfo(data);
     } else {
         console.error('Error fetching profile data');
-    }
-}
-
-async function fetchAppointments() {
-    const appointmentsResponse = await fetch('/api/appointments/patient/appointments'); // Call new endpoint
-    if (appointmentsResponse.ok) {
-        const appointmentsData = await appointmentsResponse.json();
-
-        // Sort appointments by preferredDate in descending order (latest to oldest)
-        appointmentsData.sort((a, b) => new Date(b.preferredDate) - new Date(a.preferredDate));
-
-        console.log('Sorted Appointments:', appointmentsData); // Log the sorted appointments data
-        displayAppointments(appointmentsData);
-    } else {
-        console.error('Error fetching appointments:', appointmentsResponse.statusText);
     }
 }
 
@@ -57,14 +60,10 @@ function formatDate(dateString) {
 
 function toggleEditForm() {
     const overlay = document.getElementById('overlay');
-    const formContainer = document.getElementById('form-container');
-    
-    const isHidden = formContainer.style.display === 'none' || formContainer.style.display === '';
-    formContainer.style.display = isHidden ? 'block' : 'none';
-    overlay.style.display = isHidden ? 'block' : 'none';
-
-    if (!isHidden) {
-        hideMessages();
+    if (overlay) {
+        overlay.style.display = overlay.style.display === 'none' || overlay.style.display === '' ? 'flex' : 'none';
+    } else {
+        console.error("Element with ID 'overlay' not found.");
     }
 }
 
@@ -368,3 +367,39 @@ window.onload = async function () {
         document.getElementById("profile-preview").src = defaultImage;
     }
 };
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await fetchProfile();
+
+    // Fetch and populate email in the input box
+    const emailInput = document.getElementById('edit-email');
+    if (emailInput) {
+        const response = await fetch('/api/patient/profile');
+        if (response.ok) {
+            const data = await response.json();
+            emailInput.value = data.email;
+            emailInput.readOnly = true; // Make the input readonly
+        } else {
+            console.error('Error fetching email data');
+        }
+    }
+
+    document.querySelectorAll('.payButton').forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = document.getElementById('paymentModal');
+            if (modal) {
+                modal.style.display = 'flex';
+            }
+        });
+    });
+
+    const closeModal = document.getElementById('closeModal');
+    if (closeModal) {
+        closeModal.addEventListener('click', () => {
+            const modal = document.getElementById('paymentModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+});

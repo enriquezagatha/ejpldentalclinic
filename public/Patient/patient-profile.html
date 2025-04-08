@@ -4,413 +4,215 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Profile</title>
-    <link rel="stylesheet" href="patientstyle.css">
+    <!-- <link rel="stylesheet" href="patientstyle.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-patient/navbarfetch-patients.js"></script>
+    <script src="../components/footerfetch.js"></script>    
 </head>
-<body>
+<body class="bg-slate-50 flex flex-col font-inter">
+    <!-- Navbar -->
     <header>
-        <nav class="nav-container">
-            <img src="../media/logo/EJPL.png" alt="Logo" class="logo">
-            <div class="nav-links">
-                <a href="../Patient/patient-home.html">Home</a>
-                <a href="../Patient/patient-aboutus.html">About Us</a>
-                <a href="../Patient/patient-doctors.html">Doctors</a>
-                <a href="../Patient/patient-services.html">Services</a>
-                <a href="../Patient/patient-contact.html">Contact Us</a>
-                <a href="../Patient/patient-location.html">Location</a>
-                <a href="../Patient/patient-records.html">Records</a>
-            </div>
-            <a href="../Patient/patient-profile.html">
-                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
-            </a>
-        </nav>
-    </header>
-    <main>
-        <h1>Patient Profile</h1>
-        <div id="profile-picture-container">
-            <img src="../media/logo/default-profile.png?nocache=1"
-            id="profile-picture"  
-            alt="Profile Picture" 
-            class="profile-picture"
-            onclick ="openPictureModal()">
-        </div>
+        <div id="navbar-container"></div>
+    </header>       
+        <!-- Mobile Bottom Nav (outside the container) -->
+            <aside class="fixed bottom-0 left-0 w-full h-16 bg-[#2C4A66] flex justify-around items-center xl:hidden z-50 shadow-lg border-t border-gray-100">
+            <button onclick="location.href='patient-profile.html'" class="bg-[#1E354A] flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+                <i class="fas fa-user text-lg"></i>
+                <span class="text-[10px]">Profile</span>
+            </button>
+            <button onclick="location.href='patient-appointments.html'" class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+                <i class="fas fa-calendar-alt text-lg"></i>
+                <span class="text-[10px]">Appointments</span>
+            </button>
+            <button onclick="location.href='patient-payments.html'" class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+                <i class="fas fa-credit-card text-lg"></i>
+                <span class="text-[10px]">Payments</span>
+            </button>
+        </aside>
+        
+        
 
-        <div id="profile-info">
-            <p id="full-name"></p>
-            <p id="birthday-info"></p>
-            <p id="email-info"></p>        
-        </div>
-
-        <!-- Picture Picture Modal -->
-        <div id="picture-options-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <button class="closepic-button" onclick="closePictureModal()">X</button>
-                <h2>Profile Picture</h2>
-                <img id="profile-preview" src="" alt="Preview" class="profile-preview">
-                <label for="upload-picture">Change Profile Picture:</label>
-                <input type="file" id="upload-picture" name="profilePicture" accept="image/*">
-                <div class="image-controls">
-                    <button class="confirm-upload-button" onclick="showUploadConfirmation()">Upload</button>
-                    <button class="confirm-delete-button" onclick="showDeleteConfirmation()">Delete</button>
+        <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-[90%]">
+           <!-- Sidebar (hidden on small screens) -->
+            <aside class="hidden xl:block w-[13.9rem] bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
+                <div class="flex flex-col items-center mt-4">
+                    <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture" alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
+                    <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
+                    <p class="text-xs text-white">Patient</p>
                 </div>
+                <nav class="mt-12">
+                    <ul class="space-y-3">
+                        <li>
+                            <button class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]">
+                                <i class="fas fa-user mr-3"></i> Patient Profile
+                            </button>
+                        </li>
+                        <li>
+                            <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-appointments.html'">
+                                <i class="fas fa-calendar-alt mr-3"></i> Appointments
+                            </button>
+                        </li>
+                        <li>
+                            <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-payments.html'">
+                                <i class="fas fa-credit-card mr-3"></i> Payment
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
 
-                <!-- Delete Confirmation Modal -->
-                <div id="delete-confirmation-modal" class="deletemodal" style="display: none;">
-                    <div class="modal-content">
-                        <h3>Confirm Delete</h3>
-                        <p>Are you sure you want to delete your profile picture?</p>
-                        <button onclick="confirmDelete(true)">Yes</button>
-                        <button onclick="confirmDelete(false)">No</button>
-                        <button onclick="closeDeleteConfirmation()">X</button>
+    
+            <!-- Main Content -->
+            <div class="flex-1 p-4 w-full bg-[#FCFCFC] max-h-screen mt-6 mb-6 shadow-md border">
+                <main>
+                    <div class="bg-white shadow-md shadow-t-lg rounded-lg p-6 border flex relative flex-col items-center text-center sm:flex-row sm:items-start sm:text-left">
+                        <!-- Profile Picture -->
+                        <div class="w-36 flex justify-center relative group mb-4 sm:justify-start sm:mb-0">
+                            <img src="../media/logo/default-profile.png?nocache=1" id="profile-picture" alt="Profile Picture" class="w-32 h-32 rounded-lg object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 w-36 sm:w-32 h-32 rounded-lg transition-opacity" onclick="openPictureModal()">
+                                <i class="fas fa-edit text-gray-100 text-2xl"></i>
+                            </div>
+                        </div>  
+
+                        <!-- Profile Info -->
+                        <div class="w-full sm:w-3/4 sm:ml-3">
+                            <h1 id="full-name" class="text-2xl font-semibold mb-2">N/A</h1>
+                            <p class="text-sm text-black mb-4">Patient</p>
+                        </div>
+
+                        <!-- Edit Button -->
+                        <button class="bg-white text-[#2C4A66] px-4 py-1 rounded font-bold hover:bg-[#2C4A66] hover:text-white flex items-center border-2 border-[#2C4A66] mt-4 sm:absolute sm:top-4 sm:right-4 sm:mt-0" onclick="toggleEditForm()">
+                            Edit Password <i class="fas fa-edit ml-2"></i>
+                        </button>
                     </div>
-                </div>
 
-                <!-- Success Message -->
-                <div id="modal-success-message" style="display: none; color: green; text-align: center; margin-top: 10px;">
-                    Profile picture uploaded successfully.
-                </div>
-
-                <!-- Error Message -->
-                <div id="modal-error-message" style="display: none; color: red; text-align: center; margin-top: 10px;">
-                    Profile picture cancelled.
-                </div>
-
-                <!-- Upload Confirmation Modal -->
-                <div id="upload-confirmation-modal" class="uploadmodal" style="display: none;">
-                    <div class="modal-content">
-                        <h3>Confirm Upload</h3>
-                        <p>Are you sure you want to upload this picture as your profile picture?</p>
-                        <button onclick="confirmUpload(true)">Yes</button>
-                        <button onclick="confirmUpload(false)">No</button>
-                        <button onclick="closeUploadConfirmation()">X</button>
+                    <div class="mt-8">
+                        <div class="relative flex items-center">
+                            <hr class="w-8 border-black mr-4">
+                            <span class="text-black font-semibold">Patient Information</span>
+                            <hr class="flex-grow border-black ml-4">
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <button class="edit-button" onclick="toggleEditForm()">Edit</button>
-        <div class="overlay" id="overlay" style="display:none;"></div>
-        <div class="form-container" id="form-container" style="display:none;">
-            <button class="close-button" onclick="toggleEditForm()">✖</button>
-            <form id="edit-form">
-                <label for="edit-email">Email:</label>
-                <input type="email" id="edit-email" name="email" required>
-                
-                <label for="current-password">Current Password:</label>
-                <input type="password" id="current-password" name="currentPassword" required>
-                
-                <label for="new-password">New Password:</label>
-                <input type="password" id="new-password" name="newPassword">
-                
-                <input type="checkbox" id="toggle-password" onclick="togglePasswordVisibility()"> Show Password
-                
-                <div id="edit-error-message" style="color: red; display: none;"></div>
-                <div id="edit-success-message" style="color: green; display: none;"></div>
-                <button class="save-button" type="button" onclick="confirmSave()">Save</button>
-
-                <div class="profileconfirmation-modal" id="profileconfirmation-modal" style="display:none;">
-                    <div class="modal-content">
-                        <h2>Confirm Changes</h2>
-                        <p>Do you want to save the changes?</p>
-                        <button type="button" onclick="confirmChanges(true)">Yes</button>
-                        <button type="button" onclick="confirmChanges(false)">No</button>
+                    <div class="w-[90%] mx-auto mt-6">
+                        <div class="mb-8">
+                            <label class="text-gray-600">Birthday</label>
+                            <p id="birthday-info" class="text-black font-bold">N/A</p>
+                        </div>
+                        <div class="mb-8">
+                            <label class="text-gray-600">Age</label>
+                            <p id="age-info" class="text-black font-bold">N/A</p>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
 
-        <!-- PAYMENT MODAL -->
-        <div id="paymentModal" class="paymentmodal">
-            <div class="paymentmodal-content">
-                <span class="close" id="closeModal">&times;</span>
-                <h2>PayMongo Payment Link</h2>
+                    <div class="mt-8">
+                        <div class="relative flex items-center">
+                            <hr class="w-8 border-black mr-4">
+                            <span class="text-black font-semibold">Contact Information</span>
+                            <hr class="flex-grow border-black ml-4">
+                        </div>
+                    </div>
 
-                <label for="patientName">Enter Patient Name:</label>
-                <input type="text" id="patientName" placeholder="Enter patient name" required><br><br>
+                    <div class="w-[90%] mx-auto mt-6">
+                        <div class="mb-8">
+                            <label class="text-gray-600">Email</label>
+                            <p id="email-info" class="text-black font-bold">N/A</p>
+                        </div>
+                    </div>
 
-                <label for="patientEmail">Enter Patient Email:</label>
-                <input type="email" id="patientEmail" placeholder="Enter patient email" required><br><br>
+    
+                    <!-- Picture Picture Modal -->
+                    <div id="picture-options-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" style="display: none;">
+                        <div class="bg-white rounded-lg shadow-lg p-6 w-[95%] sm:w-96 relative">
+                            <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700" onclick="closePictureModal()">&times;</button>
+                            <h2 class="text-lg font-semibold mb-4">Edit Profile Picture</h2>
+                            <img id="profile-preview" src="" alt="Preview" class="w-32 h-32 rounded-full mx-auto mb-4">
+                            <label for="upload-picture" class="block text-sm font-medium text-gray-700 mb-2">Change Profile Picture:</label>
+                            <input type="file" id="upload-picture" name="profilePicture" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <div class="flex justify-between mt-4">
+                                <button class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600" onclick="showDeleteConfirmation()">Remove</button>
+                                <button class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600" onclick="showUploadConfirmation()">Upload</button>
+                            </div>
 
-                <label for="treatmentType">Enter Type of Treatment:</label>
-                <input type="text" id="treatmentType" placeholder="Enter type of treatment" required><br><br>
+                            <!-- Delete Confirmation Modal -->
+                            <div id="delete-confirmation-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" style="display: none;">
+                                <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative">   
+                                    <h3 class="text-lg font-semibold mb-4">Confirm Delete</h3>
+                                    <p class="text-sm text-gray-600 mb-4 text-center">Are you sure you want to delete your profile picture?</p>
+                                    <div class="flex justify-between">
+                                        <button class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600" onclick="confirmDelete(false)">No</button>
+                                        <button class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600" onclick="confirmDelete(true)">Yes</button>
+                                    </div>
+                                    <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700" onclick="closeDeleteConfirmation()">&times;</button>
+                                </div>
+                            </div>
 
-                <!-- Senior Discount Checkbox -->
-                <label>
-                    <input type="checkbox" id="seniorDiscount"> Apply Senior Discount (20%)
-                </label>
-                <br><br>
+                            <!-- Success Message -->
+                            <div id="modal-success-message" class="text-green-500 text-center mt-4 hidden">
+                                Profile picture uploaded successfully.
+                            </div>
 
-                <!-- Senior Discount Form (Initially Hidden) -->
-                <div id="seniorDiscountForm" style="display: none;">
-                    <label for="seniorName">Name on Card:</label>
-                    <input type="text" id="seniorName" placeholder="Enter name on card"><br><br>
+                            <!-- Error Message -->
+                            <div id="modal-error-message" class="text-red-500 text-center mt-4 hidden"> 
+                                Profile picture cancelled.
+                            </div>
 
-                    <label for="seniorID">Senior ID No:</label>
-                    <input type="text" id="seniorID" placeholder="Enter senior ID number"><br><br>
-                </div>
-
-
-                <label for="amount">Enter Amount (PHP):</label>
-                <input type="number" id="amount" placeholder="Enter amount in PHP" min="1" required><br><br>
-
-                <button id="submitPayment">Submit Payment</button>
-
-                <p id="paymentLink"></p>
-                <p id="validationMessage" style="color: red; display: none;"></p>
+                            <!-- Upload Confirmation Modal -->
+                            <div id="upload-confirmation-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" style="display: none;">
+                                <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative">
+                                    <h3 class="text-lg font-semibold mb-4">Confirm Upload</h3>
+                                    <p class="text-sm text-gray-600 mb-4 text-center">Are you sure you want to upload this picture as your profile picture?</p>
+                                    <div class="flex justify-between">
+                                        <button class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600" onclick="confirmUpload(false)">No</button>
+                                        <button class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600" onclick="confirmUpload(true)">Yes</button>
+                                    </div>
+                                    <button class="absolute top-2 right-1 text-gray-500 hover:text-gray-700" onclick="closeUploadConfirmation()">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" id="overlay" style="display:none;">
+                        <div class="bg-white rounded-lg shadow-lg p-6  w-[95%] sm:w-96 relative">
+                            <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700" onclick="toggleEditForm()">&times;</button>
+                            <h2 class="text-lg font-semibold mb-4">Change Password</h2>
+                            <form id="edit-form" class="space-y-4">
+                                <div>
+                                    <label for="edit-email" class="block text-sm font-medium text-gray-700">Email:</label>
+                                    <input type="email" id="edit-email" name="email" required class="text-gray-500 pl-2 mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 read-only:">
+                                </div>
+                                <div>
+                                    <label for="current-password" class="block text-sm font-medium text-gray-700">Current Password:</label>
+                                    <input type="password" id="current-password" name="currentPassword" required class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label for="new-password" class="block text-sm font-medium text-gray-700">New Password:</label>
+                                    <input type="password" id="new-password" name="newPassword" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="toggle-password" onclick="togglePasswordVisibility()" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                    <label for="toggle-password" class="ml-2 block text-sm text-gray-700">Show Password</label>
+                                </div>
+                                <div id="edit-error-message" class="text-red-500 text-sm hidden"></div>
+                                <div id="edit-success-message" class="text-green-500 text-sm hidden"></div>
+                                <button type="button" onclick="confirmSave()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </main>
             </div>
         </div>
 
-        <!-- APPOINTMENTS TABLE -->
-        <div id="appointments-container">
-            <h2>Your Appointments</h2>
-            <table id="appointments" border="1">
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Reference Number</th>
-                        <th>Name</th>
-                        <th>Contact Number</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Treatment Type</th>
-                        <th>Treatment Price</th>
-                        <th>Action</th> <!-- NEW COLUMN for Payment Button -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Appointments will be dynamically inserted here -->
-                </tbody>
-            </table>
-            <div id="pagination" class="pagination-container"></div>
-        </div>
-
-        <button class="logout-button" onclick="showLogoutModal()">Logout</button>
-        <div class="logout-overlay" id="logout-overlay">
-            <div class="logout-modal">
-                <h2>Are you sure you want to log out?</h2>
-                <button class="confirm-btn" onclick="confirmLogout(true)">Yes</button>
-                <button class="cancel-btn" onclick="confirmLogout(false)">No</button>
-            </div>
-        </div>
-    </main>
+        <footer>
+            <div id="footer-container"></div>
+        </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             await fetchProfile();
-            await fetchAppointments();
-        });
-
-        function displayAppointments(appointments) {
-            const appointmentsTableBody = document.querySelector('#appointments tbody');
-            const paginationContainer = document.getElementById('pagination');
-            const appointmentsPerPage = 5;
-            let currentPage = 1;
-
-            appointmentsTableBody.innerHTML = '';
-            paginationContainer.innerHTML = '';
-
-            if (appointments.length === 0) {
-                appointmentsTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No appointments found</td></tr>';
-                return;
-            }
-
-            function renderPage(page) {
-                appointmentsTableBody.innerHTML = '';
-                const startIndex = (page - 1) * appointmentsPerPage;
-                const endIndex = Math.min(startIndex + appointmentsPerPage, appointments.length);
-
-                for (let i = startIndex; i < endIndex; i++) {
-                    const appointment = appointments[i];
-                    const row = document.createElement('tr');
-                    let statusClass = '';
-
-                    if (appointment.status === 'Confirmed') {
-                        statusClass = 'status-confirmed';
-                    } else if (appointment.status === 'Cancelled') {
-                        statusClass = 'status-canceled';
-                    } else if (appointment.status === 'Pending') {
-                        statusClass = 'status-pending';
-                    }
-
-                    const formattedDate = formatDate(appointment.preferredDate);
-
-                    row.innerHTML = `
-                        <td class="${statusClass}">${appointment.status}</td>
-                        <td>${appointment.referenceNumber}</td>
-                        <td>${appointment.firstName} ${appointment.lastName}</td>
-                        <td>${appointment.contactNumber}</td>
-                        <td>${formattedDate}</td>
-                        <td>${appointment.preferredTime}</td>
-                        <td>${appointment.treatmentType}</td>
-                        <td>${appointment.treatmentPrice}</td>
-                        <td>
-                            <button class="payButton" 
-                                data-name="${appointment.firstName} ${appointment.lastName}"
-                                data-email="${appointment.emailAddress}"
-                                data-treatment="${appointment.treatmentType}"
-                                data-amount="${appointment.treatmentPrice}">
-                                Generate Payment
-                            </button>
-                        </td>
-                    `;
-
-                    appointmentsTableBody.appendChild(row);
-                }
-
-                attachPaymentEventListeners();
-            }
-
-            renderPage(currentPage);
-        }
-
-        function attachPaymentEventListeners() {
-            document.querySelectorAll('.payButton').forEach(button => {
-                button.addEventListener('click', function () {
-                    const patientName = this.getAttribute('data-name');
-                    const patientEmail = this.getAttribute('data-email');
-                    const treatmentType = this.getAttribute('data-treatment');
-                    const treatmentPrice = this.getAttribute('data-amount').replace(/,/g, '');
-
-                    console.log("Debugging - Button Clicked:");
-                    console.log("Patient Name:", patientName);
-                    console.log("Patient Email:", patientEmail);
-                    console.log("Treatment Type:", treatmentType);
-                    console.log("Treatment Price (string):", treatmentPrice);
-
-                    document.getElementById('patientName').value = patientName;
-                    document.getElementById('patientEmail').value = patientEmail;
-                    document.getElementById('treatmentType').value = treatmentType;
-
-                    // Convert treatmentPrice to a number before assigning (if necessary)
-                    document.getElementById('amount').value = treatmentPrice.trim(); // Trim any spaces
-
-                    document.getElementById('seniorDiscount').checked = false;
-                    document.getElementById('seniorDiscountForm').style.display = "none";
-
-                    modal.style.display = "block";
-                });
-            });
-
-
-        }
-
-        const modal = document.getElementById("paymentModal");
-        const closeModal = document.getElementById("closeModal");
-        const seniorDiscountCheckbox = document.getElementById("seniorDiscount");
-        const seniorDiscountForm = document.getElementById("seniorDiscountForm");
-        const amountInput = document.getElementById("amount");
-
-        closeModal.onclick = function () {
-            modal.style.display = "none";
-        };
-
-        window.onclick = function (event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        };
-
-        document.addEventListener("DOMContentLoaded", async function () {
-            let amountInput = document.getElementById("amount");
-            let seniorDiscountCheckbox = document.getElementById("seniorDiscount");
-            let seniorDiscountForm = document.getElementById("seniorDiscountForm");
-            let submitPayment = document.getElementById("submitPayment");
-
-            let discountPercentage = 0; // Default to 0%
-
-            // Fetch discount from API
-            async function fetchDiscount() {
-                try {
-                    const response = await fetch("http://localhost:3000/api/discounts");
-                    if (!response.ok) throw new Error("Failed to fetch discounts");
-
-                    const discounts = await response.json();
-                    
-                    // Assume "Senior Discount" is the one applied for seniors
-                    const seniorDiscount = discounts.find(d => d.name.toLowerCase() === "senior discount");
-                    
-                    if (seniorDiscount) {
-                        discountPercentage = seniorDiscount.percentage; // Set discount value
-                    }
-                } catch (error) {
-                    console.error("Error fetching discount:", error);
-                }
-            }
-
-            // Apply Discount to the Amount
-            function applyDiscount() {
-                if (!amountInput) {
-                    console.error("amountInput is not found.");
-                    return;
-                }
-
-                // Store the original amount if not already stored
-                if (!amountInput.dataset.originalAmount) {
-                    amountInput.dataset.originalAmount = amountInput.value;
-                }
-
-                let originalAmount = parseFloat(amountInput.dataset.originalAmount.replace(/,/g, "")) || 0;
-
-                if (seniorDiscountCheckbox.checked) {
-                    const discountedAmount = originalAmount * ((100 - discountPercentage) / 100);
-                    amountInput.value = discountedAmount.toFixed(2);
-                    seniorDiscountForm.style.display = "block";
-                } else {
-                    amountInput.value = originalAmount.toFixed(2);
-                    seniorDiscountForm.style.display = "none";
-                }
-            }
-
-            // Fetch discount before allowing interaction
-            await fetchDiscount();
-
-            // Attach event listener to senior discount checkbox
-            seniorDiscountCheckbox.addEventListener("change", applyDiscount);
-
-            // Payment submission logic (unchanged)
-            submitPayment.addEventListener("click", async function () {
-                const patientName = document.getElementById("patientName").value;
-                const patientEmail = document.getElementById("patientEmail").value;
-                const treatmentType = document.getElementById("treatmentType").value;
-                const amountInPHP = document.getElementById("treatmentPrice").value;
-                const validationMessage = document.getElementById("validationMessage");
-
-                if (!patientName || !patientEmail || !treatmentType || !amountInPHP || isNaN(amountInPHP) || amountInPHP <= 0) {
-                    validationMessage.innerText = "Please fill out all fields with valid information.";
-                    validationMessage.style.display = "block";
-                } else if (amountInPHP < 100) {
-                    validationMessage.innerText = "The minimum payment amount is PHP 100.";
-                    validationMessage.style.display = "block";
-                } else {
-                    validationMessage.style.display = "none";
-
-                    const amountInCents = amountInPHP * 100;
-                    const paymentData = { patientName, patientEmail, treatmentType, amount: amountInCents };
-
-                    const response = await fetch("http://localhost:3000/api/payment/create-payment-link", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(paymentData)
-                    });
-
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error("Server Error: ", errorText);
-                        alert("An error occurred while processing the payment link.");
-                    } else {
-                        const result = await response.json();
-                        console.log("API Response:", result);
-
-                        if (result.paymentLink) {
-                            const paymentUrl = result.paymentLink;
-                            document.getElementById("paymentLink").innerHTML = `<a href="${paymentUrl}" target="_blank">Click here to pay</a>`;
-                        } else {
-                            console.error("Invalid response structure:", result);
-                            alert("Failed to generate payment link. Please try again.");
-                        }
-                    }
-                }
-            });
-        });
+        });            
     </script>
     <script src="patientprofile.js"></script>        
 </body>

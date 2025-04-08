@@ -15,11 +15,80 @@
     <header>
         <div id="navbar-container"></div>
     </header>
-    <main>
-        <div class="content min-h-screen">
-            <h1>WANT TO BOOK AN APPOINTMENT?</h1>
-            <button class="next-button" onclick="goNextAppointment()">Next → </button>
+    <main class="max-w-6xl mx-auto">
+        <section id="home-section-1" class="flex flex-col-reverse justify-start sm:flex-row p-6 pt-10 items-start gap-8">
+            <article class="sm:w-1/2 mt-10">
+                <p class="max-w-md text-lg font-bold font-inter text-left text-[#223E57] tracking-widest">
+                    EJPL DENTAL CLINIC
+                </p>                
+                <h2 class="max-w-lg text-5xl font-bold font-inter mt-5 text-left text-black leading-tight">
+                    Quality Dental Care For a Healthy Smile
+                </h2>
+                <p class="max-w-md text-sm mt-5 text-left font-inter text-slate-700">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. 
+                </p>
+                <button class="w-30 mt-6 bg-[#2C4A66] font-bold text-white py-2 px-8 rounded-full font-inter hover:bg-[#223E57] transition duration-300"
+                    onclick="goNextAppointment()">
+                    Book an Appointment
+                </button>
+            </article>
+            <img class="w-1/2" src="../media/homepage/homepage-teeth-media.png" alt="Tooth">
+        </section>
+    </main>
+
+    <main class="bg-[#F2F2F2] w-full">
+        <div class="max-w-6xl mx-auto">
+            <section id="rockets" class="p-6 my-12 scroll-mt-20 widescreen:section-min-height tallscreen:section-min-height">
+                <div class="text-center">
+                    <button class="w-30 mt-6 bg-white text-[#2C4A66] font-bold border-2 border-[#2C4A66] py-2 px-8 rounded-full font-inter hover:bg-[#223E57] hover:text-white hover:border-[#223E57] transition duration-300"
+                        onclick="window.location.href='../main page/services.html'">
+                        Our Services
+                    </button>
+                </div>
+                <h2 class="text-5xl font-bold font-inter text-center sm:text-5xl mt-6 text-black">
+                    Services
+                </h2>
+                <div class="max-w-md mx-auto">
+                    <h2 class="text-sm font-inter text-center sm:text-sm mt-6 text-black">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </h2>
+                </div>
+                <ul class="list-none mx-auto my-12 mt-16 flex flex-col sm:flex-row items-center gap-8">
+                    <li class="w-2/3 sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
+                        <img src="../media/services/dentalconsultation.jpg" alt="Dental Consultation" class="w-[350px] h-[200px] object-cover mx-auto mb-4">
+                        <h3 class="text-2xl text-center text-black font-inter font-bold">Dental Consultation</h3>
+                    </li>
+                    <li class="w-2/3 sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
+                        <img src="../media/services/oral.jpg" alt="Oral Propophylaxis" class="w-[350px] h-[200px] object-cover mx-auto mb-4">
+                        <h3 class="text-2xl text-center text-black font-inter font-bold">Oral Propophylaxis</h3>
+                    </li>
+                    <li class="w-2/3 sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
+                        <img src="../media/services/extraction.jpg" alt="Tooth Extraction" class="w-[350px] h-[200px] object-cover mx-auto mb-4">
+                        <h3 class="text-2xl text-center text-black font-inter font-bold">Tooth Extraction</h3>
+                    </li>
+                </ul>
+            </section>
         </div>
+    </main>
+
+    <main class="max-w-6xl mx-auto">
+        <section id="home-section-1" class="flex flex-col-reverse justify-start sm:flex-row p-6 pt-10 items-start gap-8 mb-12 scroll-mt-40 widescreen:section-min-height tallscreen:section-min-height">
+            <article>
+                <p class="max-w-md text-lg font-bold font-inter text-left text-[#223E57] tracking-widest">
+                    Contact Us
+                </p>                
+                <h2 class="text-5xl font-bold font-inter mt-5 text-left text-black leading-tight">
+                   Have any Questions?
+                </h2>
+                <p class="max-w-md text-sm mt-5 text-left font-inter text-slate-700">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. 
+                </p>
+                <button class="w-30 mt-6 bg-[#2C4A66] font-bold text-white py-2 px-8 rounded-full font-inter hover:bg-[#223E57] transition duration-300"
+                    onclick="window.location.href='../main page/contact.html'">
+                    Contact Us
+                </button>
+            </article>
+        </section>
     </main>
     <footer>
         <div id="footer-container"></div>
