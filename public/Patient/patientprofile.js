@@ -242,6 +242,9 @@ async function confirmUpload(isConfirmed) {
 
                 document.getElementById("profile-picture").src = uploadedImageUrl;
                 document.getElementById("profile-preview").src = uploadedImageUrl;
+                document.getElementById("sidebar-profile-picture").src = uploadedImageUrl;
+                document.querySelector(".desktop-profile").src = uploadedImageUrl;
+                document.querySelector(".mobile-profile").src = uploadedImageUrl;
                 pictureInput.value = "";
 
                 showMessageInModal(true, "Profile picture uploaded successfully.");
@@ -251,6 +254,21 @@ async function confirmUpload(isConfirmed) {
         }
     }
 }
+
+document.getElementById("upload-picture").addEventListener("change", function () {
+    const file = this.files[0];
+    const preview = document.getElementById("profile-preview");
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = ""; // Optional: reset the preview if no file is selected
+    }
+});
 
 // Upload the new profile picture
 async function uploadProfilePicture() {
@@ -273,6 +291,7 @@ async function uploadProfilePicture() {
         document.getElementById('profile-picture').src = `/uploads/${result.filename}`;
         document.getElementById('profile-preview').src = `/uploads/${result.filename}`;
         alert('Profile picture updated successfully.');
+        location.reload(true); 
     } else {
         alert('Failed to upload profile picture.');
     }
@@ -292,6 +311,7 @@ async function deleteProfilePicture() {
             document.getElementById("profile-preview").src = defaultPicture + cacheBuster;
 
             showMessageInModal(true, "Profile picture deleted successfully.");
+            location.reload(true); 
         } else {
             console.error("Failed to delete profile picture on the server:", response.statusText);
             showMessageInModal(false, "Failed to delete profile picture.");
@@ -330,6 +350,9 @@ async function confirmDelete(isConfirmed) {
             const defaultPicture = "../media/logo/default-profile.png";
             document.getElementById("profile-picture").src = defaultPicture;
             document.getElementById("profile-preview").src = defaultPicture;
+            document.getElementById("sidebar-profile-picture").src = defaultPicture;
+            document.querySelector(".desktop-profile").src = defaultPicture;
+            document.querySelector(".mobile-profile").src = defaultPicture;
 
             localStorage.removeItem("profilePicture");
 

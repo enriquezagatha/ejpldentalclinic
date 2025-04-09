@@ -21,28 +21,25 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchProfile();
 });
 
+function displayProfileInfo(data) {
+    const profilePicture = data.profilePicture 
+    ? `/uploads/${data.profilePicture}` 
+    : "../media/logo/default-profile.png";    
+    document.getElementById('sidebar-profile-picture').src = profilePicture;
+    document.getElementById('sidebar-full-name').innerText = `${data.firstName} ${data.lastName}`;
+}
+
+
 async function fetchProfile() {
-    try {
-        const response = await fetch("/api/patient/profile");
-        if (!response.ok) throw new Error("Failed to fetch patient profile");
-
-        const patient = await response.json();
-        const fullName = `${patient.firstName} ${patient.lastName}`;
-        const sidebarFullName = document.getElementById('sidebar-full-name');
-        const profilePicture = localStorage.getItem("profilePicture") || "../media/logo/default-profile.png";
-
-        if (sidebarFullName) {
-            sidebarFullName.textContent = fullName;
-        }
-
-        const sidebarProfilePicture = document.getElementById('sidebar-profile-picture');
-        if (sidebarProfilePicture) {
-            sidebarProfilePicture.src = profilePicture;
-        }
-    } catch (error) {
-        console.error("Error fetching patient profile:", error);
+    const response = await fetch('/api/patient/profile');
+    if (response.ok) {
+        const data = await response.json();
+        displayProfileInfo(data);
+    } else {
+        console.error('Error fetching profile data');
     }
 }
+
 
 async function fetchAppointments() {
     const appointmentsResponse = await fetch('/api/appointments/patient/appointments'); // Call new endpoint
