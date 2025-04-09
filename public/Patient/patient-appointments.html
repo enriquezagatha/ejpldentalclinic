@@ -152,6 +152,8 @@
                         statusClass = 'text-yellow-600 font-semibold'; // Yellow for pending
                     } else if (appointment.status === 'Cancelled') {
                         statusClass = 'text-red-600 font-semibold'; // Red for cancelled
+                    }else if (appointment.status === 'Completed') {
+                        statusClass = 'text-blue-600 font-semibold'; // Blue for completed
                     }
 
                     const formattedDate = formatDate(appointment.preferredDate);
