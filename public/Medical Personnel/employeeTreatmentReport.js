@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
             totalTreatmentsSpan.textContent = data.patients.length;
 
             if (data.patients.length === 0) {
-                treatmentList.innerHTML = '<tr><td colspan="3">No treatment records found.</td></tr>';
+                treatmentList.innerHTML = '<tr><td colspan="3" class="px-6 py-4 text-center text-gray-500">No treatment records found.</td></tr>';
                 popularTreatmentSpan.textContent = "No Data"; 
                 return;
             }
@@ -48,9 +48,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (!selectedTreatment || treatment.treatmentType === selectedTreatment) { // Filter treatments
                         const row = `
                             <tr>
-                                <td>${record.firstName} ${record.lastName}</td>
-                                <td>${treatment.treatmentType || "No Name"}</td>
-                                <td>${treatment.treatmentDate ? new Date(treatment.treatmentDate).toLocaleDateString() : "No Date"}</td>
+                                <td class="px-6 py-4 text-sm text-gray-700">${record.firstName} ${record.lastName}</td>
+                                <td class="px-6 py-4 text-sm text-gray-700">${treatment.treatmentType || "No Name"}</td>
+                                <td class="px-6 py-4 text-sm text-gray-700">${treatment.treatmentDate ? new Date(treatment.treatmentDate).toLocaleDateString() : "No Date"}</td>
                             </tr>
                         `;
                         treatmentList.innerHTML += row;
