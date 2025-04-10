@@ -145,22 +145,27 @@
     }
 
     appointments.forEach(appointment => {
-        // Generate the dentist dropdown options with gender-based prefix
-        const dentistSelect = dentists.map(dentist => {
-            let prefix = '';
-            if (dentist.gender === 'Male') {
-                prefix = 'Dr'; // Prefix for male dentists
-            } else if (dentist.gender === 'Female') {
-                prefix = 'Dra'; // Prefix for female dentists
+        // Fetch the assigned dentist's name if already assigned
+        let assignedDentistName = 'Not Assigned';
+        if (appointment.assignedDentist) {
+            const assignedDentist = dentists.find(dentist => dentist._id === appointment.assignedDentist);
+            if (assignedDentist) {
+                const prefix = assignedDentist.gender === 'male' ? 'Dr.' : 'Dra.';
+                assignedDentistName = `${prefix} ${assignedDentist.firstName} ${assignedDentist.lastName}`;
             }
+        }
 
-            // Check if the dentist is assigned and mark it as selected
-            return `
-                <option value="${dentist._id}" ${appointment.assignedDentist && appointment.assignedDentist._id === dentist._id ? 'selected' : ''}>
-                    ${prefix} ${dentist.firstName} ${dentist.lastName}
-                </option>
-            `;
-        }).join('');
+        // Generate the dentist dropdown options with prefix
+        const dentistSelect = dentists
+            .filter(dentist => dentist._id !== appointment.assignedDentist) // Exclude the assigned dentist
+            .map(dentist => {
+                const prefix = dentist.gender === 'male' ? 'Dr.' : 'Dra.';
+                return `
+                    <option value="${dentist._id}">
+                        ${prefix} ${dentist.firstName} ${dentist.lastName}
+                    </option>
+                `;
+            }).join('');
 
         // Create a row for each appointment
         const row = document.createElement('tr');
@@ -183,7 +188,7 @@
             <td>${appointment.treatmentType}</td>
             <td>
                 <select onchange="assignDentist('${appointment._id}', this.value)" data-appointment-id="${appointment._id}">
-                    <option value="">Select Dentist</option>
+                    <option value="">${assignedDentistName}</option>
                     ${dentistSelect} <!-- Dentist select options populated here -->
                 </select>
             </td>
@@ -248,37 +253,41 @@
         async function assignDentist(appointmentId, dentistId) {
             if (!dentistId) return; // Prevent empty selection
 
-            const response = await fetch(`/api/appointments/${appointmentId}/assign-dentist`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ assignedDentist: dentistId }),
-            });
+            try {
+                const response = await fetch(`/api/appointments/${appointmentId}/assign-dentist`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assignedDentist: dentistId }), // Ensure dentistId is sent as a string
+                });
 
-            if (response.ok) {
-                const updatedAppointment = await response.json(); // Get the updated appointment data
+                if (response.ok) {
+                    const updatedAppointment = await response.json(); // Get the updated appointment data
 
-                // Find the row in the table corresponding to the appointment
-                const row = document.querySelector(`tr[data-appointment-id="${appointmentId}"]`);
-                if (row) {
-                    // Find the select dropdown for the dentist in this row
-                    const select = row.querySelector('select');
-                    if (select) {
-                        // Update the value of the select dropdown to the newly assigned dentist
-                        select.value = updatedAppointment.appointment.assignedDentist._id;
+                    // Find the row in the table corresponding to the appointment
+                    const row = document.querySelector(`tr[data-appointment-id="${appointmentId}"]`);
+                    if (row) {
+                        // Update the select dropdown to reflect the newly assigned dentist
+                        const select = row.querySelector('select');
+                        if (select) {
+                            select.value = updatedAppointment.assignedDentist._id;
+                        }
 
-                        // Optionally, you can also update the displayed name of the assigned dentist directly in the row
+                        // Optionally update the displayed name of the assigned dentist
                         const dentistNameCell = row.querySelector('td:last-child'); // Assuming last column is for dentist
                         if (dentistNameCell) {
-                            const dentist = updatedAppointment.appointment.assignedDentist;
+                            const dentist = updatedAppointment.assignedDentist;
                             dentistNameCell.textContent = `${dentist.gender === 'Male' ? 'Dr' : 'Dra'} ${dentist.firstName} ${dentist.lastName}`;
                         }
                     }
-                }
 
-                // Show success message
-                alert('Dentist assigned successfully!');
-            } else {
-                alert('Failed to assign dentist. Please try again.');
+                    alert('Dentist assigned successfully!');
+                } else {
+                    console.error('Failed to assign dentist:', response.status, response.statusText);
+                    alert('Failed to assign dentist. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error assigning dentist:', error);
+                alert('An error occurred while assigning the dentist. Please try again.');
             }
         }
     

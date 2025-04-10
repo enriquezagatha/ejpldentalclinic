@@ -159,7 +159,7 @@ exports.getAppointmentDetails = async (req, res) => {
     }
 
     try {
-        const appointment = await Appointment.findById(appointmentId);
+        const appointment = await Appointment.findById(appointmentId).populate('assignedDentist'); // Populate assignedDentist
         if (!appointment) {
             return res.status(404).json({ message: 'Appointment not found.' });
         }
@@ -168,6 +168,11 @@ exports.getAppointmentDetails = async (req, res) => {
         if (appointment.patientRecord) {
             patientRecord = await PatientRecord.findById(appointment.patientRecord);
         }
+
+        // Fetch dentist name if assignedDentist exists
+        const dentistName = appointment.assignedDentist
+            ? `${appointment.assignedDentist.firstName} ${appointment.assignedDentist.lastName}`
+            : 'N/A';
 
         res.json({
             firstName: appointment.firstName,
@@ -184,7 +189,7 @@ exports.getAppointmentDetails = async (req, res) => {
             emergencyContactRelationship: appointment.emergencyContactRelationship,
             treatments: patientRecord ? patientRecord.treatments : [], // ✅ Ensure treatments is always an array
             uploadedFiles: patientRecord ? patientRecord.uploadedFiles : [], // ✅ Ensure uploadedFiles is always an array
-            assignedDentist: dentistName,
+            assignedDentist: dentistName, // Include dentist name
         });
 
     } catch (error) {
