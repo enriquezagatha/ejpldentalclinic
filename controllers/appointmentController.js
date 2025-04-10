@@ -250,6 +250,15 @@ exports.updateAppointmentStatus = async (req, res) => {
             await updatedAppointment.save();
         }
 
+        // ✅ Retrieve the dentist's name (if any)
+        let assignedDentistName = null;
+        if (updatedAppointment.assignedDentist) {
+            const dentist = await Dentist.findById(updatedAppointment.assignedDentist);
+            if (dentist) {
+                assignedDentistName = dentist._id;
+            }
+        }
+
         // ✅ Ensure only NEW treatments are added, keeping OLD ones
         const isDuplicateTreatment = patientRecord.treatments.some(treatment =>
             treatment.treatmentType === updatedAppointment.treatmentType &&
@@ -258,10 +267,11 @@ exports.updateAppointmentStatus = async (req, res) => {
         );
 
         if (!isDuplicateTreatment) {
-            // ✅ Add only the latest completed treatment
+            // ✅ Add only the latest completed treatment, including dentist name
             const newTreatment = {
                 treatmentType: updatedAppointment.treatmentType,
                 treatmentDate: updatedAppointment.preferredDate, // Use appointment's date
+                assignedDentist: assignedDentistName,  // Add dentist name to the treatment
                 prescriptionDate: "", // Doctor fills later
                 medicineType: "", // Doctor fills later
                 procedure: "", // Doctor fills later
@@ -306,7 +316,8 @@ exports.updateAppointment = async (req, res) => {
         prescriptionDate,
         medicineType,
         procedure,
-        treatmentNotes
+        treatmentNotes,
+        assignedDentist
     } = req.body;
 
     // Fetch the appointment details first
@@ -336,23 +347,29 @@ exports.updateAppointment = async (req, res) => {
         existingRecord.contactNumber = appointment.contactNumber;
         existingRecord.emergencyContact = appointment.emergencyContact;
         existingRecord.selectedHistory = appointment.selectedHistory;
-        
-        // ✅ Ensure only latest treatment is updated
+
+        // ✅ Ensure only the latest treatment is updated
         existingRecord.treatments.push({
             treatmentType,
             preferredDate,
             prescriptionDate,
             medicineType,
             procedure,
-            treatmentNotes
+            treatmentNotes,
+            assignedDentist: assignedDentist || null
         });
 
         // Append new files to existing uploadedFiles
         existingRecord.uploadedFiles = [...existingRecord.uploadedFiles, ...files];
 
+        // Save the updated patient record
         await existingRecord.save();
 
-        return res.status(200).json({ message: 'Patient details updated successfully.', files: existingRecord.uploadedFiles });
+        // ✅ Update the assignedDentist in the appointment as well
+        appointment.assignedDentist = assignedDentist;
+        await appointment.save();
+
+        return res.status(200).json({ message: 'Patient details and appointment updated successfully.', files: existingRecord.uploadedFiles });
     } else {
         // ✅ Create a new PatientRecord if it doesn't exist
         const newPatientRecord = new PatientRecord({
@@ -371,13 +388,19 @@ exports.updateAppointment = async (req, res) => {
                 prescriptionDate,
                 medicineType,
                 procedure,
-                treatmentNotes
+                treatmentNotes,
+                assignedDentist: assignedDentist || null
             }],
             uploadedFiles: files
         });
 
         await newPatientRecord.save();
-        return res.status(200).json({ message: 'Patient details updated successfully.', files: newPatientRecord.uploadedFiles });
+
+        // ✅ Update the assignedDentist in the appointment
+        appointment.assignedDentist = assignedDentist;
+        await appointment.save();
+
+        return res.status(200).json({ message: 'New patient record created and appointment updated successfully.', files: newPatientRecord.uploadedFiles });
     }
 };
 
