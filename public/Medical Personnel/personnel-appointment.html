@@ -2,107 +2,120 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
     <title>Personnel - Home</title>
-    <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
+    <!-- <link rel="stylesheet" href="../Medical Personnel/mpstyle.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-personnel/sidebarfetch-personnel.js"></script>
 </head>
-<body>
-    <header>
-        <nav class="nav-container">
-            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='personnel-home.html';" style="cursor: pointer;">
-            <div class="nav-links">
-                <a href="../Medical Personnel/personnel-home.html">Home</a>
-                <a href="../Medical Personnel/personnel-records.html">Patient Records</a>
-                <a href="../Medical Personnel/personnel-balance.html">Tracking Balance</a>
-                <a href="../Medical Personnel/personnel-appointment.html" class="active">Appointment Data</a>
-                <a href="../Medical Personnel/personnel-management.html">Management</a>
+<body class="min-h-screen bg-slate-50 flex font-inter">
+
+<!-- Overlay for mobile -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-10 hidden lg:hidden z-40"></div>
+
+<!-- Main Content -->
+<div id="main-content" class="flex-1 lg:ml-64 z-30 overflow-x-hidden">
+    <!-- Navbar -->
+    <header class="bg-white shadow-md p-2 flex justify-between items-center">
+        <!-- Hamburger Menu -->
+        <button id="hamburger" class="lg:hidden ml-4 text-[#232931] focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+        <h1 class="text-xl font-semibold ml-8 text-[#232931] hidden lg:block">Appointments</h1>
+        <div class="flex items-center bg-white border text-white pl-6 pr-3 py-2 rounded-lg relative group">
+            <img class="w-8 h-8 rounded-full mr-3 desktop-profile object-cover" alt="Profile Picture">
+            <div class="text-left">
+                <span id="profile-name" class="block font-semibold text-[#232931]">Loading...</span>
+                <span class="block text-xs text-[#232931]">Medical Personnel</span>
             </div>
-            <a href="../Medical Personnel/personnel-profile.html">
-                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
-            </a>
-        </nav>
-    </header>
-    <main>        
-        <div class="button-container">
-            <button class="all-button" onclick="filterAppointments('All')">ALL</button>
-            <button class="pending-button" onclick="filterAppointments('Pending')">PENDING</button>
-            <button class="confirm-button" onclick="filterAppointments('Confirmed')">CONFIRMED</button>
-            <button class="cancel-button" onclick="filterAppointments('Cancelled')">CANCELLED</button>
+            <svg class="w-4 h-4 ml-6 lg:ml-14 text-[#232931]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a 1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a 1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+            <div id="desktop-profile-dropdown" class="absolute bg-white border text-[#232931] mt-32 ml-12 rounded shadow-lg w-40 hidden group-hover:block">
+                <a href="../Medical Personnel/personnel-profile.html" class="block px-4 py-2 hover:bg-gray-100">View Profile</a>
+                <a href="../main page/home.html" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+            </div>
         </div>
+    </header>
     
-        <div id="appointments-container">
-            <table id="appointments-table" border="1">
-                <caption class="header" id="appointments-header">APPOINTMENTS</caption>
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Reference Number</th>
-                        <th>Name</th>
-                        <th>Contact Number</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Treatment Type</th>
-                        <th>Assigned Dentist</th>
-                    </tr>
-                </thead>
-                <tbody id="appointments-tbody">
-                    <!-- Appointments will be displayed here -->
-                </tbody>
-            </table>
-        </div>        
+    <!-- Page Content -->
+    <main class="p-6">
+        <div class="container mx-auto px-4 lg:px-6 xl:px-8">
+            <div class="button-container flex justify-center space-x-4 my-4">
+                <button class="all-button px-4 py-2 rounded-md text-[#2C4A66] font-semibold bg-white border-2 border-[#2C4A66] hover:bg-[#2C4A66] hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400" onclick="filterAppointments('All')">ALL</button>
+                <button class="pending-button px-4 py-2 rounded-md text-[#2C4A66] font-semibold bg-white border-2 border-[#2C4A66] hover:bg-[#2C4A66] hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400" onclick="filterAppointments('Pending')">PENDING</button>
+                <button class="confirm-button px-4 py-2 rounded-md text-[#2C4A66] font-semibold bg-white border-2 border-[#2C4A66] hover:bg-[#2C4A66] hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400" onclick="filterAppointments('Confirmed')">CONFIRMED</button>
+                <button class="cancel-button px-4 py-2 rounded-md text-[#2C4A66] font-semibold bg-white border-2 border-[#2C4A66] hover:bg-[#2C4A66] hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400" onclick="filterAppointments('Cancelled')">CANCELLED</button>
+            </div>
+           
+            <div id="appointments-container" class="overflow-x-auto">
+                    <div class="min-w-[1400px]">
+                        <table id="appointments-table" class="w-full border-collapse text-sm text-gray-700">
+                            <caption class="header text-lg font-semibold text-gray-700 mb-4 mt-4" id="appointments-header">Appointment List</caption>
+                            <thead>
+                                <tr class="bg-[#2C4A66] text-white">
+                                    <th class="px-4 py-2 text-left">Status</th>
+                                    <th class="px-4 py-2 text-left">Reference Number</th>
+                                    <th class="px-4 py-2 text-left">Name</th>
+                                    <th class="px-4 py-2 text-left">Contact Number</th>
+                                    <th class="px-4 py-2 text-left">Date</th>
+                                    <th class="px-4 py-2 text-left">Time</th>
+                                    <th class="px-4 py-2 text-left">Treatment Type</th>
+                                    <th class="px-4 py-2 text-left">Assigned Dentist</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-tbody">
+                                <!-- Appointments will be displayed here -->
+                            </tbody>
+                        </table>
+                    </div>
+            </div>        
+        </div>
     </main>
     
     <!-- Confirmation Modal -->
-    <div id="confirmation-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <p id="modal-message"></p>
-            <button id="confirm-button">Yes</button>
-            <button id="cancel-button" onclick="closeModal()">No</button>
+    <div id="confirmation-modal" class="modal fixed inset-0 items-center justify-center bg-black bg-opacity-10 hidden">
+        <div class="modal-content bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            <button class="absolute top-2 right-4 text-gray-500 hover:text-gray-700 text-xl font-bold focus:outline-none" onclick="closeModal()">
+                &times;
+            </button>
+            <div class="flex flex-col items-center">
+                <div class="bg-[#E3EBF9] text-[#6E80D1] rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                    <i class="fas fa-question text-3xl"></i>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800 text-center">Are you sure?</h2>
+            </div>
+            <p id="modal-message" class="text-sm text-gray-700 text-center mt-2 mb-4"></p>
+            <div class="flex justify-between items-center space-x-4 mt-8">
+                <button id="cancel-button" class="bg-gray-300 text-sm text-gray-700 px-4 py-1 rounded-md hover:bg-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-200" onclick="closeModal()">No</button>
+                <button id="confirm-button" class="bg-[#2C4A66] text-sm text-white px-4 py-1 rounded-md hover:bg-[#1E3A56] focus:outline-none focus:ring-2 focus:ring-blue-400">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="modal fixed inset-0 items-center justify-center bg-black bg-opacity-10 hidden">
+        <div class="modal-content bg-white p-6 rounded-lg shadow-lg w-96 relative">
+            <h2 class="text-xl font-semibold text-gray-800 text-center">Dentist Assigned</h2>
+            <p id="alert-message" class="text-sm text-gray-700 text-center mt-4 mb-4">Dentist has been successfully assigned.</p>
+            <div class="flex justify-center mt-6">
+                <button id="alert-ok-button" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">OK</button>
+            </div>
         </div>
     </div>
     
-    <style>
-        .message-box {
-            display: none;
-            color: white;
-            background: green;
-            padding: 5px;
-            border-radius: 5px;
-            margin-top: 5px;
-            font-size: 12px;
-        }
-        .message-box.error {
-            background: red;
-        }
-    </style>
-    
     <script>
-        let allAppointments = [];
-        let pendingUpdate = null;
-        let currentFilter = 'All';
-        let cachedDentists = [];  // Cache dentists here
-    
-        async function fetchAppointments() {
-            const response = await fetch('/api/appointments');
-            if (response.ok) {
-                allAppointments = await response.json();
-                displayAppointments(allAppointments);
-            } else {
-                console.error('Failed to fetch appointments:', response.status, response.statusText);
-            }
-        }
-    
-        async function filterAppointments(status) {
+        function filterAppointments(status) {
             currentFilter = status; // Store the current filter status
 
             let filteredAppointments;
             if (status === 'All') {
                 filteredAppointments = allAppointments; // Show all appointments
-                document.getElementById('appointments-header').innerText = 'APPOINTMENTS';
+                document.getElementById('appointments-header').innerText = 'All Appointments';
             } else {
                 filteredAppointments = allAppointments.filter(appointment => appointment.status === status);
-                document.getElementById('appointments-header').innerText = `${status.toUpperCase()} APPOINTMENTS`;
+                document.getElementById('appointments-header').innerText = `${status} Appointments`;
             }
 
             // Show appointments container
@@ -114,6 +127,54 @@
             }).catch(error => {
                 console.error('Error fetching dentists:', error);
             });
+
+            // Update button styles
+            document.querySelectorAll('.button-container button').forEach(button => {
+                button.classList.remove('bg-[#2C4A66]', 'text-white'); // Remove active styles
+                button.classList.add('bg-white', 'text-[#2C4A66]'); // Revert to default styles
+            });
+            const buttonMap = {
+                'All': '.all-button',
+                'Pending': '.pending-button',
+                'Confirmed': '.confirm-button',
+                'Cancelled': '.cancel-button'
+            };
+            if (buttonMap[status]) {
+                const activeButton = document.querySelector(buttonMap[status]);
+                activeButton.classList.remove('bg-white', 'text-[#2C4A66]'); // Remove default styles
+                activeButton.classList.add('bg-[#2C4A66]', 'text-white'); // Apply active styles
+            }
+        }
+    </script>
+    <script>
+        let allAppointments = [];
+        let pendingUpdate = null;
+        let currentFilter = 'All'; // Default status is "All"
+        let cachedDentists = [];  // Cache dentists here
+    
+        async function fetchAppointments() {
+            const tbody = document.getElementById('appointments-tbody');
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center text-gray-500 font-medium py-4">Loading appointments...</td></tr>'; // Show loading state
+
+            try {
+                const response = await fetch('/api/appointments');
+                if (response.ok) {
+                    allAppointments = await response.json();
+                    setTimeout(() => { // Add a delay to ensure data is fetched
+                        if (allAppointments.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="8" class="text-center text-gray-500 font-medium py-4 border border-gray-300">No appointments found.</td></tr>';
+                        } else {
+                            displayAppointments(allAppointments);
+                        }
+                    }, 500); // Delay of 500ms
+                } else {
+                    console.error('Failed to fetch appointments:', response.status, response.statusText);
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-red-500 font-medium py-4">Error fetching appointments.</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error fetching appointments:', error);
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-red-500 font-medium py-4">Error fetching appointments. Please try again later.</td></tr>';
+            }
         }
     
         // Fetch dentists once and cache the result
@@ -133,18 +194,25 @@
             return cachedDentists;
         }
 
-        async function displayAppointments(appointments) {
-    const tbody = document.getElementById('appointments-tbody');
-    tbody.innerHTML = ''; // Clear existing appointments
+    async function displayAppointments(appointments) {
+        const tbody = document.getElementById('appointments-tbody');
+        tbody.innerHTML = ''; // Clear existing appointments
 
-    const dentists = await fetchDentists(); // Fetch dentists once
+        const dentists = await fetchDentists(); // Fetch dentists once
 
-    if (appointments.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No appointments found.</td></tr>';
-        return;
-    }
+        if (appointments.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center text-gray-500 font-medium py-4 border border-gray-300">No appointments found.</td></tr>';
+            return;
+        }   
 
     appointments.forEach(appointment => {
+        // Format the date to a long date format
+        const formattedDate = new Date(appointment.preferredDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
         // Fetch the assigned dentist's name if already assigned
         let assignedDentistName = 'Not Assigned';
         if (appointment.assignedDentist) {
@@ -170,8 +238,9 @@
         // Create a row for each appointment
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td class="status-cell ${appointment.status}">
-                <select onchange="updateStatus('${appointment._id}', this.value, this)"
+            <td class="status-cell ${appointment.status} border-t border-b border-l border-gray-300 px-4 py-2">
+                <select class="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    onchange="updateStatus('${appointment._id}', this.value, this)"
                     data-original-status="${appointment.status}" 
                     data-appointment-id="${appointment._id}">
                     <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''}>Pending</option>
@@ -180,14 +249,16 @@
                     <option value="Completed" ${appointment.status === 'Completed' ? 'selected' : ''}>Completed</option>
                 </select>
             </td>
-            <td>${appointment.referenceNumber}</td>
-            <td>${appointment.firstName} ${appointment.lastName}</td>
-            <td>${appointment.contactNumber}</td>
-            <td>${appointment.preferredDate}</td>
-            <td>${appointment.preferredTime}</td>
-            <td>${appointment.treatmentType}</td>
-            <td>
-                <select onchange="assignDentist('${appointment._id}', this.value)" data-appointment-id="${appointment._id}">
+            <td class="border-t border-b px-4 py-2">${appointment.referenceNumber}</td>
+            <td class="border-t border-b px-4 py-2">${appointment.firstName} ${appointment.lastName}</td>
+            <td class="border-t border-b px-4 py-2">${appointment.contactNumber}</td>
+            <td class="border-t border-b px-4 py-2">${formattedDate}</td>
+            <td class="border-t border-b px-4 py-2">${appointment.preferredTime}</td>
+            <td class="border-t border-b px-4 py-2">${appointment.treatmentType}</td>
+            <td class="border-t border-b border-r border-gray-300 px-4 py-2">
+                <select class="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    onchange="assignDentist('${appointment._id}', this.value)" 
+                    data-appointment-id="${appointment._id}">
                     <option value="">${assignedDentistName}</option>
                     ${dentistSelect} <!-- Dentist select options populated here -->
                 </select>
@@ -198,15 +269,16 @@
         tbody.appendChild(row);
     });
 }
+
         function updateStatus(appointmentId, newStatus, selectElement) {
             const currentStatus = selectElement.dataset.originalStatus;
             if (currentStatus === newStatus) return;
-            openModal(`Are you sure you want to change the status to ${newStatus}?`, appointmentId, newStatus, selectElement);
+            openModal(`Confirm change of status to ${newStatus}?`, appointmentId, newStatus, selectElement);
         }
     
         function openModal(message, appointmentId, newStatus, selectElement) {
             document.getElementById('modal-message').innerText = message;
-            document.getElementById('confirmation-modal').style.display = 'block';
+            document.getElementById('confirmation-modal').style.display = 'flex';
             pendingUpdate = { appointmentId, newStatus, selectElement };
         }
     
@@ -280,7 +352,8 @@
                         }
                     }
 
-                    alert('Dentist assigned successfully!');
+                    // Open the alert modal
+                    document.getElementById('alert-modal').style.display = 'flex';
                 } else {
                     console.error('Failed to assign dentist:', response.status, response.statusText);
                     alert('Failed to assign dentist. Please try again.');
@@ -296,6 +369,29 @@
             const modal = document.getElementById('confirmation-modal');
             if (event.target === modal) closeModal();
         }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const profileResponse = await fetch('/api/medicalPersonnel/profile');
+            if (profileResponse.ok) {
+                const personnelData = await profileResponse.json();
+                displayProfileInfo(personnelData);
+
+                // Set the profile picture if available
+                const profilePictureElement = document.querySelector('.desktop-profile');
+                profilePictureElement.src = personnelData.profilePicture 
+                    ? `/uploads/${personnelData.profilePicture}` 
+                    : '../media/logo/default-profile.png';
+            }
+            });
+
+            function displayProfileInfo(data) {
+            document.getElementById('profile-name').innerText = `${data.firstName}`;
+            }
+
+            document.getElementById('alert-ok-button').onclick = function () {
+                document.getElementById('alert-modal').style.display = 'none';
+                location.reload();
+            };
     </script>          
 </body>
 </html>

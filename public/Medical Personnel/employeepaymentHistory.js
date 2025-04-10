@@ -24,54 +24,29 @@ function fetchPayments(page = 1) {
 
 function updateTable(payments) {
     console.log(`🔄 Updating table with ${payments.length} payments.`);
-    const tableBody = document.getElementById("payment-table");
+    const tableBody = document.getElementById("payment-tbody"); // Ensure correct tbody ID
     tableBody.innerHTML = "";
 
     payments.forEach(payment => {
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${payment.patientName}</td>
-            <td>${payment.email}</td>
-            <td>${payment.treatment}</td>
-            <td>₱${(payment.amount / 100).toFixed(2)}</td>
-            <td style="color: ${payment.status === "paid" ? "green" : "red"};">${payment.status}</td>
-            <td>${new Date(payment.createdAt).toLocaleString()}</td>
-            <td>
-                <button class="delete-btn" onclick="deletePayment('${payment._id}')">❌ Delete</button>
-            </td>
+            <td class="px-6 py-4 text-sm text-gray-700">${payment.patientName}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">${payment.email}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">${payment.treatment}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">₱${(payment.amount / 100).toFixed(2)}</td>
+            <td class="px-6 py-4 text-sm font-semibold" style="color: ${payment.status === "paid" ? "green" : "red"};">${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">${new Date(payment.createdAt).toLocaleString()}</td>
         `;
         tableBody.appendChild(row);
     });
 }
 
-function deletePayment(paymentId) {
-    if (!confirm("Are you sure you want to delete this payment? This action cannot be undone.")) {
-        return;
-    }
-
-    fetch(`http://localhost:3000/api/payment/payments/${paymentId}`, { method: "DELETE" })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                console.error("❌ Error deleting payment:", data.error);
-                alert("Failed to delete payment.");
-            } else {
-                console.log("✅ Payment deleted successfully!");
-                fetchPayments(); // Refresh table
-            }
-        })
-        .catch(error => {
-            console.error("❌ Error:", error);
-            alert("An error occurred while deleting the payment.");
-        });
-}
-
 function updatePaginationControls() {
     const paginationContainer = document.getElementById("pagination-controls");
     paginationContainer.innerHTML = `
-        <button onclick="prevPage()" ${currentPage === 1 ? "disabled" : ""}>⬅ Prev</button>
-        <span> Page ${currentPage} of ${totalPages} </span>
-        <button onclick="nextPage()" ${currentPage === totalPages ? "disabled" : ""}>Next ➡</button>
+        <button class="bg-[#2C4A66] text-white px-2 py-1 rounded hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-[#2C4A66]" onclick="prevPage()" ${currentPage === 1 ? "disabled" : ""}>⬅</button>
+        <span class="p-2 mx-4 text-sm font-medium text-gray-700"> Page ${currentPage} of ${totalPages} </span>
+        <button class="bg-[#2C4A66] text-white px-2 py-1 rounded hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-[#2C4A66]" onclick="nextPage()" ${currentPage === totalPages ? "disabled" : ""}>➡</button>
     `;
 }
 

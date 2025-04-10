@@ -12,17 +12,17 @@
 <body class="min-h-screen bg-slate-50 flex font-inter">
 
     <!-- Overlay for mobile -->
-<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-10 hidden md:hidden z-40"></div>
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-10 hidden lg:hidden z-40"></div>
 
 <!-- Main Content -->
-<div id="main-content" class="flex-1 md:ml-64 z-30 overflow-x-hidden">
+<div id="main-content" class="flex-1 lg:ml-64 z-30 overflow-x-hidden">
     <!-- Navbar -->
     <header class="bg-white shadow-md p-2 flex justify-between items-center">
         <!-- Hamburger Menu -->
-        <button id="hamburger" class="md:hidden ml-4 text-[#232931] focus:outline-none">
+        <button id="hamburger" class="lg:hidden ml-4 text-[#232931] focus:outline-none">
             <i class="fas fa-bars text-2xl"></i>
         </button>
-        <h1 class="text-xl font-semibold ml-8 text-[#232931] hidden md:block">Patient Records</h1>
+        <h1 class="text-xl font-semibold ml-8 text-[#232931] hidden lg:block">Patient Records</h1>
         <div class="flex items-center bg-white border text-white pl-6 pr-3 py-2 rounded-lg relative group">
             <img class="w-8 h-8 rounded-full mr-3 desktop-profile object-cover" alt="Profile Picture">
             <div class="text-left">
@@ -39,29 +39,31 @@
         </div>
     </header>
     <main class="p-6">
-        <section id="patient-record" class="report-section">
-            <div class="mb-4 w-full mt-11 lg:w-2/6 relative">
-                <input type="text" id="patientRecordsSearch" placeholder="Search by name..." class="mt-1 block w-full px-4 py-2 pl-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 lg:text-sm">
-                <i class="fas fa-search absolute top-[1.2rem] left-3 transform -translate-y-1/2 text-gray-400"></i>
-            </div>
-            <div class="overflow-x-auto mt-4">
-                <div class="min-w-[728px]">
-                    <table id="records-table" class="w-full bg-white border border-gray-200 rounded-lg">
-                        <thead>
-                            <tr class="bg-[#2C4A66] text-white">
-                                <th class="px-6 py-3 text-left text-sm font-medium">Name</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium">Email</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium">Dentist</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium">Contact Number</th>
-                                <th class="px-6 py-3 text-left text-sm font-medium">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="appointments-tbody" class="divide-y divide-gray-200"></tbody>
-                    </table>
+        <div class="container mx-auto px-4 lg:px-6 xl:px-8">
+            <section id="patient-record" class="report-section">
+                <div class="mb-4 w-full mt-11 lg:w-2/6 relative">
+                    <input type="text" id="patientRecordsSearch" placeholder="Search by name..." class="mt-1 block w-full px-4 py-2 pl-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 lg:text-sm">
+                    <i class="fas fa-search absolute top-[1.2rem] left-3 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
-            </div>
-            <div id="loading" class="loading" style="display:none;">Loading appointments...</div>
-        </section>
+                <div class="overflow-x-auto mt-4">
+                    <div class="min-w-[728px]">
+                        <table id="records-table" class="w-full bg-white border border-gray-200 rounded-lg">
+                            <thead>
+                                <tr class="bg-[#2C4A66] text-white">
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Name</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Email</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Dentist</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Contact Number</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Actions</th> <!-- Added Action column -->
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-tbody" class="divide-y divide-gray-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="loading" class="loading" style="display:none;">Loading appointments...</div>
+            </section>
+        </div>
     </main>
     
     <script>

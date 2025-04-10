@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td class="px-6 py-4 text-sm text-gray-700">${payment.email}</td>
                 <td class="px-6 py-4 text-sm text-gray-700">${payment.treatment}</td>
                 <td class="px-6 py-4 text-sm text-gray-700">₱${(payment.amount / 100).toFixed(2)}</td>
-                <td class="px-6 py-4 text-sm text-gray-700">${payment.status}</td>
+                <td class="px-6 py-4 text-sm font-semibold" style="color: ${payment.status === "paid" ? "green" : "red"};">${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</td>
                 <td class="px-6 py-4 text-sm text-gray-700">${new Date(payment.createdAt).toLocaleDateString()}</td>
             `;
             paymentList.appendChild(row);
