@@ -4,7 +4,7 @@ const Dentist = require("../models/Dentist");
 exports.getDentists = async (req, res) => {
     try {
         const dentists = await Dentist.find();
-        res.json(dentists);
+        res.json(dentists); // This will include the gender field as well
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch dentists" });
     }
@@ -13,10 +13,20 @@ exports.getDentists = async (req, res) => {
 // Add a dentist
 exports.addDentist = async (req, res) => {
     try {
-        const { name, contact } = req.body;
+        const { firstName, secondName, middleName, lastName, contact, gender } = req.body;
         const image = req.file ? `/uploads/${req.file.filename}` : null; // Store image path
 
-        const newDentist = new Dentist({ name, contact, image });
+        // Create new dentist with firstName, secondName, middleName, lastName, gender
+        const newDentist = new Dentist({
+            firstName,
+            secondName,
+            middleName,
+            lastName,
+            contact,
+            gender, // Saving the gender
+            image,
+        });
+
         await newDentist.save();
         res.status(201).json(newDentist);
     } catch (error) {
@@ -27,12 +37,12 @@ exports.addDentist = async (req, res) => {
 // Update a dentist
 exports.updateDentist = async (req, res) => {
     try {
-        const { name, contact } = req.body;
+        const { firstName, secondName, middleName, lastName, contact, gender } = req.body;
         const image = req.file ? `/uploads/${req.file.filename}` : req.body.image; // Keep old image if not updated
 
         const updatedDentist = await Dentist.findByIdAndUpdate(
             req.params.id,
-            { name, contact, image },
+            { firstName, secondName, middleName, lastName, contact, gender, image },
             { new: true }
         );
 

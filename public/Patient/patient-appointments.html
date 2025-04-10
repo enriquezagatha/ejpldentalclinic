@@ -87,6 +87,7 @@
                                            <th class="border border-gray-300 px-4 py-2 truncate">Date</th>
                                            <th class="border border-gray-300 px-4 py-2 truncate">Time</th>
                                            <th class="border border-gray-300 px-4 py-2 truncate">Treatment Type</th>
+                                           <th class="border border-gray-300 px-4 py-2 truncate">Dentist</th>
                                            <!-- <th class="border border-gray-300 px-4 py-2">Treatment Price</th>
                                            <th class="border border-gray-300 px-4 py-2">Action</th>  -->
                                        </tr>
@@ -135,44 +136,44 @@
                     </tr>`;
                 return;
             }
-
             function renderPage(page) {
-                appointmentsTableBody.innerHTML = '';
-                const startIndex = (page - 1) * appointmentsPerPage;
-                const endIndex = Math.min(startIndex + appointmentsPerPage, appointments.length);
+            appointmentsTableBody.innerHTML = '';
+            const startIndex = (page - 1) * appointmentsPerPage;
+            const endIndex = Math.min(startIndex + appointmentsPerPage, appointments.length);
 
-                for (let i = startIndex; i < endIndex; i++) {
-                    const appointment = appointments[i];
-                    const row = document.createElement('tr');
-                    let statusClass = '';
+            for (let i = startIndex; i < endIndex; i++) {
+                const appointment = appointments[i];
+                const row = document.createElement('tr');
+                let statusClass = '';
 
-                    if (appointment.status === 'Confirmed') {
-                        statusClass = 'text-green-600 font-semibold'; // Corrected Tailwind class for green
-                    } else if (appointment.status === 'Pending') {
-                        statusClass = 'text-yellow-600 font-semibold'; // Yellow for pending
-                    } else if (appointment.status === 'Cancelled') {
-                        statusClass = 'text-red-600 font-semibold'; // Red for cancelled
-                    }else if (appointment.status === 'Completed') {
-                        statusClass = 'text-blue-600 font-semibold'; // Blue for completed
-                    }
-
-                    const formattedDate = formatDate(appointment.preferredDate);
-
-                    row.innerHTML = `
-                        <td class="border-y border-gray-300 px-4 py-6 text-center ${statusClass}">${appointment.status}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.referenceNumber}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.firstName} ${appointment.lastName}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.contactNumber}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${formattedDate}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.preferredTime}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentType}</td>
-                    `;
-
-                    appointmentsTableBody.appendChild(row);
+                if (appointment.status === 'Confirmed') {
+                    statusClass = 'text-green-600 font-semibold';
+                } else if (appointment.status === 'Pending') {
+                    statusClass = 'text-yellow-600 font-semibold';
+                } else if (appointment.status === 'Cancelled') {
+                    statusClass = 'text-red-600 font-semibold';
+                } else if (appointment.status === 'Completed') {
+                    statusClass = 'text-blue-600 font-semibold';
                 }
 
-                attachPaymentEventListeners();
+                const formattedDate = formatDate(appointment.preferredDate);
+
+                row.innerHTML = `
+                    <td class="border-y border-gray-300 px-4 py-6 text-center ${statusClass}">${appointment.status}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.referenceNumber}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.firstName} ${appointment.lastName}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.contactNumber}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${formattedDate}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.preferredTime}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentType}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.assignedDentist?.fullName || "No Assigned Dentist"}</td>
+                `;
+
+                appointmentsTableBody.appendChild(row);
             }
+
+            attachPaymentEventListeners();
+        }
 
             renderPage(currentPage);
         }

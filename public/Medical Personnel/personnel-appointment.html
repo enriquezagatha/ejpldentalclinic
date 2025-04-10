@@ -81,6 +81,7 @@
         let allAppointments = [];
         let pendingUpdate = null;
         let currentFilter = 'All';
+        let cachedDentists = [];  // Cache dentists here
     
         async function fetchAppointments() {
             const response = await fetch('/api/appointments');
@@ -91,8 +92,8 @@
                 console.error('Failed to fetch appointments:', response.status, response.statusText);
             }
         }
-
-        function filterAppointments(status) {
+    
+        async function filterAppointments(status) {
             currentFilter = status; // Store the current filter status
 
             let filteredAppointments;
@@ -107,75 +108,91 @@
             // Show appointments container
             document.getElementById('appointments-container').style.display = 'block';
 
-            displayAppointments(filteredAppointments);
-        }
-
-        async function fetchDentists() {
-            try {
-                const response = await fetch('/api/dentists'); // Fetch dentists from API
-                if (response.ok) {
-                    return await response.json();
-                } else {
-                    console.error('Failed to fetch dentists:', response.statusText);
-                    return [];
-                }
-            } catch (error) {
+            // Ensure dentists are fetched before displaying appointments
+            fetchDentists().then(() => {
+                displayAppointments(filteredAppointments);
+            }).catch(error => {
                 console.error('Error fetching dentists:', error);
-                return [];
-            }
-        }
-
-        async function displayAppointments(appointments) {
-            const tbody = document.getElementById('appointments-tbody');
-            tbody.innerHTML = '';
-
-            const dentists = await fetchDentists(); // Fetch dentists once
-
-            if (appointments.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No appointments found.</td></tr>';
-                return;
-            }
-
-            appointments.forEach(appointment => {
-                const row = document.createElement('tr');
-                let statusClass = '';
-                if (appointment.status === 'Confirmed') statusClass = 'status-confirmed';
-                else if (appointment.status === 'Cancelled') statusClass = 'status-cancelled';
-                else if (appointment.status === 'Pending') statusClass = 'status-pending';
-
-                row.innerHTML = `
-                    <td class="status-cell ${statusClass}">
-                        <select onchange="updateStatus('${appointment._id}', this.value, this)"
-                            data-original-status="${appointment.status}" 
-                            data-appointment-id="${appointment._id}">
-                            <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                            <option value="Confirmed" ${appointment.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
-                            <option value="Cancelled" ${appointment.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-                            <option value="Completed" ${appointment.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                        </select>
-                    </td>
-                    <td>${appointment.referenceNumber}</td>
-                    <td>${appointment.firstName} ${appointment.lastName}</td>
-                    <td>${appointment.contactNumber}</td>
-                    <td>${appointment.preferredDate}</td>                    
-                    <td>${appointment.preferredTime}</td>
-                    <td>${appointment.treatmentType}</td>
-                    <td>
-                        <select onchange="assignDentist('${appointment._id}', this.value)">
-                            <option value="">Select Dentist</option>
-                            ${dentists.map(dentist => `
-                                <option value="${dentist._id}" ${appointment.assignedDentist && appointment.assignedDentist._id === dentist._id ? 'selected' : ''}>
-                                    ${dentist.name}
-                                </option>
-                            `).join('')}
-                        </select>
-                    </td>
-                `;
-
-                tbody.appendChild(row);
             });
         }
     
+        // Fetch dentists once and cache the result
+        async function fetchDentists() {
+            if (cachedDentists.length === 0) {
+                try {
+                    const response = await fetch('/api/dentists'); // Fetch dentists from API
+                    if (response.ok) {
+                        cachedDentists = await response.json();  // Cache dentists
+                    } else {
+                        console.error('Failed to fetch dentists:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error fetching dentists:', error);
+                }
+            }
+            return cachedDentists;
+        }
+
+        async function displayAppointments(appointments) {
+    const tbody = document.getElementById('appointments-tbody');
+    tbody.innerHTML = ''; // Clear existing appointments
+
+    const dentists = await fetchDentists(); // Fetch dentists once
+
+    if (appointments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No appointments found.</td></tr>';
+        return;
+    }
+
+    appointments.forEach(appointment => {
+        // Generate the dentist dropdown options with gender-based prefix
+        const dentistSelect = dentists.map(dentist => {
+            let prefix = '';
+            if (dentist.gender === 'Male') {
+                prefix = 'Dr'; // Prefix for male dentists
+            } else if (dentist.gender === 'Female') {
+                prefix = 'Dra'; // Prefix for female dentists
+            }
+
+            // Check if the dentist is assigned and mark it as selected
+            return `
+                <option value="${dentist._id}" ${appointment.assignedDentist && appointment.assignedDentist._id === dentist._id ? 'selected' : ''}>
+                    ${prefix} ${dentist.firstName} ${dentist.lastName}
+                </option>
+            `;
+        }).join('');
+
+        // Create a row for each appointment
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="status-cell ${appointment.status}">
+                <select onchange="updateStatus('${appointment._id}', this.value, this)"
+                    data-original-status="${appointment.status}" 
+                    data-appointment-id="${appointment._id}">
+                    <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                    <option value="Confirmed" ${appointment.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                    <option value="Cancelled" ${appointment.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                    <option value="Completed" ${appointment.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                </select>
+            </td>
+            <td>${appointment.referenceNumber}</td>
+            <td>${appointment.firstName} ${appointment.lastName}</td>
+            <td>${appointment.contactNumber}</td>
+            <td>${appointment.preferredDate}</td>
+            <td>${appointment.preferredTime}</td>
+            <td>${appointment.treatmentType}</td>
+            <td>
+                <select onchange="assignDentist('${appointment._id}', this.value)" data-appointment-id="${appointment._id}">
+                    <option value="">Select Dentist</option>
+                    ${dentistSelect} <!-- Dentist select options populated here -->
+                </select>
+            </td>
+        `;
+
+        // Append the row to the table body
+        tbody.appendChild(row);
+    });
+}
         function updateStatus(appointmentId, newStatus, selectElement) {
             const currentStatus = selectElement.dataset.originalStatus;
             if (currentStatus === newStatus) return;
@@ -227,7 +244,7 @@
             messageBox.style.display = 'block';
             setTimeout(() => { messageBox.style.display = 'none'; }, 3000);
         }
-
+    
         async function assignDentist(appointmentId, dentistId) {
             if (!dentistId) return; // Prevent empty selection
 
@@ -238,19 +255,38 @@
             });
 
             if (response.ok) {
+                const updatedAppointment = await response.json(); // Get the updated appointment data
+
+                // Find the row in the table corresponding to the appointment
+                const row = document.querySelector(`tr[data-appointment-id="${appointmentId}"]`);
+                if (row) {
+                    // Find the select dropdown for the dentist in this row
+                    const select = row.querySelector('select');
+                    if (select) {
+                        // Update the value of the select dropdown to the newly assigned dentist
+                        select.value = updatedAppointment.appointment.assignedDentist._id;
+
+                        // Optionally, you can also update the displayed name of the assigned dentist directly in the row
+                        const dentistNameCell = row.querySelector('td:last-child'); // Assuming last column is for dentist
+                        if (dentistNameCell) {
+                            const dentist = updatedAppointment.appointment.assignedDentist;
+                            dentistNameCell.textContent = `${dentist.gender === 'Male' ? 'Dr' : 'Dra'} ${dentist.firstName} ${dentist.lastName}`;
+                        }
+                    }
+                }
+
+                // Show success message
                 alert('Dentist assigned successfully!');
-                fetchAppointments(); // Refresh appointments
             } else {
                 alert('Failed to assign dentist. Please try again.');
             }
         }
-
     
         window.onload = fetchAppointments;
         window.onclick = function (event) {
             const modal = document.getElementById('confirmation-modal');
             if (event.target === modal) closeModal();
         }
-    </script>    
+    </script>          
 </body>
 </html>

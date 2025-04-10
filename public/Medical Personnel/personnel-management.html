@@ -176,16 +176,27 @@
         <div id="doctor-section" class="management-section">
             <section>
                 <h2>Manage Dentists</h2>
-                <button id="open-dentist-modal-btn">Add New Dentists</button>
+                <button id="open-dentist-modal-btn">Add New Dentist</button>
 
                 <!-- Doctor Modal -->
                 <div id="dentist-modal" class="modal">
                     <div class="modal-content">
                         <span id="close-dentist-modal-btn" class="close-btn">&times;</span>
-                        <h2 id="dentist-modal-title">Add New Doctor</h2>
-                        <input type="text" id="dentist-name" placeholder="Dentist's Name" required>
+                        <h2 id="dentist-modal-title">Add New Dentist</h2>
+                        <input type="text" id="dentist-first-name" placeholder="First Name" required>
+                        <input type="text" id="dentist-second-name" placeholder="Second Name">
+                        <input type="text" id="dentist-middle-name" placeholder="Middle Name">
+                        <input type="text" id="dentist-last-name" placeholder="Last Name" required>
                         <input type="text" id="dentist-contact" placeholder="Contact Number" required>
-                        <input type="file" id="dentist-image" accept="image/*" required>
+                        
+                        <!-- Gender Dropdown with placeholder, styled like other input fields -->
+                        <select id="dentist-gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        
+                        <input type="file" id="dentist-image" accept="image/*">
                         <input type="hidden" id="editdentistId"> <!-- For editing -->
                         <button id="save-dentist-btn">Save Dentist</button>
                     </div>
@@ -208,6 +219,7 @@
                 </div>
             </section>
         </div>
+
 
         <!-- ========== STAFF MANAGEMENT ========== -->
         <div id="staff-section" class="management-section">

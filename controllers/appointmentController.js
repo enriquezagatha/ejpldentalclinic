@@ -28,6 +28,7 @@ exports.createAppointment = async (req, res) => {
         emergencyContactNumber,
         emergencyContactRelationship,
         selectedHistory,
+        assignedDentist, // This is the dentist's ID (can be null)
     } = req.body;
 
     const referenceNumber = generateReferenceNumber();
@@ -38,14 +39,24 @@ exports.createAppointment = async (req, res) => {
         return res.status(400).json({ success: false, message: "Appointment slots full for this time." });
     }
 
-    // Format preferredDate as "Month, Day. Year"
+    // Format preferredDate as "Month Day, Year"
     const formattedPreferredDate = new Date(preferredDate).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric"
     }).replace(/(\d+),/, '$1.');
 
-    // Create appointment WITHOUT adding to PatientRecord yet
+    let assignedDentistName = null;
+    
+    // If assignedDentist exists, perform the lookup, otherwise leave it as null
+    if (assignedDentist) {
+        const dentist = await Dentist.findById(assignedDentist);
+        if (dentist) {
+            assignedDentistName = `${dentist.firstName} ${dentist.lastName}`;
+        }
+    }
+
+    // Create appointment data
     const appointmentData = {
         patient: req.session.user.id,
         referenceNumber,
@@ -65,21 +76,22 @@ exports.createAppointment = async (req, res) => {
         emergencyContactNumber,
         emergencyContactRelationship,
         selectedHistory,
-        status: "Pending", // Always start as "Pending"
+        assignedDentist: assignedDentist || null, // Assign null if no dentist
+        status: "Pending",
     };
 
     const appointment = await new Appointment(appointmentData).save();
 
     // ✅ Create a notification
     const notification = new Notification({
-        user: req.session.user.id, // or null if it's an admin notification
+        user: req.session.user.id,
         title: "New Appointment Created",
         message: `Your appointment for ${treatmentType} on ${formattedPreferredDate} at ${preferredTime} has been created.`,
-        referenceId: appointment._id, // optional, link it to the appointment
+        referenceId: appointment._id,
         type: "Appointment",
         isRead: false,
         createdAt: new Date(),
-        logoUrl: "http://localhost:3000/media/logo/EJPL.png", // ✅ correct way
+        logoUrl: "http://localhost:3000/media/logo/EJPL.png",
     });
 
     await notification.save();
@@ -97,19 +109,31 @@ exports.getAppointmentsByPatient = async (req, res) => {
     }
 
     try {
-        // Fetch appointments and populate treatment details
         const appointments = await Appointment.find({ patient: req.session.user.id })
-            .populate('treatment');
+            .populate('treatment')
+            .populate('assignedDentist'); // Ensure assignedDentist is populated
 
         if (!appointments || appointments.length === 0) {
             return res.status(404).json({ message: 'No appointments found' });
         }
 
-        // Ensure `treatmentId` is null if no treatment exists
-        const sanitizedAppointments = appointments.map(appointment => ({
-            ...appointment.toObject(), // Convert Mongoose object to plain JSON
-            treatmentId: appointment.treatmentId || null // Set null if no treatment exists
-        }));
+        const sanitizedAppointments = appointments.map(appointment => {
+            const apptObj = appointment.toObject();
+
+            // Optional: Add a computed fullName field for display
+            if (apptObj.assignedDentist) {
+                const dentist = apptObj.assignedDentist;
+                const prefix = dentist.gender === 'Male' ? 'Dr.' : dentist.gender === 'Female' ? 'Dra.' : '';
+                apptObj.assignedDentist.fullName = `${prefix} ${dentist.firstName} ${dentist.lastName}`;
+            }
+
+            return {
+                ...apptObj,
+                treatmentId: appointment.treatmentId || null
+            };
+        });
+
+        console.log(sanitizedAppointments); // Check the populated data here
 
         res.json(sanitizedAppointments);
     } catch (error) {
@@ -159,7 +183,8 @@ exports.getAppointmentDetails = async (req, res) => {
             emergencyContactNumber: appointment.emergencyContactNumber,
             emergencyContactRelationship: appointment.emergencyContactRelationship,
             treatments: patientRecord ? patientRecord.treatments : [], // ✅ Ensure treatments is always an array
-            uploadedFiles: patientRecord ? patientRecord.uploadedFiles : [] // ✅ Ensure uploadedFiles is always an array
+            uploadedFiles: patientRecord ? patientRecord.uploadedFiles : [], // ✅ Ensure uploadedFiles is always an array
+            assignedDentist: dentistName,
         });
 
     } catch (error) {
@@ -567,11 +592,29 @@ exports.assignDentist = async (req, res) => {
             req.params.id,
             { assignedDentist },
             { new: true }
-        ).populate("assignedDentist");
+        ).populate("assignedDentist");  // This ensures the dentist details are populated
 
         if (!appointment) return res.status(404).json({ error: "Appointment not found" });
 
-        res.json({ message: "Dentist assigned successfully", appointment });
+        // Build the full name with a gender prefix
+        const genderPrefix = dentist.gender === "male" ? "Dr." : dentist.gender === "female" ? "Dra." : "";
+        const fullName = [
+            genderPrefix, // Prefix based on gender
+            dentist.firstName,
+            dentist.middleName,
+            dentist.lastName
+        ].filter(Boolean).join(" "); // Filter out any empty values
+
+        // Update the appointment's assignedDentist field with the full name
+        appointment.assignedDentist = {
+            ...appointment.assignedDentist.toObject(),
+            fullName // Add full name to the assignedDentist object
+        };
+
+        res.json({
+            message: "Dentist assigned successfully",
+            appointment
+        });
     } catch (error) {
         res.status(500).json({ error: "Failed to assign dentist" });
     }

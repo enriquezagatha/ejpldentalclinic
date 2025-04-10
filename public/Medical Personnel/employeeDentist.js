@@ -7,14 +7,20 @@ async function displayDentists() {
 
     const dentistTableBody = document.getElementById("dentist-table-body");
     dentistTableBody.innerHTML = "";
+
     dentists.forEach((dentist) => {
+        
+        // Create the full name with middle initial (if available)
+        const middleInitial = dentist.middleName ? dentist.middleName.charAt(0) + "." : ""; // Get the middle initial
+        const fullName = `${dentist.firstName} ${dentist.secondName} ${middleInitial} ${dentist.lastName}`.replace(/\s+/g, " ").trim();
+
         dentistTableBody.innerHTML += `
             <tr>
-                <td>${dentist.name}</td>
+                <td>${fullName}</td>
                 <td>${dentist.contact}</td>
                 <td><img src="${dentist.image ? dentist.image : 'default-image.jpg'}" alt="dentist Image" class="dentist-img" width="50"></td>
                 <td>
-                    <button onclick="editDentist('${dentist._id}', '${dentist.name}', '${dentist.contact}', '${dentist.image}')">Edit</button>
+                    <button onclick="editDentist('${dentist._id}', '${fullName.replace(/'/g, "\\'")}', '${dentist.contact}', '${dentist.image || ''}')">Edit</button>
                     <button onclick="deleteDentist('${dentist._id}')">Delete</button>
                 </td>
             </tr>`;
@@ -23,25 +29,31 @@ async function displayDentists() {
 
 // Add or update dentist (with image upload support)
 async function addOrUpdateDentist() {
-    const name = document.getElementById("dentist-name").value.trim();
+    const firstName = document.getElementById("dentist-first-name").value.trim();
+    const secondName = document.getElementById("dentist-second-name").value.trim();
+    const middleName = document.getElementById("dentist-middle-name").value.trim();
+    const lastName = document.getElementById("dentist-last-name").value.trim();
     const contact = document.getElementById("dentist-contact").value.trim();
+    const gender = document.getElementById("dentist-gender").value; // Get gender from the dropdown
     const imageFile = document.getElementById("dentist-image").files[0];
     const editId = document.getElementById("editdentistId").value;
 
-    if (!name || !contact) {
-        alert("Please enter both name and contact number.");
+    if (!firstName || !lastName || !contact || !gender) {
+        alert("Please enter first name, last name, contact number, and select gender.");
         return;
     }
 
+    const fullName = `${firstName} ${secondName} ${middleName} ${lastName}`.replace(/\s+/g, " ").trim();
+
     try {
-        // Fetch existing dentists to check for duplicate names
         const res = await fetch(DENTIST_API_URL);
         if (!res.ok) throw new Error("Failed to fetch dentists");
 
         const dentists = await res.json();
-        const isDuplicate = dentists.some(dentist => 
-            dentist.name.toLowerCase() === name.toLowerCase() && dentist._id !== editId
-        );
+        const isDuplicate = dentists.some(dentist => {
+            const existingFullName = `${dentist.firstName || ""} ${dentist.secondName || ""} ${dentist.middleName || ""} ${dentist.lastName || ""}`.replace(/\s+/g, " ").trim().toLowerCase();
+            return existingFullName === fullName.toLowerCase() && dentist._id !== editId;
+        });
 
         if (isDuplicate) {
             alert("A dentist with this name already exists. Please choose a different name.");
@@ -49,8 +61,12 @@ async function addOrUpdateDentist() {
         }
 
         const formData = new FormData();
-        formData.append("name", name);
+        formData.append("firstName", firstName);
+        formData.append("secondName", secondName);
+        formData.append("middleName", middleName);
+        formData.append("lastName", lastName);
         formData.append("contact", contact);
+        formData.append("gender", gender); // Append the gender to the form data
         if (imageFile) {
             formData.append("image", imageFile);
         }
@@ -64,7 +80,7 @@ async function addOrUpdateDentist() {
         });
 
         if (response.ok) {
-            alert(`dentist ${editId ? "updated" : "added"} successfully!`);
+            alert(`Dentist ${editId ? "updated" : "added"} successfully!`);
             document.getElementById("dentist-modal").style.display = "none";
             displayDentists();
         } else {
@@ -76,8 +92,16 @@ async function addOrUpdateDentist() {
 }
 
 // Edit dentist (populate fields)
-function editDentist(id, name, contact, image) {
-    document.getElementById("dentist-name").value = name;
+function editDentist(id, fullName, contact, image) {
+    const nameParts = fullName.split(" ");
+    const firstName = nameParts[0];
+    const lastName = nameParts[nameParts.length - 1];
+    const middleName = nameParts.length > 2 ? nameParts.slice(1, -1).join(" ") : "";
+
+    document.getElementById("dentist-first-name").value = firstName;
+    document.getElementById("dentist-second-name").value = middleName;
+    document.getElementById("dentist-middle-name").value = middleName;
+    document.getElementById("dentist-last-name").value = lastName;
     document.getElementById("dentist-contact").value = contact;
     document.getElementById("editdentistId").value = id;
     document.getElementById("dentist-modal").style.display = "block";

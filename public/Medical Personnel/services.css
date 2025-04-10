@@ -310,3 +310,13 @@ form button:hover {
 .close-button:hover {
     background: darkred;
 }
+
+#dentist-gender {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
