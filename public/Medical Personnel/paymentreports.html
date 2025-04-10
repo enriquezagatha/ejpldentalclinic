@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personnel - Home</title>
+    <title>Personnel - Payment Reports</title>
     <link href="../output.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-personnel/sidebarfetch-personnel.js"></script>
     <!-- <link rel="stylesheet" href="../Medical Personnel/mpstyle.css"> -->
-    <link rel="stylesheet" href="../Medical Personnel/reports.css"> 
+    <!-- <link rel="stylesheet" href="../Medical Personnel/reports.css">  -->
 </head>
+
 <body class="min-h-screen bg-slate-50 flex font-inter">
 
-    <!-- Overlay for mobile -->
-<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-10 hidden md:hidden z-40"></div>
+<!-- Overlay for mobile -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-10 hidden lg:hidden z-40"></div>
 
 <!-- Main Content -->
-<div id="main-content" class="flex-1 md:ml-64 z-30">
+<div id="main-content" class="flex-1 lg:ml-64 z-30 overflow-x-hidden">
     <!-- Navbar -->
     <header class="bg-white shadow-md p-2 flex justify-between items-center">
         <!-- Hamburger Menu -->
-        <button id="hamburger" class="md:hidden ml-4 text-[#232931] focus:outline-none">
+        <button id="hamburger" class="lg:hidden ml-4 text-[#232931] focus:outline-none">
             <i class="fas fa-bars text-2xl"></i>
         </button>
-        <h1 class="text-xl font-semibold ml-8 text-[#232931] hidden md:block">Payments</h1>
+        <h1 class="text-xl font-semibold ml-8 text-[#232931] hidden lg:block">Payments</h1>
         <div class="flex items-center bg-white border text-white pl-6 pr-3 py-2 rounded-lg relative group">
             <img class="w-8 h-8 rounded-full mr-3 desktop-profile object-cover" alt="Profile Picture">
             <div class="text-left">
@@ -40,266 +41,146 @@
             </div>
         </div>
     </header>
+
     <!-- Page Content -->
-    <main class="p-6">
-
-        <!-- Report Navigation Buttons -->
-        <div class="report-buttons">
-            <button class="tab-btn" onclick="showSection('patient-record')">Patient Appointment Report</button>
-            <button class="tab-btn" onclick="showSection('patient-treatment')">Treatment Report</button>
-            <button class="tab-btn" onclick="showSection('payment-report')">Payment Report</button>
-        </div>
-
-        <!-- ✅ Patient Record Report Section -->
-        <section id="patient-record" class="report-section">
-            <div class="container">
-                <h2>Patient Appointment Report</h2>
-
-                <label for="patientstartDate">Start Date:</label>
-                <input type="date" id="patientstartDate">
-                
-                <label for="patientendDate">End Date:</label>
-                <input type="date" id="patientendDate">
-                
-                <button id="patientfilterButton">Filter</button>
-
-                <p><strong>Total Patients:</strong> <span id="totalPatients">0</span></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Gender</th>
-                            <th>Contact Number</th>
-                            <th>Created At</th>
-                        </tr>
-                    </thead>
-                    <tbody id="patientList">
-                        <tr><td colspan="4">Loading...</td></tr>
-                    </tbody>
-                </table>
-
-                <button id="patientdownloadPdfBtn">Download Patient Report</button>
-            </div>
-        </section>             
-
-        <!-- ✅ Patient Treatment Report Section -->
-        <section id="patient-treatment" class="report-section" style="display: none;">
-            <div class="container">
-                <h2>Treatment Report</h2>
-                
-                <label for="startDate">Start Date:</label>
-                <input type="date" id="startDate">
-
-                <label for="endDate">End Date:</label>
-                <input type="date" id="endDate">
-
-                <div class="custom-dropdown">
-                    <div class="dropdown-btn" id="dropdownBtn">Select Treatment</div>
-                    <div class="dropdown-content" id="dropdownContent">
-                        <input type="text" id="dropdownSearch" placeholder="Search Treatment...">
-                        <div data-value="">All Treatments</div>
-                        <div data-value="consultation">Consultation</div>
-                        <div data-value="mild">Mild</div>
-                        <div data-value="moderate">Moderate</div>
-                        <div data-value="severe">Severe</div>
-                        <div data-value="deep_scalping">Deep scalping (per quadrant)</div>
-                        <div data-value="diastema_closure">Diastema closure</div>
-                        <div data-value="temporary_dressing">Temporary dressing</div>
-                        <div data-value="composite_filling">Composite filling (per surface)</div>
-                        <div data-value="inlay_onlay_composite">Inlay | onlay (composite)</div>
-                        <div data-value="simple_extraction">Simple extraction</div>
-                        <div data-value="complicated_case">Complicated case</div>
-                        <div data-value="acrylic_plastic">Acrylic | plastic</div>
-                        <div data-value="pfm_crown">PFM crown</div>
-                        <div data-value="pfm_crown_tilite">PFM crown (tilite)</div>
-                        <div data-value="all_ceramic_porcelain">All ceramic porcelain</div>
-                        <div data-value="zirconia_ceramic_brown">Zirconia ceramic brown</div>
-                        <div data-value="metal_brackets">Metal brackets</div>
-                        <div data-value="ceramic_brackets">Ceramic brackets</div>
-                        <div data-value="self_ligating_metal_brackets">Self-ligating metal brackets</div>
-                        <div data-value="self_ligating_ceramic_brackets">Self-ligating ceramic brackets</div>
-                        <div data-value="clear_aligners">Clear aligners</div>
-                        <div data-value="functional_appliance">Functional appliance</div>
-                        <div data-value="hawleys_retainer">Hawley's retainer (u/l)</div>
-                        <div data-value="essix_retainers">Essix retainers</div>
-                        <div data-value="fixed_retainers">Fixed retainers</div>
-                        <div data-value="temporary_anchorage_device">Temporary anchorage device</div>
-                        <div data-value="bracket_recementation">Bracket recementation</div>
-                        <div data-value="bracket_removal">Bracket removal</div>
-                        <div data-value="downpayment">Downpayment</div>
-                        <div data-value="odontectomy">Odontectomy</div>
-                        <div data-value="apicoectomy">Apicoectomy</div>
-                        <div data-value="frenectomy">Frenectomy</div>
-                        <div data-value="gingivectomy">Gingivectomy (per arch)</div>
-                        <div data-value="in_office_teeth_whitening">In-office teeth whitening (u/l)</div>
-                        <div data-value="at_home_whitening">At-home whitening (u/l)</div>
-                        <div data-value="direct_composite">Direct composite</div>
-                        <div data-value="indirect_composite">Indirect composite</div>
-                        <div data-value="indirect_porcelain">Indirect porcelain</div>
-                        <div data-value="new_ace">New ace (u/l)</div>
-                        <div data-value="new_ace_fx">New ace fx</div>
-                        <div data-value="natura_tone">Natura tone (u/l)</div>
-                        <div data-value="new_ace_us">New ace (us) (u/l)</div>
-                        <div data-value="biotone">Biotone (u/l)</div>
-                        <div data-value="bioform">Bioform (u/l)</div>
-                        <div data-value="inocap">Inocap (u/l)</div>
-                        <div data-value="thermosens">Thermosens (u/l)</div>
-                        <div data-value="stayplate">Stayplate (2 pontics)</div>
-                        <div data-value="assembled_casted_clasp">Assembled casted clasp</div>
-                        <div data-value="flexible_uni">Flexible uni</div>
-                        <div data-value="flexible_bil">Flexible bil</div>
-                        <div data-value="goldmesh">Goldmesh (additional)</div>
-                        <div data-value="lucitone">Lucitone (add in)</div>
-                        <div data-value="one_piece_uni">One piece uni</div>
-                        <div data-value="one_piece_bila">One piece bila</div>
-                        <div data-value="flexi_combi">Flexi combi (bilateral)</div>
-                        <div data-value="reline">Reline (laboratory)</div>
-                        <div data-value="rebase">Rebase (laboratory)</div>
-                        <div data-value="chairside_reline">Chairside reline</div>
-                        <div data-value="recementation_of_crown">Recementation of crown</div>
-                        <div data-value="night_guard">Night guard (per arch)</div>
-                    </div>
-                </div>
-
-                <button id="treatmentfilterButton">Filter</button>
-
-                <p><strong>Total Treatments:</strong> <span id="totalTreatments">0</span></p>
-                <p><strong>Most Popular Treatment:</strong> <span id="popularTreatment">Loading...</span></p>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Patient Name</th>
-                            <th>Treatment Name</th>
-                            <th>Treatment Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="treatmentList">
-                        <tr><td colspan="3">No data available</td></tr>
-                    </tbody>
-                </table>
-
-                <button id="downloadTreatmentPdfBtn">Download PDF</button>
-            </div>
-        </section>
+    <main class="p-6">        
 
          <!-- ✅ Payment Report Section -->
         <section id="payment-report" class="report-section">
-            <div class="container">
-                <h2>Payment Report</h2>
+            <div class="container mx-auto px-4 lg:px-6 xl:px-8">
 
-                <label for="startDate">Start Date:</label>
-                <input type="date" id="paymentstartDate">
+                <div class="flex flex-col-reverse lg:flex-row lg:gap-16 lg:items-center">
+                    <p class="text-lg font-medium text-gray-700"><strong>Total Revenue:</strong> <span id="totalRevenue" class="text-indigo-600">₱0.00</span></p>
+                    <p class="text-lg font-medium text-gray-700"><strong>Total Transactions:</strong> <span id="totalPayments" class="text-indigo-600">0</span></p>
+                </div>
+                <p class="text-lg font-medium text-gray-700"><strong>Total Paid Amount:</strong> <span id="totalPaid" class="text-indigo-600">₱0.00</span></p>
+                
+                <div class="mb-4 w-full mt-4 lg:w-2/6 relative">
+                    <input type="text" id="paymentReportsSearch" placeholder="Search by name..." class="mt-1 block w-full px-4 py-2 pl-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 lg:text-sm">
+                    <i class="fas fa-search absolute top-[1.2rem] left-3 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
 
-                <label for="endDate">End Date:</label>
-                <input type="date" id="paymentendDate">
-
-                <!-- ✅ Custom Dropdown for Payment Status -->
-                <div class="paymentcustom-dropdown">
-                    <div class="paymentdropdown-btn" id="paymentdropdownBtn">Select Status</div>
-                    <div class="paymentdropdown-content" id="paymentdropdownContent">
-                        <div data-value="">All Treatments</div>
-                        <div data-value="consultation">Consultation</div>
-                        <div data-value="mild">Mild</div>
-                        <div data-value="moderate">Moderate</div>
-                        <div data-value="severe">Severe</div>
-                        <div data-value="deep_scalping">Deep scalping (per quadrant)</div>
-                        <div data-value="diastema_closure">Diastema closure</div>
-                        <div data-value="temporary_dressing">Temporary dressing</div>
-                        <div data-value="composite_filling">Composite filling (per surface)</div>
-                        <div data-value="inlay_onlay_composite">Inlay | onlay (composite)</div>
-                        <div data-value="simple_extraction">Simple extraction</div>
-                        <div data-value="complicated_case">Complicated case</div>
-                        <div data-value="acrylic_plastic">Acrylic | plastic</div>
-                        <div data-value="pfm_crown">PFM crown</div>
-                        <div data-value="pfm_crown_tilite">PFM crown (tilite)</div>
-                        <div data-value="all_ceramic_porcelain">All ceramic porcelain</div>
-                        <div data-value="zirconia_ceramic_brown">Zirconia ceramic brown</div>
-                        <div data-value="metal_brackets">Metal brackets</div>
-                        <div data-value="ceramic_brackets">Ceramic brackets</div>
-                        <div data-value="self_ligating_metal_brackets">Self-ligating metal brackets</div>
-                        <div data-value="self_ligating_ceramic_brackets">Self-ligating ceramic brackets</div>
-                        <div data-value="clear_aligners">Clear aligners</div>
-                        <div data-value="functional_appliance">Functional appliance</div>
-                        <div data-value="hawleys_retainer">Hawley's retainer (u/l)</div>
-                        <div data-value="essix_retainers">Essix retainers</div>
-                        <div data-value="fixed_retainers">Fixed retainers</div>
-                        <div data-value="temporary_anchorage_device">Temporary anchorage device</div>
-                        <div data-value="bracket_recementation">Bracket recementation</div>
-                        <div data-value="bracket_removal">Bracket removal</div>
-                        <div data-value="downpayment">Downpayment</div>
-                        <div data-value="odontectomy">Odontectomy</div>
-                        <div data-value="apicoectomy">Apicoectomy</div>
-                        <div data-value="frenectomy">Frenectomy</div>
-                        <div data-value="gingivectomy">Gingivectomy (per arch)</div>
-                        <div data-value="in_office_teeth_whitening">In-office teeth whitening (u/l)</div>
-                        <div data-value="at_home_whitening">At-home whitening (u/l)</div>
-                        <div data-value="direct_composite">Direct composite</div>
-                        <div data-value="indirect_composite">Indirect composite</div>
-                        <div data-value="indirect_porcelain">Indirect porcelain</div>
-                        <div data-value="new_ace">New ace (u/l)</div>
-                        <div data-value="new_ace_fx">New ace fx</div>
-                        <div data-value="natura_tone">Natura tone (u/l)</div>
-                        <div data-value="new_ace_us">New ace (us) (u/l)</div>
-                        <div data-value="biotone">Biotone (u/l)</div>
-                        <div data-value="bioform">Bioform (u/l)</div>
-                        <div data-value="inocap">Inocap (u/l)</div>
-                        <div data-value="thermosens">Thermosens (u/l)</div>
-                        <div data-value="stayplate">Stayplate (2 pontics)</div>
-                        <div data-value="assembled_casted_clasp">Assembled casted clasp</div>
-                        <div data-value="flexible_uni">Flexible uni</div>
-                        <div data-value="flexible_bil">Flexible bil</div>
-                        <div data-value="goldmesh">Goldmesh (additional)</div>
-                        <div data-value="lucitone">Lucitone (add in)</div>
-                        <div data-value="one_piece_uni">One piece uni</div>
-                        <div data-value="one_piece_bila">One piece bila</div>
-                        <div data-value="flexi_combi">Flexi combi (bilateral)</div>
-                        <div data-value="reline">Reline (laboratory)</div>
-                        <div data-value="rebase">Rebase (laboratory)</div>
-                        <div data-value="chairside_reline">Chairside reline</div>
-                        <div data-value="recementation_of_crown">Recementation of crown</div>
-                        <div data-value="night_guard">Night guard (per arch)</div>
+                <div class="flex flex-wrap items-center gap-4 mb-4">
+                    <div class="w-full lg:w-auto">
+                        <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date:</label>
+                        <input type="date" id="paymentstartDate" class="mt-1 block w-full px-4 py-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 lg:text-sm">
+                    </div>
+                    <div class="w-full lg:w-auto">
+                        <label for="endDate" class="block text-sm font-medium text-gray-700">End Date:</label>
+                        <input type="date" id="paymentendDate" class="mt-1 block w-full px-4 py-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 lg:text-sm">
+                    </div>
+                    <div class="relative mb-4 w-full lg:w-1/6 paymentcustom-dropdown">
+                        <div id="paymentdropdownBtn" class="paymentdropdown-btn mt-10 block w-full px-4 py-1 border-gray-300 rounded-md shadow-sm bg-white cursor-pointer focus:ring-indigo-500 focus:border-indigo-500 lg:text-sm">
+                            Select Status
+                        </div>
+                        <div id="paymentdropdownContent" class="paymentdropdown-content absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden">
+                            <input type="text" id="paymentdropdownSearch" placeholder="Search Status..." class="w-full px-4 py-2 border-b border-gray-300 focus:outline-none">
+                            <div class="max-h-48 overflow-y-auto">
+                                <div data-value="" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">All Treatments</div>
+                                <div data-value="consultation" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Consultation</div>
+                                <div data-value="mild" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Mild</div>
+                                <div data-value="moderate" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Moderate</div>
+                                <div data-value="severe" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Severe</div>
+                                <div data-value="deep_scalping" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Deep scalping (per quadrant)</div>
+                                <div data-value="diastema_closure" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Diastema closure</div>
+                                <div data-value="temporary_dressing" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Temporary dressing</div>
+                                <div data-value="composite_filling" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Composite filling (per surface)</div>
+                                <div data-value="inlay_onlay_composite" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Inlay | onlay (composite)</div>
+                                <div data-value="simple_extraction" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Simple extraction</div>
+                                <div data-value="complicated_case" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Complicated case</div>
+                                <div data-value="acrylic_plastic" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Acrylic | plastic</div>
+                                <div data-value="pfm_crown" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">PFM crown</div>
+                                <div data-value="pfm_crown_tilite" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">PFM crown (tilite)</div>
+                                <div data-value="all_ceramic_porcelain" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">All ceramic porcelain</div>
+                                <div data-value="zirconia_ceramic_brown" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Zirconia ceramic brown</div>
+                                <div data-value="metal_brackets" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Metal brackets</div>
+                                <div data-value="ceramic_brackets" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Ceramic brackets</div>
+                                <div data-value="self_ligating_metal_brackets" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Self-ligating metal brackets</div>
+                                <div data-value="self_ligating_ceramic_brackets" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Self-ligating ceramic brackets</div>
+                                <div data-value="clear_aligners" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Clear aligners</div>
+                                <div data-value="functional_appliance" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Functional appliance</div>
+                                <div data-value="hawleys_retainer" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Hawley's retainer (u/l)</div>
+                                <div data-value="essix_retainers" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Essix retainers</div>
+                                <div data-value="fixed_retainers" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Fixed retainers</div>
+                                <div data-value="temporary_anchorage_device" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Temporary anchorage device</div>
+                                <div data-value="bracket_recementation" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Bracket recementation</div>
+                                <div data-value="bracket_removal" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Bracket removal</div>
+                                <div data-value="downpayment" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Downpayment</div>
+                                <div data-value="odontectomy" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Odontectomy</div>
+                                <div data-value="apicoectomy" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Apicoectomy</div>
+                                <div data-value="frenectomy" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Frenectomy</div>
+                                <div data-value="gingivectomy" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Gingivectomy (per arch)</div>
+                                <div data-value="in_office_teeth_whitening" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">In-office teeth whitening (u/l)</div>
+                                <div data-value="at_home_whitening" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">At-home whitening (u/l)</div>
+                                <div data-value="direct_composite" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Direct composite</div>
+                                <div data-value="indirect_composite" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Indirect composite</div>
+                                <div data-value="indirect_porcelain" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Indirect porcelain</div>
+                                <div data-value="new_ace" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">New ace (u/l)</div>
+                                <div data-value="new_ace_fx" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">New ace fx</div>
+                                <div data-value="natura_tone" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Natura tone (u/l)</div>
+                                <div data-value="new_ace_us" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">New ace (us) (u/l)</div>
+                                <div data-value="biotone" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Biotone (u/l)</div>
+                                <div data-value="bioform" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Bioform (u/l)</div>
+                                <div data-value="inocap" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Inocap (u/l)</div>
+                                <div data-value="thermosens" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Thermosens (u/l)</div>
+                                <div data-value="stayplate" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Stayplate (2 pontics)</div>
+                                <div data-value="assembled_casted_clasp" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Assembled casted clasp</div>
+                                <div data-value="flexible_uni" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Flexible uni</div>
+                                <div data-value="flexible_bil" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Flexible bil</div>
+                                <div data-value="goldmesh" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Goldmesh (additional)</div>
+                                <div data-value="lucitone" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Lucitone (add in)</div>
+                                <div data-value="one_piece_uni" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">One piece uni</div>
+                                <div data-value="one_piece_bila" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">One piece bila</div>
+                                <div data-value="flexi_combi" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Flexi combi (bilateral)</div>
+                                <div data-value="reline" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Reline (laboratory)</div>
+                                <div data-value="rebase" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Rebase (laboratory)</div>
+                                <div data-value="chairside_reline" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Chairside reline</div>
+                                <div data-value="recementation_of_crown" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Recementation of crown</div>
+                                <div data-value="night_guard" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Night guard (per arch)</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative mb-4 w-full lg:w-1/6 paymentcustom-dropdown">
+                        <div class="treatmentdropdown-btn mt-10 block w-full px-4 py-1 border-gray-300 rounded-md shadow-sm bg-white cursor-pointer focus:ring-indigo-500 focus:border-indigo-500 lg:text-sm" id="treatmentdropdownBtn">Select Treatment</div>
+                        <div class="treatmentdropdown-content absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg hidden" id="treatmentdropdownContent">
+                            <div data-value="" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">All Treatments</div>
+                            <div data-value="cleaning" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Cleaning</div>
+                            <div data-value="whitening" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Whitening</div>
+                            <div data-value="filling" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Filling</div>
+                            <div data-value="extraction" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Extraction</div>
+                        </div>
+                    </div>
+                    <button id="paymentfilterButton" class="w-full lg:w-auto bg-[#2C4A66] text-white px-4 py-1 mt-6 rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-[#2C4A66]">Filter</button>
+                    <div class="w-full lg:flex-1 flex justify-end">
+                        <button id="downloadPaymentPdfBtn" class="w-full lg:w-auto bg-[#2C4A66] text-white px-4 py-1 mt-6 rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-green-500">Download PDF</button>
                     </div>
                 </div>
 
-                <!-- ✅ Custom Dropdown for Treatment -->
-                <div class="paymentcustom-dropdown">
-                    <div class="treatmentdropdown-btn" id="treatmentdropdownBtn">Select Treatment</div>
-                    <div class="treatmentdropdown-content" id="treatmentdropdownContent">
-                        <div data-value="">All Treatments</div>
-                        <div data-value="cleaning">Cleaning</div>
-                        <div data-value="whitening">Whitening</div>
-                        <div data-value="filling">Filling</div>
-                        <div data-value="extraction">Extraction</div>
-                    </div>
-                </div>
-
-                <button id="paymentfilterButton">Filter</button>
-
-                <p><strong>Total Transactions:</strong> <span id="totalPayments">0</span></p>
-                <p><strong>Total Revenue:</strong> <span id="totalRevenue">₱0.00</span></p>
-                <p><strong>Total Paid Amount:</strong> <span id="totalPaid">₱0.00</span></p>
-
+    
                 <!-- ✅ Added Loading Indicator -->
                 <div id="loadingIndicator" style="display: none;">Loading...</div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Patient Name</th>
-                            <th>Email</th>
-                            <th>Treatment</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="paymentList">
-                        <tr><td colspan="6">No data available</td></tr>
-                    </tbody>
-                </table>
-
-                <button id="downloadPaymentPdfBtn">Download PDF</button>
+                <div class="overflow-x-auto mt-4">
+                    <div class="min-w-[728px]">
+                        <table class="w-full bg-white border border-gray-200 rounded-lg">
+                            <thead>
+                                <tr class="bg-[#2C4A66] text-white">
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Patient Name</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Email</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Treatment</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Amount</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Status</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentList" class="divide-y divide-gray-200">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500">No data available</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                 <!-- ✅ Added Pagination Controls -->
                 <div id="pagination-controls"></div>
@@ -368,6 +249,5 @@
                     }
                 });
     </script>
-
 </body>
 </html>

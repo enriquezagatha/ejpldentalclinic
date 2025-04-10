@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
             patientList.innerHTML = "";
     
             if (appointments.length === 0) {
-                patientList.innerHTML = '<tr><td colspan="3">No appointments found.</td></tr>'; // ✅ Fixed colspan
+                patientList.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No appointments found.</td></tr>'; // ✅ Fixed colspan
                 totalPatientsElement.textContent = "0";
                 return;
             }

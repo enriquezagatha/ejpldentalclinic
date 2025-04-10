@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./**/*.html'], // Update this based on where your HTML files are located
+  content: ['./**/*.html'],
+  safelist: [
+    'bg-[#E3EBF9]',
+    'text-[#6E80D1]',
+    'current-page',
+], // Update this based on where your HTML files are located
   theme: {
     extend: {
       fontFamily: {

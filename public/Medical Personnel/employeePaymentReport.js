@@ -19,31 +19,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ Toggle dropdown visibility when clicking the button
     paymentDropdownBtn.addEventListener("click", function () {
-        paymentDropdownContent.classList.toggle("show");
+        paymentDropdownContent.classList.toggle("hidden");
     });
 
     treatmentDropdownBtn.addEventListener("click", function () {
-        treatmentDropdownContent.classList.toggle("show");
+        treatmentDropdownContent.classList.toggle("hidden");
     });
 
     // ✅ Handle dropdown selection for status
-    paymentDropdownContent.querySelectorAll("div").forEach(item => {
-        item.addEventListener("click", function () {
-            selectedStatus = this.getAttribute("data-value");
+    document.querySelectorAll("#paymentdropdownContent div[data-value]").forEach(option => {
+        option.addEventListener("click", function () {
+            selectedStatus = this.dataset.value;
             paymentDropdownBtn.textContent = this.textContent;
-            paymentDropdownContent.classList.remove("show");
-
+            paymentDropdownContent.classList.add("hidden"); // Use class toggle instead of style.display
             console.log("✅ Selected Status:", selectedStatus);
         });
     });
 
     // ✅ Handle dropdown selection for treatment
-    treatmentDropdownContent.querySelectorAll("div").forEach(item => {
-        item.addEventListener("click", function () {
-            selectedTreatment = this.getAttribute("data-value");
+    document.querySelectorAll("#treatmentdropdownContent div[data-value]").forEach(option => {
+        option.addEventListener("click", function () {
+            selectedTreatment = this.dataset.value;
             treatmentDropdownBtn.textContent = this.textContent;
-            treatmentDropdownContent.classList.remove("show");
-
+            treatmentDropdownContent.classList.add("hidden"); // Use class toggle instead of style.display
             console.log("✅ Selected Treatment:", selectedTreatment);
         });
     });
@@ -51,10 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // ✅ Close dropdowns when clicking outside
     document.addEventListener("click", function (event) {
         if (!paymentDropdownBtn.contains(event.target) && !paymentDropdownContent.contains(event.target)) {
-            paymentDropdownContent.classList.remove("show");
+            paymentDropdownContent.classList.add("hidden");
         }
         if (!treatmentDropdownBtn.contains(event.target) && !treatmentDropdownContent.contains(event.target)) {
-            treatmentDropdownContent.classList.remove("show");
+            treatmentDropdownContent.classList.add("hidden");
         }
     });
 
@@ -109,19 +107,19 @@ document.addEventListener("DOMContentLoaded", function () {
         paymentList.innerHTML = "";
 
         if (payments.length === 0) {
-            paymentList.innerHTML = "<tr><td colspan='6'>No data available</td></tr>";
+            paymentList.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No data available</td></tr>';
             return;
         }
 
         payments.forEach(payment => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${payment.patientName}</td>
-                <td>${payment.email}</td>
-                <td>${payment.treatment}</td>
-                <td>₱${(payment.amount / 100).toFixed(2)}</td>
-                <td>${payment.status}</td>
-                <td>${new Date(payment.createdAt).toLocaleDateString()}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${payment.patientName}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${payment.email}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${payment.treatment}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">₱${(payment.amount / 100).toFixed(2)}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${payment.status}</td>
+                <td class="px-6 py-4 text-sm text-gray-700">${new Date(payment.createdAt).toLocaleDateString()}</td>
             `;
             paymentList.appendChild(row);
         });
