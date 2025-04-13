@@ -3,10 +3,26 @@
         <img src="../media/logo/EJPL.png" alt="Logo" class="logo w-24 h-auto" onclick="window.location.href='../Patient/patient-home.html';" style="cursor: pointer;">
         <div class="flex items-center space-x-4">
             <!-- Bell Icon for Mobile -->
-            <a href="#" class="relative mt-1 mr-4 order-1 lg:order-none lg:hidden">
-                <i class="fas fa-bell text-white text-xl hover:text-gray-300"></i>  
-                <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full px-1"></span>
-            </a>
+            <div class="relative">
+                <!-- Notification Bell -->
+                <button id="mobile-notification-bell" class="mt-1 mr-2 lg:hidden relative focus:outline-none">
+                    <i class="fas fa-bell text-white text-xl hover:text-white"></i>
+                    <span id="mobile-notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
+                </button>
+            </div>
+            <div id="mobile-notification-dropdown" class="absolute right-[0.1rem] mt-[20.8rem] w-full bg-white border border-gray-200 rounded-none shadow-lg hidden lg:hidden z-50">
+                <div class="p-4 border-b border-gray-200">
+                    <div class="flex gap-2">
+                        <button onclick="markSelectedAsRead()" class="flex-1 py-1 bg-green-500 text-white text-xs font-semibold rounded hover:bg-green-600 font-inter">Mark as Read</button>
+                        <button onclick="markSelectedAsUnread()" class="flex-1 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600 font-inter">Mark as Unread</button>
+                        <button onclick="deleteSelectedNotifications()" class="flex-1 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600 font-inter">Delete</button>
+                    </div>
+                </div>
+                <ul id="mobile-notification-list" class="max-h-48 overflow-y-auto p-2 space-y-2">
+                    <!-- Notifications will be dynamically added here -->
+                    <li class="text-sm text-gray-500 text-center font-inter">No notifications</li>
+                </ul>
+            </div>
             <!-- Hamburger Menu -->
             <button id="mobile-open-button" class="text-3xl lg:hidden focus:outline-none mr-4 order-2">
                 &#9776;
@@ -39,10 +55,27 @@
             </div>
             <a href="../Patient/patient-doctors.html" class="">Dentists</a>
             <!-- Bell Icon for Desktop -->
-            <a href="#" class="relative hidden lg:block">
-                <i class="fas fa-bell text-white text-xl hover:text-gray-300"></i>  
-                <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full px-1"></span>
-            </a>
+            <div class="relative">
+                <!-- Notification Bell -->
+                <button id="notification-bell" class="relative focus:outline-none">
+                    <i class="fas fa-bell text-white text-xl hover:text-white"></i>
+                    <span id="notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
+                </button>
+                <!-- Notification Dropdown -->
+                <div id="notification-dropdown" class="absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
+                    <div class="p-4 border-b border-gray-200">
+                        <div class="flex gap-2">
+                            <button onclick="markSelectedAsRead()" class="flex-1 py-1 bg-green-500 text-white text-xs font-semibold rounded hover:bg-green-600">Mark as Read</button>
+                            <button onclick="markSelectedAsUnread()" class="flex-1 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600">Mark as Unread</button>
+                            <button onclick="deleteSelectedNotifications()" class="flex-1 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600">Delete</button>
+                        </div>
+                    </div>
+                    <ul id="notification-list" class="max-h-48 overflow-y-auto p-2 space-y-2">
+                        <!-- Notifications will be dynamically added here -->
+                        <li class="text-sm text-gray-500 text-center">No notifications</li>
+                    </ul>
+                </div>
+            </div>
             <div class="flex items-center bg-[#223E57] text-white pl-6 pr-3 py-2 rounded-lg cursor-pointer relative group">
                 <img class="w-8 h-8 rounded-full mr-3 desktop-profile object-cover" alt="Profile Picture">
                 <div class="text-left">

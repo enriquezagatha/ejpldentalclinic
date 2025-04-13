@@ -27,10 +27,40 @@
             <h1 class="text-xl font-semibold ml-8 text-[#232931] hidden lg:block">Dashboard</h1>
             <!-- Notification Bell -->
             <div class="flex items-center gap-4">
-                <a href="#" class="relative mr-4">
-                    <i class="fas fa-bell text-[#232931] text-xl hover:text-gray-600"></i>
-                    <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full px-1"></span>
-                </a>
+                <div class="relative">
+                    <!-- Notification Bell -->
+                    <button id="notification-bell" class="relative focus:outline-none">
+                        <i class="fas fa-bell text-[#232931] text-xl hover:text-gray-600"></i>
+                        <span id="notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
+                    </button>
+                    <!-- Notification Dropdown -->
+                    <div id="notification-dropdown" class="absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
+                        <div class="p-4 border-b border-gray-200">
+                            <div class="flex gap-2">
+                                <button onclick="markSelectedAsRead()" class="flex-1 py-1 bg-green-500 text-white text-xs font-semibold rounded hover:bg-green-600">Mark as Read</button>
+                                <button onclick="markSelectedAsUnread()" class="flex-1 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600">Mark as Unread</button>
+                                <button onclick="deleteSelectedNotifications()" class="flex-1 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600">Delete</button>
+                            </div>
+                        </div>
+                        <ul id="notification-list" class="max-h-48 overflow-y-auto p-2 space-y-2">
+                            <!-- Notifications will be dynamically added here -->
+                            <li class="text-sm text-gray-500 text-center">No notifications</li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="mobile-notification-dropdown" class="absolute left-0 mt-[19rem] w-full bg-white border border-gray-200 rounded-none shadow-lg hidden z-50">
+                    <div class="p-4 border-b border-gray-200">
+                        <div class="flex gap-2">
+                            <button onclick="markSelectedAsRead()" class="flex-1 py-1 bg-green-500 text-white text-xs font-semibold rounded hover:bg-green-600">Mark as Read</button>
+                            <button onclick="markSelectedAsUnread()" class="flex-1 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600">Mark as Unread</button>
+                            <button onclick="deleteSelectedNotifications()" class="flex-1 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600">Delete</button>
+                        </div>
+                    </div>
+                    <ul id="mobile-notification-list" class="max-h-48 overflow-y-auto p-2 space-y-2">
+                        <!-- Notifications will be dynamically added here -->
+                        <li class="text-sm text-gray-500 text-center">No notifications</li>
+                    </ul>
+                </div>
                 <div id="profile-container" onclick=toggleMobileDropdown() class="flex items-center bg-white border text-white pl-6 pr-3 py-2 rounded-lg relative group">
                     <img class="w-8 h-8 rounded-full mr-0 lg:mr-3 desktop-profile object-cover" alt="Profile Picture">
                     <div class="hidden lg:block text-left">
@@ -59,53 +89,8 @@
             <script src="employeePaymentReport.js"></script> -->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-            <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        const profileResponse = await fetch('/api/medicalPersonnel/profile');
-        if (profileResponse.ok) {
-            const personnelData = await profileResponse.json();
-            displayProfileInfo(personnelData);
-
-            // Set the profile picture if available
-            const profilePictureElement = document.querySelector('.desktop-profile');
-            profilePictureElement.src = personnelData.profilePicture 
-                ? `/uploads/${personnelData.profilePicture}` 
-                : '../media/logo/default-profile.png';
-        }
-
-        function toggleMobileDropdown() {
-            const mobileDropdown = document.getElementById('mobile-profile-dropdown');
-            const desktopDropdown = document.getElementById('desktop-profile-dropdown');
-
-            // Toggle mobile dropdown visibility
-            mobileDropdown.classList.toggle('hidden');
-
-            // Ensure desktop dropdown is hidden on mobile
-            if (window.innerWidth < 1024) {
-                desktopDropdown.classList.add('hidden');
-            }
-        }
-
-        document.getElementById('profile-container').addEventListener('click', function (event) {
-            event.stopPropagation(); // Prevent triggering the outside click listener
-            toggleMobileDropdown();
-        });
-
-        // Close mobile dropdown when clicking outside
-        document.addEventListener('click', function (event) {
-            const mobileDropdown = document.getElementById('mobile-profile-dropdown');
-            const profileContainer = document.getElementById('profile-container');
-
-            if (!mobileDropdown.contains(event.target) && !profileContainer.contains(event.target)) {
-                mobileDropdown.classList.add('hidden');
-            }
-        });
-    });
-
-    function displayProfileInfo(data) {
-        document.getElementById('profile-name').innerText = `${data.firstName}`;
-    }
-</script>
+            <script src="../components/components-personnel/navbarpersonnel-functionalities.js"></script>
+            <script src="personnelnotification.js"></script>
         </main>
     </div>
 

@@ -59,4 +59,41 @@ fetch('../components/components-patient/navbar-patients.html')
     if (mobileProfileImage) mobileProfileImage.src = defaultPic;
 
     fetchProfile();
+
+    // Notification Bell Dropdown Script
+    const notificationBell = document.getElementById('notification-bell');
+    const notificationDropdown = document.getElementById('notification-dropdown');
+
+    notificationBell.addEventListener('click', () => {
+        notificationDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!notificationBell.contains(event.target) && !notificationDropdown.contains(event.target)) {
+            notificationDropdown.classList.add('hidden');
+        }
+    });
+
+    // Mobile Notification Bell Dropdown Script
+    const mobileNotificationBell = document.getElementById('mobile-notification-bell');
+    const mobileNotificationDropdown = document.getElementById('mobile-notification-dropdown');
+
+    mobileNotificationBell.addEventListener('click', () => {
+        mobileNotificationDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!mobileNotificationBell.contains(event.target) && !mobileNotificationDropdown.contains(event.target)) {
+            mobileNotificationDropdown.classList.add('hidden');
+        }
+    });
+
+    // Ensure mobile-notification-dropdown is hidden on non-mobile screens
+    window.addEventListener('resize', () => {
+        const mobileNotificationDropdown = document.getElementById('mobile-notification-dropdown');
+        if (window.innerWidth >= 1024) {
+            mobileNotificationDropdown.classList.add('hidden');
+        }
+    });
+    
 });

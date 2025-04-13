@@ -28,11 +28,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function displayNotifications(notifications) {
-    const container = document.getElementById('notification-list');
-    container.innerHTML = '';
+    const desktopContainer = document.getElementById('notification-list');
+    const mobileContainer = document.getElementById('mobile-notification-list');
+    
+    desktopContainer.innerHTML = '';
+    mobileContainer.innerHTML = '';
 
     if (notifications.length === 0) {
-        container.innerHTML = '<li style="padding: 10px;">No notifications yet.</li>';
+        const noNotificationsHTML = '<li style="padding: 10px;">No notifications yet.</li>';
+        desktopContainer.innerHTML = noNotificationsHTML;
+        mobileContainer.innerHTML = noNotificationsHTML;
         return;
     }
 
@@ -40,15 +45,15 @@ function displayNotifications(notifications) {
     document.getElementById('notification-count').textContent = notifications.filter(n => !n.isRead).length;
 
     notifications.forEach(notification => {
-        const item = document.createElement('li');
-        item.className = 'notification-item';
-        item.style.padding = '10px';
-        item.style.borderBottom = '1px solid #eee';
-        item.innerHTML = `
-            <strong>${notification.title}</strong><br>
-            <p style="margin: 5px 0;">${notification.message}</p>
-            <small style="color: gray;">${new Date(notification.createdAt).toLocaleString()}</small>
+        const itemHTML = `
+            <li class="notification-item p-4 border-b border-gray-200">
+                <strong class="block text-lg font-semibold text-gray-800">${notification.title}</strong>
+                <p class="mt-1 text-sm text-gray-600">${notification.message}</p>
+                <small class="block mt-2 text-xs text-gray-500">${new Date(notification.createdAt).toLocaleString()}</small>
+            </li>
         `;
-        container.appendChild(item);
+
+        desktopContainer.innerHTML += itemHTML;
+        mobileContainer.innerHTML += itemHTML;
     });
 }
