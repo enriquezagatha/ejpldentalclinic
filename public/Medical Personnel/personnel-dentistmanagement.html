@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service & Treatment Maintenance</title>
+    <!-- <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
+    <link rel="stylesheet" href="../Medical Personnel/services.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-personnel/sidebarfetch-personnel.js"></script>
+</head>
+<body class="min-h-screen bg-slate-50 flex font-inter">
+
+    <!-- Overlay for mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-10 hidden lg:hidden z-40"></div>
+    
+    <!-- Main Content -->
+    <div id="main-content" class="flex-1 lg:ml-64 z-30 overflow-x-hidden">
+        <!-- Navbar -->
+        <header class="bg-white shadow-md p-2 flex justify-between items-center">
+            <!-- Hamburger Menu -->
+            <button id="hamburger" class="lg:hidden ml-4 text-[#232931] focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+            <h1 class="text-xl font-semibold ml-8 text-[#232931] hidden lg:block">Dentist</h1>
+            <div class="flex items-center bg-white border text-white pl-6 pr-3 py-2 rounded-lg relative group">
+                <img class="w-8 h-8 rounded-full mr-3 desktop-profile object-cover" alt="Profile Picture">
+                <div class="text-left">
+                    <span id="profile-name" class="block font-semibold text-[#232931]">Loading...</span>
+                    <span class="block text-xs text-[#232931]">Medical Personnel</span>
+                </div>
+                <svg class="w-4 h-4 ml-6 lg:ml-14 text-[#232931]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 111.414 1.414l-4 4a1 1 01-1.414 0l-4-4a1 1 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                <div id="desktop-profile-dropdown" class="absolute bg-white border text-[#232931] mt-32 ml-12 rounded shadow-lg w-40 hidden group-hover:block">
+                    <a href="../Medical Personnel/personnel-profile.html" class="block px-4 py-2 hover:bg-gray-100">View Profile</a>
+                    <a href="../main page/home.html" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
+                </div>
+            </div>
+        </header>
+    
+        <main class="p-6">
+            <div class="container mx-auto px-4 lg:px-6 xl:px-8">
+                <div id="doctor-section" class="management-section">
+                    <section>
+                        <div class="mb-4 w-full mt-11 lg:w-2/6 relative">
+                            <input type="text" id="dentistManagementSearch" placeholder="Search by name..." class="mt-1 block w-full px-4 py-2 pl-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 lg:text-sm">
+                            <i class="fas fa-search absolute top-[1.2rem] left-3 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        <button id="open-dentist-modal-btn" class="px-4 py-2 bg-[#2C4A66] w-full sm:w-auto text-white font-semibold rounded-md shadow-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300">Add New Dentist</button>
+        
+                        <!-- Doctor Modal -->
+                        <div id="dentist-modal" class="fixed inset-0 bg-black bg-opacity-10 items-center justify-center hidden z-50">
+                            <div class="bg-white rounded-lg shadow-lg w-11/12 sm:w-96 p-6 relative">
+                                <button id="close-dentist-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <h2 id="dentist-modal-title" class="text-xl font-semibold text-gray-800 mb-4">Add New Dentist</h2>
+                                
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">First Name:</label>
+                                    <input type="text" id="dentist-first-name" placeholder="First Name" required class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                        
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Second Name:</label>
+                                    <input type="text" id="dentist-second-name" placeholder="Second Name" class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                        
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Middle Name:</label>
+                                    <input type="text" id="dentist-middle-name" placeholder="Middle Name" class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                        
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Last Name:</label>
+                                    <input type="text" id="dentist-last-name" placeholder="Last Name" required class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                        
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Contact Number:</label>
+                                    <input type="text" id="dentist-contact" placeholder="Contact Number" required class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                        
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Gender:</label>
+                                    <select id="dentist-gender" required class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                        <option value="" disabled selected>Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                        
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700">Image:</label>
+                                    <input type="file" id="dentist-image" accept="image/*" class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                        
+                                <input type="hidden" id="editdentistId"> <!-- For editing -->
+                        
+                                <div class="flex justify-end space-x-2">
+                                    <button id="save-dentist-btn" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">Save Dentist</button>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div id="dentist-list" class="services-list overflow-x-auto mt-4">
+                            <div class="min-w-[728px]">
+                                <table class="w-full bg-white border border-gray-200 rounded-lg table-fixed">
+                                    <thead>
+                                        <tr class="bg-[#2C4A66] text-white">
+                                            <th class="px-6 py-3 text-left text-sm font-medium">Dentist Name</th>
+                                            <th class="px-6 py-3 text-left text-sm font-medium">Contact Number</th>
+                                            <th class="px-6 py-3 text-left text-sm font-medium">Image</th>
+                                            <th class="px-6 py-3 text-left text-sm font-medium">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dentist-table-body">
+                                        <!-- Dentists will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+        <div id="pagination" class="flex justify-center mt-4 space-x-2 mb-6">
+            <!-- Pagination buttons will be dynamically added here -->
+        </div>
+        
+
+    <!-- JavaScript -->
+    <!-- <script src="../Medical Personnel/employeeServices.js"></script>
+    <script src="../Medical Personnel/employeeTreatments.js"></script>
+    <script src="../Medical Personnel/employeeContact.js"></script> -->
+    <script src="../Medical Personnel/employeeDentist.js"></script>
+    <!-- <script src="../Medical Personnel/employeeStaff.js"></script>
+    <script src="../Medical Personnel/employeeDiscount.js"></script> -->
+
+    <script>
+         document.addEventListener('DOMContentLoaded', async () => {
+            const profileResponse = await fetch('/api/medicalPersonnel/profile');
+            if (profileResponse.ok) {
+                const personnelData = await profileResponse.json();
+                displayProfileInfo(personnelData);
+
+                // Set the profile picture if available
+                const profilePictureElement = document.querySelector('.desktop-profile');
+                profilePictureElement.src = personnelData.profilePicture 
+                    ? `/uploads/${personnelData.profilePicture}` 
+                    : '../media/logo/default-profile.png';
+            }
+            });
+
+            function displayProfileInfo(data) {
+            document.getElementById('profile-name').innerText = `${data.firstName}`;
+            }
+    </script>
+
+</body>
+</html>
