@@ -25,7 +25,14 @@ exports.loginPersonnel = async (req, res) => {
         return res.status(400).json({ message: 'Incorrect password.' });
     }
 
-    req.session.user = { email: personnel.email, role: 'medical-personnel' };
+    // ✅ Add ID and userModel to session
+    req.session.user = {
+        id: personnel._id,
+        email: personnel.email,
+        role: 'medical-personnel',
+        userModel: 'MedicalPersonnel'
+    };
+
     return res.status(200).json({
         message: 'Login successful.',
         isGeneratedPassword: personnel.isGeneratedPassword

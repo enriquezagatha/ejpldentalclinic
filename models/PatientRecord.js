@@ -24,6 +24,7 @@ const patientRecordSchema = new mongoose.Schema({
             medicineType: String,
             procedure: String,
             treatmentNotes: String,
+            assignedDentist: { type: mongoose.Schema.Types.ObjectId, ref: "Dentist" }, // Link to Dentist model
         },
     ],
     uploadedFiles: [

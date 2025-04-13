@@ -884,6 +884,12 @@ video {
   min-width: -moz-fit-content;
   min-width: fit-content;
 }
+.min-w-\[1000px\] {
+  min-width: 1000px;
+}
+.min-w-\[1200px\] {
+  min-width: 1200px;
+}
 .max-w-6xl {
   max-width: 72rem;
 }
@@ -2013,6 +2019,10 @@ video {
 
   .xl\:max-w-6xl {
     max-width: 72rem;
+  }
+
+  .xl\:overflow-y-hidden {
+    overflow-y: hidden;
   }
 
   .xl\:px-8 {

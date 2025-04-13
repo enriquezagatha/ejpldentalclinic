@@ -383,9 +383,10 @@ body {
     z-index: 10; /* Ensure it appears above other content */
 }
 
-.credentials p {
-    margin: 10px 0; /* Adjust margin as needed */
-    font-size: 14px;
+.credentials {
+    display: block; /* Make the credentials visible always */
+    margin-top: 10px;
+    text-align: left; /* Align text to the left or as preferred */
 }
 
 .close-btn {

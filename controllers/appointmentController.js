@@ -5,6 +5,7 @@ const fs = require('fs');
 const { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth } = require("date-fns");
 const Dentist = require('../models/Dentist');
 const Notification = require('../models/Notification');
+const MedicalPersonnel = require('../models/MedicalPersonnel');
 
 exports.createAppointment = async (req, res) => {
     if (!req.session.user) {
@@ -47,8 +48,8 @@ exports.createAppointment = async (req, res) => {
     }).replace(/(\d+),/, '$1.');
 
     let assignedDentistName = null;
-    
-    // If assignedDentist exists, perform the lookup, otherwise leave it as null
+
+    // If assignedDentist exists, perform the lookup
     if (assignedDentist) {
         const dentist = await Dentist.findById(assignedDentist);
         if (dentist) {
@@ -76,15 +77,16 @@ exports.createAppointment = async (req, res) => {
         emergencyContactNumber,
         emergencyContactRelationship,
         selectedHistory,
-        assignedDentist: assignedDentist || null, // Assign null if no dentist
+        assignedDentist: assignedDentist || null,
         status: "Pending",
     };
 
     const appointment = await new Appointment(appointmentData).save();
 
-    // ✅ Create a notification
-    const notification = new Notification({
+    // ✅ Notify Patient - Appointment Created
+    const firstPatientNotification = new Notification({
         user: req.session.user.id,
+        userModel: "Patient",
         title: "New Appointment Created",
         message: `Your appointment for ${treatmentType} on ${formattedPreferredDate} at ${preferredTime} has been created.`,
         referenceId: appointment._id,
@@ -94,7 +96,64 @@ exports.createAppointment = async (req, res) => {
         logoUrl: "http://localhost:3000/media/logo/EJPL.png",
     });
 
-    await notification.save();
+    await firstPatientNotification.save();
+
+    // ✅ Notify Patient - Assigned Dentist
+    if (assignedDentistName) {
+        const secondPatientNotification = new Notification({
+            user: req.session.user.id,
+            userModel: "Patient",
+            title: "Assigned Dentist for Your Appointment",
+            message: `Your assigned dentist for your appointment on ${formattedPreferredDate} for ${treatmentType} is ${assignedDentistName}.`,
+            referenceId: appointment._id,
+            type: "Appointment",
+            isRead: false,
+            createdAt: new Date(),
+            logoUrl: "http://localhost:3000/media/logo/EJPL.png",
+        });
+
+        await secondPatientNotification.save();
+    }
+
+    // ✅ Notify all Medical Personnel - New Appointment
+    const personnel = await MedicalPersonnel.find({});
+    const personnelNotificationsFirst = personnel.map(person => ({
+        user: person._id,
+        userModel: "MedicalPersonnel",
+        title: "New Appointment Submitted",
+        message: `A new appointment has been scheduled by ${firstName} ${lastName} for ${treatmentType} on ${formattedPreferredDate} at ${preferredTime}.`,
+        referenceId: appointment._id,
+        type: "Appointment",
+        isRead: false,
+        createdAt: new Date(),
+        logoUrl: "http://localhost:3000/media/logo/EJPL.png"
+    }));
+
+    await Notification.insertMany(personnelNotificationsFirst);
+
+    // ✅ Notify Medical Personnel about Assigned Dentist (if any)
+    if (assignedDentist) {
+        const dentist = await Dentist.findById(assignedDentist);
+        if (dentist) {
+            const assignedDentistName = `${dentist.firstName} ${dentist.lastName}`;
+            
+            // Notify all medical personnel
+            const personnelNotificationsForDentist = personnel.map(person => ({
+                user: person._id,
+                userModel: "MedicalPersonnel",
+                title: "Assigned Dentist for Appointment",
+                message: `Dr. ${assignedDentistName} has been assigned to the appointment of ${firstName} ${lastName} for ${treatmentType} on ${formattedPreferredDate} at ${preferredTime}.`,
+                referenceId: appointment._id,
+                type: "Appointment",
+                isRead: false,
+                createdAt: new Date(),
+                logoUrl: "http://localhost:3000/media/logo/EJPL.png"
+            }));
+
+            // Save notifications for medical personnel
+            await Notification.insertMany(personnelNotificationsForDentist);
+        }
+    }
 
     return res.status(201).json({
         success: true,
@@ -206,11 +265,9 @@ exports.updateAppointmentStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    let updateFields = { status };
-
     const updatedAppointment = await Appointment.findByIdAndUpdate(
         id,
-        updateFields,
+        { status },
         { new: true }
     );
 
@@ -227,10 +284,9 @@ exports.updateAppointmentStatus = async (req, res) => {
         });
 
         if (!patientRecord) {
-            // ✅ Create a new PatientRecord if none exists
             patientRecord = new PatientRecord({
-                patientId: updatedAppointment.patient || new mongoose.Types.ObjectId(), // Link to patient
-                patient: updatedAppointment.patient,  
+                patientId: updatedAppointment.patient || new mongoose.Types.ObjectId(),
+                patient: updatedAppointment.patient,
                 firstName: updatedAppointment.firstName,
                 lastName: updatedAppointment.lastName,
                 contactNumber: updatedAppointment.contactNumber,
@@ -242,7 +298,7 @@ exports.updateAppointmentStatus = async (req, res) => {
                 emergencyContactNumber: updatedAppointment.emergencyContactNumber,
                 emergencyContactRelationship: updatedAppointment.emergencyContactRelationship,
                 selectedHistory: updatedAppointment.selectedHistory,
-                treatments: [], // Initialize treatments array
+                treatments: [],
             });
 
             await patientRecord.save();
@@ -250,7 +306,6 @@ exports.updateAppointmentStatus = async (req, res) => {
             await updatedAppointment.save();
         }
 
-        // ✅ Ensure only NEW treatments are added, keeping OLD ones
         const isDuplicateTreatment = patientRecord.treatments.some(treatment =>
             treatment.treatmentType === updatedAppointment.treatmentType &&
             new Date(treatment.treatmentDate).toISOString().slice(0, 10) === 
@@ -258,41 +313,56 @@ exports.updateAppointmentStatus = async (req, res) => {
         );
 
         if (!isDuplicateTreatment) {
-            // ✅ Add only the latest completed treatment
-            const newTreatment = {
+            patientRecord.treatments.push({
                 treatmentType: updatedAppointment.treatmentType,
-                treatmentDate: updatedAppointment.preferredDate, // Use appointment's date
-                prescriptionDate: "", // Doctor fills later
-                medicineType: "", // Doctor fills later
-                procedure: "", // Doctor fills later
-                treatmentNotes: "", // Doctor fills later
-            };
-
-            patientRecord.treatments.push(newTreatment);
+                treatmentDate: updatedAppointment.preferredDate,
+                prescriptionDate: "",
+                medicineType: "",
+                procedure: "",
+                treatmentNotes: "",
+            });
         }
 
-        await patientRecord.save(); // ✅ Save the updated record
+        await patientRecord.save();
     }
 
-    // ✅ Create a notification for the patient
+    // ✅ Format date
     const formattedDate = new Date(updatedAppointment.preferredDate).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
     });
 
-    const notification = new Notification({
+    // ✅ Notification for patient
+    const patientNotification = new Notification({
         user: updatedAppointment.patient,
+        userModel: "Patient",
         title: `Appointment ${status}`,
-        message: `Your appointment for ${updatedAppointment.treatmentType} on ${formattedDate} has been marked as ${status}.`,
+        message: `Your appointment for ${updatedAppointment.treatmentType} on ${formattedPreferredDate} at ${preferredTime} has been updated to ${status}.`,
         referenceId: updatedAppointment._id,
         type: "Appointment",
         isRead: false,
         createdAt: new Date(),
-        logoUrl: "http://localhost:3000/media/logo/EJPL.png", // Adjust if served from different base URL
+        logoUrl: "http://localhost:3000/media/logo/EJPL.png",
     });
 
-    await notification.save();
+    await patientNotification.save();
+
+    // ✅ Notification for all medical personnel
+    const personnel = await MedicalPersonnel.find({});
+    const personnelNotifications = personnel.map(person => ({
+        user: person._id,
+        userModel: "MedicalPersonnel",
+        title: `Appointment ${status}`,
+        message: `${updatedAppointment.firstName} ${updatedAppointment.lastName}'s appointment for ${updatedAppointment.treatmentType} on ${formattedPreferredDate} at ${preferredTime} has been marked as ${status}.`,
+        referenceId: updatedAppointment._id,
+        type: "Appointment",
+        isRead: false,
+        createdAt: new Date(),
+        logoUrl: "http://localhost:3000/media/logo/EJPL.png",
+    }));
+
+    await Notification.insertMany(personnelNotifications);
 
     res.json({ message: 'Appointment status updated successfully', appointment: updatedAppointment });
 };
@@ -615,6 +685,37 @@ exports.assignDentist = async (req, res) => {
             ...appointment.assignedDentist.toObject(),
             fullName // Add full name to the assignedDentist object
         };
+
+        // ✅ Notify Patient - Assigned Dentist
+        const patientNotification = new Notification({
+            user: appointment.patient,
+            userModel: "Patient",
+            title: "Assigned Dentist for Your Appointment",
+            message: `Your assigned dentist for your appointment on ${formattedPreferredDate} at ${appointment.preferredTime} for ${appointment.treatmentType} is ${dentist.firstName} ${dentist.lastName}.`,
+            referenceId: appointment._id,
+            type: "Appointment",
+            isRead: false,
+            createdAt: new Date(),
+            logoUrl: "http://localhost:3000/media/logo/EJPL.png",
+        });
+
+        await patientNotification.save();
+
+        // ✅ Notify all Medical Personnel - Assigned Dentist
+        const personnel = await MedicalPersonnel.find({});
+        const personnelNotifications = personnel.map(person => ({
+            user: person._id,
+            userModel: "MedicalPersonnel",
+            title: "Assigned Dentist for Appointment",
+            message: `Dr. ${dentist.firstName} ${dentist.lastName} has been assigned to the appointment of ${appointment.firstName} ${appointment.lastName} for ${appointment.treatmentType} on ${formattedPreferredDate} at ${appointment.preferredTime}.`,
+            referenceId: appointment._id,
+            type: "Appointment",
+            isRead: false,
+            createdAt: new Date(),
+            logoUrl: "http://localhost:3000/media/logo/EJPL.png",
+        }));
+
+        await Notification.insertMany(personnelNotifications);
 
         res.json({
             message: "Dentist assigned successfully",

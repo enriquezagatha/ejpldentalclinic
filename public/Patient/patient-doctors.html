@@ -216,18 +216,18 @@
                     const count = notifications.filter(n => !n.isRead).length;
                     const list = document.getElementById('notification-list');
                     const countEl = document.getElementById('notification-count');
-    
+            
                     list.innerHTML = '';
                     countEl.style.display = count > 0 ? 'inline-block' : 'none';
                     if (count > 0) countEl.textContent = count;
-    
+            
                     notifications.forEach(notification => {
                         const li = document.createElement('li');
                         const date = new Date(notification.createdAt);
                         const timeAgo = getTimeAgo(date);
-    
+            
                         const imgSrc = notification.logoUrl || "../media/logo/EJPL.png";
-    
+            
                         li.innerHTML = `
                             <div class="notification-item">
                                 <input type="checkbox" class="notification-checkbox" data-id="${notification._id}">

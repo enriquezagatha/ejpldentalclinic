@@ -54,6 +54,7 @@ exports.loginPatient = async (req, res) => {
                 // Create a "Welcome" notification
                 const notification = new Notification({
                     user: patient._id,
+                    userModel: 'Patient',
                     title: 'Welcome to Our Health Platform!',
                     message: 'Welcome to EJPL Dental Clinic! Explore our dental services and keep your smile healthy and bright.',
                     type: 'Welcome'
