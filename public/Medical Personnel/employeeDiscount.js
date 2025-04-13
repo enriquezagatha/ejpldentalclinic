@@ -6,9 +6,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const discountList = document.getElementById("discount-list");
     const modalTitle = document.getElementById("modal-title");
 
+    let currentPage = 1;
+    const rowsPerPage = 10;
+
     // Open the modal for adding/editing
     function openDiscountModal(id = null, name = "", percentage = "") {
-        discountModal.style.display = "block";
+        const discountModal = document.getElementById("discount-modal");
+        const discountIdInput = document.getElementById("discountId");
+        const discountNameInput = document.getElementById("discountName");
+        const discountPercentageInput = document.getElementById("discountPercentage");
+        const modalTitle = document.getElementById("modal-title");
+
+        discountModal.classList.remove("hidden");
+        discountModal.classList.add("flex");
         discountIdInput.value = id || ""; // Store ID for edit
         discountNameInput.value = name;
         discountPercentageInput.value = percentage;
@@ -17,36 +27,91 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Close the modal
     function closeDiscountModal() {
-        discountModal.style.display = "none";
+        const discountModal = document.getElementById("discount-modal");
+        const discountIdInput = document.getElementById("discountId");
+        const discountNameInput = document.getElementById("discountName");
+        const discountPercentageInput = document.getElementById("discountPercentage");
+
+        discountModal.classList.add("hidden");
+        discountModal.classList.remove("flex");
         discountIdInput.value = "";
         discountNameInput.value = "";
         discountPercentageInput.value = "";
     }
 
-    // Fetch and display discounts
+    // Render paginated discounts
+    function renderDiscounts(discounts) {
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        const paginatedDiscounts = discounts.slice(start, end);
+
+        discountList.innerHTML = ""; // Clear table
+
+        paginatedDiscounts.forEach((discount) => {
+            const row = document.createElement("tr");
+            row.className = "border-b hover:bg-gray-100";
+            row.innerHTML = `
+                <td class="px-4 py-2 text-gray-700">${discount.name}</td>
+                <td class="px-4 py-2 text-gray-700">${discount.percentage}%</td>
+                <td class="px-4 py-2 text-gray-700">
+                    <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="openDiscountModal('${discount._id}', '${discount.name}', '${discount.percentage}')">Edit</button>
+                    <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteDiscount('${discount._id}')">Delete</button>
+                </td>
+            `;
+            discountList.appendChild(row);
+        });
+
+        renderPagination(discounts.length);
+    }
+
+    // Render pagination controls
+    function renderPagination(totalRows) {
+        const paginationContainer = document.getElementById("pagination");
+        paginationContainer.innerHTML = ""; // Clear pagination
+
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+        if (totalPages <= 1) {
+            paginationContainer.style.display = "none"; // Hide pagination if only 1 page
+            return;
+        }
+    
+        paginationContainer.style.display = "flex"; // Show pagination if more than 1 page
+
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement("button");
+            button.className = `px-3 py-1 mx-1 rounded-md ${i === currentPage ? "bg-[#2C4A66] text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`;
+            button.innerText = i;
+            button.onclick = () => {
+                currentPage = i;
+                loadDiscounts();
+            };
+            paginationContainer.appendChild(button);
+        }
+    }
+
+    // Fetch and display discounts with pagination
     async function loadDiscounts() {
         try {
+            // Show loading message
+            discountList.innerHTML = `
+                <tr>
+                    <td colspan="3" class="text-center py-4 text-gray-500">Loading discounts...</td>
+                </tr>
+            `;
+
             const response = await fetch("http://localhost:3000/api/discounts");
             if (!response.ok) throw new Error("Failed to fetch discounts");
 
             const discounts = await response.json();
-            discountList.innerHTML = ""; // Clear table
-
-            discounts.forEach((discount) => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${discount.name}</td>
-                    <td>${discount.percentage}%</td>
-                    <td>
-                        <button onclick="openDiscountModal('${discount._id}', '${discount.name}', '${discount.percentage}')">Edit</button>
-                        <button onclick="deleteDiscount('${discount._id}')">Delete</button>
-                    </td>
-                `;
-                discountList.appendChild(row);
-            });
+            renderDiscounts(discounts);
         } catch (error) {
             console.error("Error loading discounts:", error);
-            discountList.innerHTML = "<tr><td colspan='3'>Error loading discounts</td></tr>";
+            discountList.innerHTML = `
+                <tr>
+                    <td colspan="3" class="text-center py-4 text-red-500">Error loading discounts</td>
+                </tr>
+            `;
         }
     }
 

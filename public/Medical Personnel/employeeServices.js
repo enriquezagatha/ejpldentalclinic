@@ -1,32 +1,83 @@
 const SERVICE_API_URL = 'http://localhost:3000/api/services'; // Adjust if necessary
 
+let currentPage = 1;
+const rowsPerPage = 5;
+
+function renderPagination(totalRows) {
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = '';
+
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+    if (totalPages <= 1) {
+        paginationContainer.style.display = 'none'; // Hide pagination if only 1 page
+        return;
+    }
+
+    paginationContainer.style.display = 'flex'; // Show pagination if more than 1 page
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.className = `px-3 py-1 mx-1 ${i === currentPage ? 'bg-[#2C4A66] text-white' : 'bg-gray-200 text-gray-700'} rounded-md`;
+        button.addEventListener('click', () => {
+            currentPage = i;
+            fetchServices();
+        });
+        paginationContainer.appendChild(button);
+    }
+}
+
 // Load services when page loads
 document.addEventListener('DOMContentLoaded', fetchServices);
 
 function fetchServices() {
+    const tableBody = document.getElementById('service-table-body');
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="4" class="px-4 py-6 text-center text-gray-500 font-medium">
+                <div class="flex justify-center items-center space-x-2">
+                    <span>Loading services...</span>
+                </div>
+            </td>
+        </tr>
+    `;
+
     fetch(SERVICE_API_URL)
         .then(response => response.json())
         .then(services => {
+            const start = (currentPage - 1) * rowsPerPage;
+            const paginatedServices = services.slice(start, start + rowsPerPage);
+
             let rows = '';
-            services.forEach(service => {
+            paginatedServices.forEach(service => {
                 rows += `
-                    <tr>
-                        <td>${service.name}</td>
-                        <td>${service.description}</td>
-                        <td><img src="${service.image}" alt="Service Image" width="80"></td>
-                        <td>
-                            <button onclick="editService('${service._id}', '${service.name}', '${service.description}', '${service.image}')">Edit</button>
-                            <button onclick="deleteService('${service._id}')">Delete</button>
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="px-4 py-2 text-gray-700">${service.name}</td>
+                        <td class="px-4 py-2 text-gray-700">${service.description}</td>
+                        <td class="px-4 py-2">
+                            <img src="${service.image}" alt="Service Image" class="w-20 h-20 object-cover rounded-md border border-gray-300">
+                        </td>
+                        <td class="px-4 py-2 flex space-x-2 gap-2 mt-6">
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editService('${service._id}', '${service.name}', '${service.description}', '${service.image}')">Edit</button>
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteService('${service._id}')">Delete</button>
                         </td>
                     </tr>`;
             });
-            document.getElementById('service-table-body').innerHTML = rows;
+            tableBody.innerHTML = rows;
+
+            renderPagination(services.length);
         })
         .catch(error => {
             console.error('Error fetching services:', error);
-            alert('Failed to load services. Please try again.');
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="px-4 py-6 text-center text-red-500 font-medium">
+                        Failed to load services. Please try again.
+                    </td>
+                </tr>
+            `;
         });
-        
 }
 
 // Open modal for adding a new service
@@ -111,7 +162,7 @@ function editService(id, name, description, image) {
     document.getElementById('service-desc').value = description;
     document.getElementById('service-modal-title').textContent = 'Edit Service';
     document.getElementById('save-service-btn').textContent = 'Update Service';
-    document.getElementById('service-modal').style.display = 'block';
+    document.getElementById('service-modal').style.display = 'flex';
 }
 
 // Delete service

@@ -15,13 +15,17 @@ function resetForms() {
 // Open Add Staff Modal
 function openAddStaffModal() {
     resetForms(); // Ensure form resets before opening
-    document.getElementById("add-staff-modal").style.display = "flex";
+    const modal = document.getElementById("add-staff-modal");
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
 }
 
 // Close Add Staff Modal
 function closeAddStaffModal() {
     resetForms();
-    document.getElementById("add-staff-modal").style.display = "none";
+    const modal = document.getElementById("add-staff-modal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
 }
 
 // Open Remove Staff Modal
@@ -60,15 +64,16 @@ async function loadStaffData() {
                     : "N/A";
 
                 const row = document.createElement("tr");
+                row.className = "border-b hover:bg-gray-100";
                 row.innerHTML = `
-                    <td>${staff.firstName || "N/A"}</td>
-                    <td>${staff.middleName || "N/A"}</td>
-                    <td>${staff.lastName || "N/A"}</td>
-                    <td>${formattedBirthday}</td>
-                    <td>${staff.email || "N/A"}</td>
-                    <td>
-                        <button class="edit-btn" onclick="editStaff('${staff.email}')">Edit</button>
-                        <button class="delete-btn" onclick="removeStaff('${staff.email}')">Delete</button>
+                <td class="px-4 py-2 text-gray-700">${staff.firstName || "N/A"}</td>
+                    <td class="px-4 py-2 text-gray-700">${staff.middleName || "N/A"}</td>
+                    <td class="px-4 py-2 text-gray-700">${staff.lastName || "N/A"}</td>
+                    <td class="px-4 py-2 text-gray-700">${formattedBirthday}</td>
+                    <td class="px-4 py-2 text-gray-700">${staff.email || "N/A"}</td>
+                    <td class="px-4 py-2 text-gray-700">
+                        <button class="edit-btn px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editStaff('${staff.email}')">Edit</button>
+                        <button class="delete-btn px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="removeStaff('${staff.email}')">Delete</button>
                     </td>
                 `;
                 staffTableBody.appendChild(row);
@@ -115,15 +120,7 @@ async function addStaff() {
 
             setTimeout(() => {
                 closeAddStaffModal(); // Close and reset modal
-                document.getElementById("generated-password").innerHTML = `Password: <strong>${result.password}</strong>`;
-                document.getElementById("generated-credentials-modal").style.display = "block";
-
-                // Hide the credentials modal after 20 seconds
-                setTimeout(() => {
-                    document.getElementById("generated-credentials-modal").style.display = "none";
-                    document.getElementById("generated-password").innerHTML = "";
-                }, 20000);
-
+                showGeneratedCredentialsModal(result.password); // Show credentials modal
                 loadStaffData(); // Refresh staff list
             }, 5000);
         } else {
@@ -143,7 +140,26 @@ async function addStaff() {
 
 // Function to close the auto-generated credentials modal
 function closeGeneratedCredentialsModal() {
-    document.getElementById("generated-credentials-modal").style.display = "none";
+    const modal = document.getElementById("generated-credentials-modal");
+    modal.classList.add("hidden");
+    modal.classList.remove("flex");
+}
+
+// Show Generated Credentials Modal
+function showGeneratedCredentialsModal(password) {
+    const credentialsModal = document.getElementById("generated-credentials-modal");
+    const passwordElement = document.getElementById("generated-password");
+
+    passwordElement.innerHTML = `Password: <strong>${password}</strong>`;
+    credentialsModal.classList.remove("hidden");
+    credentialsModal.classList.add("flex");
+
+    // Hide the credentials modal after 20 seconds
+    setTimeout(() => {
+        credentialsModal.classList.add("hidden");
+        credentialsModal.classList.remove("flex");
+        passwordElement.innerHTML = "";
+    }, 20000);
 }
 
 // Generate a random password (8-12 characters)

@@ -17,22 +17,23 @@ function resetContactForm() {
 openModalBtn.addEventListener("click", () => {
     resetContactForm(); // Reset form before showing modal
     document.getElementById("modal-title").innerText = "Add Contact";
-    document.getElementById("add-contact-btn").style.display = "block"; // Show Add Contact Button
-    document.getElementById("save-contact-btn").style.display = "none"; // Hide Save Changes Button
-    modal.style.display = "block";
+    document.getElementById("add-contact-btn").classList.remove("hidden"); // Show Add Contact Button
+    document.getElementById("save-contact-btn").classList.add("hidden"); // Hide Save Changes Button
+    modal.classList.remove("hidden"); // Remove hidden class
+    modal.classList.add("flex"); // Add flex class to display modal
 });
 
 // ✅ Close the Modal & Reset Form
 closeModalBtn.addEventListener("click", () => {
     resetContactForm(); // Reset form when closing
-    modal.style.display = "none";
+    modal.classList.add("hidden"); // Hide modal
 });
 
 // ✅ Close Modal if Click Outside
 window.addEventListener("click", (event) => {
     if (event.target === modal) {
         resetContactForm();
-        modal.style.display = "none";
+        modal.classList.add("hidden"); // Hide modal
     }
 });
 
@@ -42,11 +43,17 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function loadContacts() {
+    const contactTable = document.getElementById("contact-list");
+    contactTable.innerHTML = `
+        <tr>
+            <td colspan="3" class="px-4 py-2 text-center text-gray-500">Loading contacts...</td>
+        </tr>
+    `; // Display loading message
+
     try {
         const response = await fetch(CONTACT_API_URL);
         const contacts = await response.json();
 
-        const contactTable = document.getElementById("contact-list");
         contactTable.innerHTML = ""; // Clear table before updating
 
         if (contacts && contacts.length > 0) {
@@ -54,12 +61,13 @@ async function loadContacts() {
                 // Create a row for landline, if available
                 if (contact.landline) {
                     const row = document.createElement("tr");
+                    row.className = "border-b hover:bg-gray-100";
                     row.innerHTML = `
-                        <td>Landline</td>
-                        <td>${contact.landline}</td>
-                        <td>
-                            <button onclick="editContact('${contact._id}', 'landline')">Edit</button>
-                            <button onclick="deleteContact('${contact._id}')">Delete</button>
+                        <td class="px-4 py-2 text-gray-700">Landline</td>
+                        <td class="px-4 py-2 text-gray-700">${contact.landline}</td>
+                        <td class="px-4 py-2 flex space-x-2 gap-2">
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editContact('${contact._id}', 'landline')">Edit</button>
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteContact('${contact._id}')">Delete</button>
                         </td>
                     `;
                     contactTable.appendChild(row);
@@ -68,12 +76,13 @@ async function loadContacts() {
                 // ✅ Create a row for phone, if available
                 if (contact.phone) {
                     const row = document.createElement("tr");
+                    row.className = "border-b hover:bg-gray-100";
                     row.innerHTML = `
-                        <td>Phone</td>
-                        <td>${contact.phone}</td>
-                        <td>
-                            <button onclick="editContact('${contact._id}', 'phone')">Edit</button>
-                            <button onclick="deleteContact('${contact._id}')">Delete</button>
+                        <td class="px-4 py-2 text-gray-700">Phone</td>
+                        <td class="px-4 py-2 text-gray-700">${contact.phone}</td>
+                        <td class="px-4 py-2 flex space-x-2 gap-2">
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editContact('${contact._id}', 'phone')">Edit</button>
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteContact('${contact._id}')">Delete</button>
                         </td>
                     `;
                     contactTable.appendChild(row);
@@ -82,12 +91,13 @@ async function loadContacts() {
                 // ✅ Create a row for Facebook page, if available
                 if (contact.facebook_page) {
                     const row = document.createElement("tr");
+                    row.className = "border-b hover:bg-gray-100";
                     row.innerHTML = `
-                        <td>Facebook Page</td>
-                        <td><a href="${contact.facebook_page}" target="_blank">${contact.facebook_page}</a></td>
-                        <td>
-                            <button onclick="editContact('${contact._id}', 'facebook_page')">Edit</button>
-                            <button onclick="deleteContact('${contact._id}')">Delete</button>
+                        <td class="px-4 py-2 text-gray-700">Facebook Page</td>
+                        <td class="px-4 py-2 text-gray-700"><a href="${contact.facebook_page}" target="_blank" class="text-blue-500 hover:underline">${contact.facebook_page}</a></td>
+                        <td class="px-4 py-2 flex space-x-2 gap-2">
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editContact('${contact._id}', 'facebook_page')">Edit</button>
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteContact('${contact._id}')">Delete</button>
                         </td>
                     `;
                     contactTable.appendChild(row);
@@ -96,21 +106,33 @@ async function loadContacts() {
                 // ✅ Create a row for Facebook text, if available
                 if (contact.facebook_text) {
                     const row = document.createElement("tr");
+                    row.className = "border-b hover:bg-gray-100";
                     row.innerHTML = `
-                        <td>Facebook Text</td>
-                        <td>${contact.facebook_text}</td>
-                        <td>
-                            <button onclick="editContact('${contact._id}', 'facebook_text')">Edit</button>
-                            <button onclick="deleteContact('${contact._id}')">Delete</button>
+                        <td class="px-4 py-2 text-gray-700">Facebook Text</td>
+                        <td class="px-4 py-2 text-gray-700">${contact.facebook_text}</td>
+                        <td class="px-4 py-2 flex space-x-2 gap-2">
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editContact('${contact._id}', 'facebook_text')">Edit</button>
+                            <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteContact('${contact._id}')">Delete</button>
                         </td>
                     `;
                     contactTable.appendChild(row);
                 }
 
             });
+        } else {
+            contactTable.innerHTML = `
+                <tr>
+                    <td colspan="3" class="px-4 py-2 text-center text-gray-500">No contacts found.</td>
+                </tr>
+            `;
         }
     } catch (error) {
         console.error("Error loading contacts:", error);
+        contactTable.innerHTML = `
+            <tr>
+                <td colspan="3" class="px-4 py-2 text-center text-red-500">Failed to load contacts. Please try again later.</td>
+            </tr>
+        `;
     }
 }
 
@@ -132,7 +154,7 @@ document.getElementById("add-contact-btn").addEventListener("click", async funct
 
         alert("Contact added successfully!");
         resetContactForm(); // ✅ Reset form after adding
-        modal.style.display = "none"; // ✅ Close modal
+        modal.classList.add("hidden"); // ✅ Close modal
         loadContacts(); // ✅ Reload the contact list
     } catch (error) {
         console.error("Error adding contact:", error);
@@ -198,7 +220,7 @@ async function editContact(contactId, field) {
         document.getElementById("save-contact-btn").style.display = "block"; // Show Save Changes Button
 
         // Show the modal
-        modal.style.display = "block";
+        modal.classList.remove("hidden"); // Show modal
 
         // Handle save action for the edited contact (specific field)
         document.getElementById("save-contact-btn").addEventListener("click", async () => {
@@ -225,7 +247,7 @@ async function editContact(contactId, field) {
                 if (!updateResponse.ok) throw new Error("Failed to update contact");
 
                 alert(`${field} updated successfully!`);
-                modal.style.display = "none"; // Close the modal after saving
+                modal.classList.add("hidden"); // Close the modal after saving
                 loadContacts(); // Reload the contact list
             } catch (error) {
                 console.error("Error updating contact:", error);

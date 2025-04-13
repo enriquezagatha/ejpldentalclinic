@@ -1,5 +1,26 @@
 const TREATMENTS_API_URL = "http://localhost:3000/api/treatments";
 
+let currentPage = 1;
+const rowsPerPage = 10;
+
+function renderPagination(totalRows) {
+    const paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = '';
+
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.className = `px-3 py-1 mx-1 ${i === currentPage ? 'bg-[#2C4A66] text-white' : 'bg-gray-200 text-gray-700'} rounded-md`;
+        button.addEventListener('click', () => {
+            currentPage = i;
+            fetchTreatments();
+        });
+        paginationContainer.appendChild(button);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchTreatments();  //Fetch treatments for the table
 
@@ -16,27 +37,50 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 //Fetch all treatments
 async function fetchTreatments() {
+    const tableBody = document.getElementById("treatment-table-body");
+    tableBody.innerHTML = `
+        <tr>
+            <td colspan="3" class="px-4 py-6 text-center text-gray-500 font-medium">
+                <div class="flex justify-center items-center space-x-2">
+                    <span>Loading treatments...</span>
+                </div>
+            </td>
+        </tr>
+    `;
+
     try {
         const res = await fetch(TREATMENTS_API_URL);
         const treatments = await res.json();
-        const tableBody = document.getElementById("treatment-table-body");
 
-        tableBody.innerHTML = "";
-        treatments.forEach(treatment => {
+        const start = (currentPage - 1) * rowsPerPage;
+        const paginatedTreatments = treatments.slice(start, start + rowsPerPage);
+
+        tableBody.innerHTML = ""; // Clear the loading message
+        paginatedTreatments.forEach(treatment => {
             const row = document.createElement("tr");
+            row.className = "border-b hover:bg-gray-100"; // Add row styling
             row.innerHTML = `
-                <td>${treatment.name}</td>
-                <td>${formatPrice(treatment.price)}</td>
-                <td>
-                    <button onclick="editTreatment('${treatment._id}', '${treatment.name}', ${treatment.price})">Edit</button>
-                    <button onclick="deleteTreatment('${treatment._id}')">Delete</button>
+                <td class="px-4 py-2 text-gray-700">${treatment.name}</td>
+                <td class="px-4 py-2 text-gray-700">${formatPrice(treatment.price)}</td>
+                <td class="px-4 py-2 flex space-x-2 gap-2">
+                    <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editTreatment('${treatment._id}', '${treatment.name}', ${treatment.price})">Edit</button>
+                    <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteTreatment('${treatment._id}')">Delete</button>
                 </td>
             `;
             tableBody.appendChild(row);
         });
 
+        renderPagination(treatments.length);
+
     } catch (error) {
         console.error("Error fetching treatments:", error);
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="3" class="px-4 py-6 text-center text-red-500 font-medium">
+                    Failed to load treatments. Please try again.
+                </td>
+            </tr>
+        `;
     }
 }
 

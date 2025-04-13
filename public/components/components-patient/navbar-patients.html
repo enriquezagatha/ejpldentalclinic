@@ -1,10 +1,18 @@
 <header class="bg-[#2C4A66] text-white sticky top-0 z-10">
     <section class="max-w-full mx-auto px-5 flex justify-between items-center h-20">
         <img src="../media/logo/EJPL.png" alt="Logo" class="logo w-24 h-auto" onclick="window.location.href='../Patient/patient-home.html';" style="cursor: pointer;">
-        <button id="mobile-open-button" class="text-3xl md:hidden focus:outline-none mr-4">
-            &#9776;
-        </button>
-        <nav id="navbar" class="hidden md:flex space-x-12 text-l mr-0 lg:mr-8 font-inter items-center justify-center" aria-label="main">
+        <div class="flex items-center space-x-4">
+            <!-- Bell Icon for Mobile -->
+            <a href="#" class="relative mt-1 mr-4 order-1 lg:order-none lg:hidden">
+                <i class="fas fa-bell text-white text-xl hover:text-gray-300"></i>  
+                <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full px-1"></span>
+            </a>
+            <!-- Hamburger Menu -->
+            <button id="mobile-open-button" class="text-3xl lg:hidden focus:outline-none mr-4 order-2">
+                &#9776;
+            </button>
+        </div>
+        <nav id="navbar" class="hidden lg:flex space-x-12 text-l mr-0 lg:mr-8 font-inter items-center justify-center" aria-label="main">
             <a href="../Patient/patient-home.html" class="active">Home</a>
             <div class="relative group h-10">
                 <a href="../Patient/patient-aboutus.html" class="flex items-center mt-2 group-hover:text-gray-300">
@@ -30,7 +38,8 @@
                 </div>
             </div>
             <a href="../Patient/patient-doctors.html" class="">Dentists</a>
-            <a href="#" class="relative">
+            <!-- Bell Icon for Desktop -->
+            <a href="#" class="relative hidden lg:block">
                 <i class="fas fa-bell text-white text-xl hover:text-gray-300"></i>  
                 <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full px-1"></span>
             </a>
@@ -52,7 +61,7 @@
             </div>
         </nav>
     </section>
-    <div id="mobile-menu" class="md:hidden opacity-0 pointer-events-none absolute top-20 left-0 w-full bg-[#223E57] text-white transition-all duration-300 ease-in-out transform -translate-y-4 z-20">
+    <div id="mobile-menu" class="lg:hidden opacity-0 pointer-events-none absolute top-20 left-0 w-full bg-[#223E57] text-white transition-all duration-300 ease-in-out transform -translate-y-4 z-20">
         <a href="../Patient/patient-home.html" class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Home</a>
         <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer" onclick="toggleDropdown('about-us-dropdown')">
             <span>About Us</span>

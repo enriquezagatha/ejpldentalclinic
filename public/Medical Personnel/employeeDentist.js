@@ -1,30 +1,85 @@
 const DENTIST_API_URL = "http://localhost:3000/api/dentists";
+let currentPage = 1;
+const rowsPerPage = 5;
+
+function renderPagination(totalRows) {
+    const paginationContainer = document.getElementById("pagination");
+    paginationContainer.innerHTML = "";
+
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+    if (totalPages <= 1) {
+        paginationContainer.style.display = "none"; // Hide pagination if only 1 page
+        return;
+    }
+
+    paginationContainer.style.display = "flex"; // Show pagination if more than 1 page
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.className = `px-3 py-1 mx-1 ${i === currentPage ? 'bg-[#2C4A66] text-white' : 'bg-gray-200 text-gray-700'} rounded-md`;
+        button.addEventListener("click", () => {
+            currentPage = i;
+            displayDentists();
+        });
+        paginationContainer.appendChild(button);
+    }
+}
 
 // Fetch and display dentists
 async function displayDentists() {
-    const response = await fetch(DENTIST_API_URL);
-    const dentists = await response.json();
-
     const dentistTableBody = document.getElementById("dentist-table-body");
-    dentistTableBody.innerHTML = "";
+    
+    // Display loading message
+    dentistTableBody.innerHTML = `
+        <tr>
+            <td colspan="4" class="px-4 py-6 text-center text-gray-500 font-medium">
+                <div class="flex justify-center items-center space-x-2">
+                    <span>Loading dentists...</span>
+                </div>
+            </td>
+        </tr>
+    `;
 
-    dentists.forEach((dentist) => {
-        
-        // Create the full name with middle initial (if available)
-        const middleInitial = dentist.middleName ? dentist.middleName.charAt(0) + "." : ""; // Get the middle initial
-        const fullName = `${dentist.firstName} ${dentist.secondName} ${middleInitial} ${dentist.lastName}`.replace(/\s+/g, " ").trim();
+    try {
+        const response = await fetch(DENTIST_API_URL);
+        const dentists = await response.json();
 
-        dentistTableBody.innerHTML += `
+        const start = (currentPage - 1) * rowsPerPage;
+        const paginatedDentists = dentists.slice(start, start + rowsPerPage);
+
+        dentistTableBody.innerHTML = ""; // Clear loading message
+
+        paginatedDentists.forEach((dentist) => {
+            
+            // Create the full name with middle initial (if available)
+            const middleInitial = dentist.middleName ? dentist.middleName.charAt(0) + "." : ""; // Get the middle initial
+            const fullName = `${dentist.firstName} ${dentist.secondName} ${middleInitial} ${dentist.lastName}`.replace(/\s+/g, " ").trim();
+
+            dentistTableBody.innerHTML += `
+                <tr class="border-b hover:bg-gray-100">
+                    <td class="px-4 py-2 text-gray-700">${fullName}</td>
+                    <td class="px-4 py-2 text-gray-700">${dentist.contact}</td>
+                    <td class="px-4 py-2 text-gray-700"><img src="${dentist.image ? dentist.image : 'default-image.jpg'}" alt="dentist Image" class="dentist-img" width="50"></td>
+                    <td class="px-4 py-2 text-gray-700">
+                        <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editDentist('${dentist._id}', '${fullName.replace(/'/g, "\\'")}', '${dentist.contact}', '${dentist.image || ''}')">Edit</button>
+                        <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteDentist('${dentist._id}')">Delete</button>
+                    </td>
+                </tr>`;
+        });
+
+        renderPagination(dentists.length);
+    } catch (error) {
+        console.error("Error fetching dentists:", error);
+        dentistTableBody.innerHTML = `
             <tr>
-                <td>${fullName}</td>
-                <td>${dentist.contact}</td>
-                <td><img src="${dentist.image ? dentist.image : 'default-image.jpg'}" alt="dentist Image" class="dentist-img" width="50"></td>
-                <td>
-                    <button onclick="editDentist('${dentist._id}', '${fullName.replace(/'/g, "\\'")}', '${dentist.contact}', '${dentist.image || ''}')">Edit</button>
-                    <button onclick="deleteDentist('${dentist._id}')">Delete</button>
+                <td colspan="4" class="px-4 py-6 text-center text-red-500 font-medium">
+                    Failed to load dentists. Please try again.
                 </td>
-            </tr>`;
-    });
+            </tr>
+        `;
+    }
 }
 
 // Add or update dentist (with image upload support)
@@ -104,7 +159,11 @@ function editDentist(id, fullName, contact, image) {
     document.getElementById("dentist-last-name").value = lastName;
     document.getElementById("dentist-contact").value = contact;
     document.getElementById("editdentistId").value = id;
-    document.getElementById("dentist-modal").style.display = "block";
+
+    // Update modal title
+    document.getElementById("dentist-modal-title").innerText = "Edit Dentist Details";
+
+    document.getElementById("dentist-modal").style.display = "flex";
 }
 
 // Delete dentist
@@ -117,7 +176,7 @@ async function deleteDentist(id) {
 
 // Open & close modal
 document.getElementById("open-dentist-modal-btn").addEventListener("click", () => {
-    document.getElementById("dentist-modal").style.display = "block";
+    document.getElementById("dentist-modal").style.display = "flex";
 });
 
 document.getElementById("close-dentist-modal-btn").addEventListener("click", () => {
