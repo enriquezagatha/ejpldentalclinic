@@ -42,8 +42,10 @@ staff
   "birthday": "2022-07-13",
   "password": "$2b$10$pSOMTsaJ.kVM3HrSSZHV1e2zlvtl4Z8jEPIOAOXh0STtCJtfv.gqu",
   "__v": 0,
-  "profilePicture": "1732551362138-24647093-byeon woo seok.png"
+  "profilePicture": null,
+  "userType": "personnel"
 }
+
 
 contact
 {

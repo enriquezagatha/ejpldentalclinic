@@ -755,3 +755,88 @@ th, td {
 th {
     background-color: #f4f4f4;
 }
+
+.notification-bell {
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-bell img {
+    width: 30px;
+    height: 30px;
+}
+
+.notification-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 2px 6px;
+    display: none;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    z-index: 1000;
+    color: black;
+}
+
+.notification-dropdown ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.notification-dropdown li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.notification-dropdown li:last-child {
+    border-bottom: none;
+}
+
+.notification-dropdown li:hover {
+    background-color: #f0f0f0;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.notification-logo {
+    width: 100px; /* Adjust size as needed */
+    height: 100px;
+    margin-right: 10px; /* Space between logo and text */
+}
+
+.notification-text {
+    flex-grow: 1;
+}
+
+.notification-text strong {
+    display: block;
+    font-weight: bold;
+}
+
+.mark-read-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}

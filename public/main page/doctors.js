@@ -18,7 +18,7 @@ async function fetchdentists() {
                 <div class="team-member">
                     <img src="${dentist.image ? dentist.image : 'https://via.placeholder.com/150'}" alt="${dentist.name}">
                     <h3>${title} ${dentist.firstName} ${dentist.lastName}</h3>
-                    <h4>Contact: ${contactNumber}</h4>
+                    <h4>Contact: ${dentist.contact}</h4>
                 </div>`;
         });
     } catch (error) {

@@ -53,26 +53,26 @@
         function goBack() {
             window.location.href = "existingpatient.html";
         }
-
+    
         function openModal(message) {
             document.getElementById('confirmation-text').innerText = message;
             document.getElementById('confirmation-modal').style.display = 'block';
         }
-
+    
         function closeModal() {
             document.getElementById('confirmation-modal').style.display = 'none';
         }
-
+    
         window.onclick = function(event) {
             const modal = document.getElementById("confirmation-modal");
             if (event.target == modal) {
                 closeModal();
             }
         };
-
+    
         function loadConfirmationData() {
             const savedFormData = JSON.parse(sessionStorage.getItem('existingPatientFormData')) || {}; 
-
+    
             if (savedFormData) {
                 const confirmationHTML = `
                     <p><strong>Name:</strong> ${savedFormData.firstName || 'N/A'} ${savedFormData.lastName || ''}</p>
@@ -86,9 +86,9 @@
                 document.getElementById('confirmation-date').innerText = new Date().toLocaleDateString();
             }
         }
-        
+    
         document.addEventListener('DOMContentLoaded', loadConfirmationData);
-
+    
         function submitAppointment() {
             const savedFormData = JSON.parse(sessionStorage.getItem('existingPatientFormData')) || {}; 
             const savedScheduleData = {
@@ -96,7 +96,7 @@
                 preferredTime: localStorage.getItem('preferredTime'),
                 treatmentType: localStorage.getItem('treatmentType'),
             };
-
+    
             const appointmentData = {
                 firstName: savedFormData.firstName || "N/A",
                 lastName: savedFormData.lastName || "N/A",
@@ -105,7 +105,7 @@
                 preferredTime: savedScheduleData.preferredTime || "N/A",
                 treatmentType: savedScheduleData.treatmentType || "N/A",
             };
-
+    
             fetch('/api/appointments/patient/appointments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -114,13 +114,25 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Send notification
+                    fetch('api/notifications', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: 'Appointment confirmed successfully!',
+                            appointmentData: appointmentData
+                        })
+                    });
+    
                     window.location.href = `existing-receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
                     
                     sessionStorage.removeItem('existingPatientFormData');
                     localStorage.removeItem('preferredDate');
                     localStorage.removeItem('preferredTime');
                     localStorage.removeItem('treatmentType');
-
+    
                     document.querySelector('.confirmation-info').innerHTML = '';
                 } else {
                     displayError(data.message || 'Error confirming appointment');
@@ -128,23 +140,23 @@
             })
             .catch(error => displayError('Request failed: ' + error));
         }
-
+    
         function displayError(message) {
             openModal(message);
         }
-
+    
         function printReceipt() {
             const receiptSection = document.getElementById('appointment-receipt');
             receiptSection.style.display = 'block'; 
-
+    
             const originalContent = document.body.innerHTML;
             document.body.innerHTML = receiptSection.innerHTML;
             
             window.print();
-
+    
             document.body.innerHTML = originalContent;
             location.reload();
         }
-    </script>
+    </script>    
 </body>
 </html>

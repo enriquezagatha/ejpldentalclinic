@@ -17,11 +17,30 @@
                 <a href="../Medical Personnel/personnel-appointment.html">Appointment Data</a>
                 <a href="../Medical Personnel/personnel-management.html">Management</a>
             </div>
+            <div class="notification-bell" style="position: relative;">
+                <img src="../media/logo/notif.png" alt="Notification Bell" id="notification-icon" style="cursor: pointer;">
+                
+                <!-- Notification Count -->
+                <span id="notification-count" class="notification-count" style="position: absolute; top: -5px; right: -5px; background: red; color: white; font-size: 12px; padding: 2px 6px; border-radius: 50%; display: none;">0</span>
+                
+                <!-- Notification Dropdown -->
+                <div id="notification-dropdown" class="notification-dropdown" style="display: none; position: absolute; top: 30px; right: 0; background: white; border: 1px solid #ccc; width: 250px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); z-index: 1000;">
+                    <div id="notification-controls" style="padding: 10px; border-bottom: 1px solid #ddd;">
+                        <button onclick="markSelectedAsRead()" style="width: 100%; padding: 8px; margin-bottom: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Mark as Read</button>
+                        <button onclick="markSelectedAsUnread()" style="width: 100%; padding: 8px; margin-bottom: 5px; background-color: #2196F3; color: white; border: none; cursor: pointer;">Mark as Unread</button>
+                        <button onclick="deleteSelectedNotifications()" style="width: 100%; padding: 8px; background-color: #f44336; color: white; border: none; cursor: pointer;">Delete</button>
+                    </div>
+                    <ul id="notification-list" style="list-style-type: none; margin: 0; padding: 0; max-height: 200px; overflow-y: auto;">
+                        <!-- Notifications will be dynamically added here -->
+                    </ul>
+                </div>
+            </div>
+    
             <a href="../Medical Personnel/personnel-home.html">
                 <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
             </a>
         </nav>
-    </header>
+    </header>    
     <main>
         <h1>Medical Personnel Profile</h1>
 
@@ -130,6 +149,7 @@
             </div>
         </div>
     </main>
+    <script src="../Medical Personnel/personnelnotification.js"></script>
     <script>
         function showLogoutModal() {
             const overlay = document.getElementById('logout-overlay');
