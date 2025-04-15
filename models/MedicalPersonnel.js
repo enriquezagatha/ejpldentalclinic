@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Medical Personnel Schema
 const medicalPersonnelSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     middleName: { type: String },
@@ -10,6 +9,7 @@ const medicalPersonnelSchema = new mongoose.Schema({
     password: { type: String, required: true },
     isGeneratedPassword: { type: Boolean, default: false },
     profilePicture: { type: String },
+    isAuthorizedPersonnel: { type: Boolean, default: false }, // 👈 Add this
 });
 
 const MedicalPersonnel = mongoose.model('MedicalPersonnel', medicalPersonnelSchema);

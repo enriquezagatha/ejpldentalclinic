@@ -29,12 +29,14 @@ router.delete('/delete-profile-picture', medicalPersonnelController.deleteProfil
 
 // Route to add a new staff member (protected by authorizeAdmin middleware)
 router.post('/add', authorizeAdmin, async (req, res) => {
-    const { firstName, middleName, lastName, birthday, email } = req.body;
+    const { firstName, middleName, lastName, birthday, email, isAuthorizedPersonnel } = req.body;
 
     // Validate required fields
     if (!firstName || !lastName || !birthday || !email) {
         return res.status(400).json({ message: 'First Name, Last Name, Birthday, and Email are required' });
     }
+
+    const authorized = isAuthorizedPersonnel ?? false;
 
     const plainPassword = generatePassword();
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
@@ -60,6 +62,7 @@ router.post('/add', authorizeAdmin, async (req, res) => {
         email: normalizedEmail,  // Use the user-provided email
         password: hashedPassword,
         isGeneratedPassword: true,
+        isAuthorizedPersonnel: authorized
     });
 
     await newStaff.save();
@@ -69,6 +72,30 @@ router.post('/add', authorizeAdmin, async (req, res) => {
         message: 'Staff added successfully!',
         email: normalizedEmail,  // Send the user-provided email to the frontend
         password: plainPassword,
+    });
+});
+
+// Toggle medical personnel authorization (protected)
+router.patch('/authorize', authorizeAdmin, async (req, res) => {
+    const { email, isAuthorized } = req.body;
+
+    if (!email || typeof isAuthorized !== 'boolean') {
+        return res.status(400).json({ message: 'Email and isAuthorized (boolean) are required.' });
+    }
+
+    const updatedPersonnel = await MedicalPersonnel.findOneAndUpdate(
+        { email },
+        { isAuthorizedPersonnel: isAuthorized },
+        { new: true }
+    );
+
+    if (!updatedPersonnel) {
+        return res.status(404).json({ message: 'Personnel not found.' });
+    }
+
+    res.status(200).json({
+        message: `Personnel ${isAuthorized ? 'authorized' : 'unauthorized'} successfully.`,
+        personnel: updatedPersonnel
     });
 });
 
@@ -101,6 +128,47 @@ router.delete('/remove', authorizeAdmin, async (req, res) => {
 
 //Route to get all medical personnel (protected by authorizeAdmin middleware)
 router.get('/list', authorizeAdmin, medicalPersonnelController.getAllMedicalPersonnel);
+
+// Route to get medical personnel by email for editing
+router.get('/get/:email', async (req, res) => {
+    const { email } = req.params;
+    const medicalPersonnel = await MedicalPersonnel.findOne({ email });
+
+    if (medicalPersonnel) {
+        res.json(medicalPersonnel);
+    } else {
+        res.status(404).json({ message: 'Medical personnel not found' });
+    }
+});
+
+// Route to update medical personnel details (add validation as necessary)
+router.post('/update', async (req, res) => {
+    const { firstName, middleName, lastName, birthday, email, isAuthorizedPersonnel } = req.body;
+
+    const personnel = await MedicalPersonnel.findOne({ email });
+
+    if (!personnel) {
+        return res.status(404).json({ message: 'Medical personnel not found' });
+    }
+
+    // Update the personnel fields
+    personnel.firstName = firstName;
+    personnel.middleName = middleName;
+    personnel.lastName = lastName;
+    personnel.birthday = birthday;
+
+    // Update the authorization status
+    if (typeof isAuthorizedPersonnel !== 'undefined') {
+        personnel.isAuthorizedPersonnel = isAuthorizedPersonnel;
+    }
+
+    try {
+        await personnel.save();
+        res.status(200).json({ message: 'Personnel updated successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to update personnel' });
+    }
+});
 
 // Export the routes
 module.exports = router;

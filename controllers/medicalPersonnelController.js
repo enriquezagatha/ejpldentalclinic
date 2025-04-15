@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
 const { updateUser } = require('../services/userService'); // Import the updateUser function from services/userService
 
 //Handle the login of medical personnel
-// Handle the login of medical personnel
 exports.loginPersonnel = async (req, res) => {
     const { email, password } = req.body;
 
@@ -25,7 +24,9 @@ exports.loginPersonnel = async (req, res) => {
         return res.status(400).json({ message: 'Incorrect password.' });
     }
 
-    // ✅ Add ID and userModel to session
+    // Log personnel data for verification
+    console.log('Logged in personnel data:', personnel);
+
     req.session.user = {
         id: personnel._id,
         email: personnel.email,
@@ -35,7 +36,8 @@ exports.loginPersonnel = async (req, res) => {
 
     return res.status(200).json({
         message: 'Login successful.',
-        isGeneratedPassword: personnel.isGeneratedPassword
+        isGeneratedPassword: personnel.isGeneratedPassword,
+        isAuthorizedPersonnel: personnel.isAuthorizedPersonnel // Send the authorization status
     });
 };
 
@@ -73,6 +75,7 @@ exports.logoutPersonnel = (req, res) => {
 };
 
 //Handle personnel profile
+// Handle personnel profile
 exports.getPersonnelProfile = async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'medical-personnel') {
         return res.status(401).json({ message: 'Unauthorized' });
@@ -88,7 +91,7 @@ exports.getPersonnelProfile = async (req, res) => {
         lastName: personnel.lastName,
         birthday: personnel.birthday,
         email: personnel.email,
-        profilePicture: personnel.profilePicture || null
+        profilePicture: personnel.profilePicture || null // Ensure profile picture is included in response
     });
 };
 
@@ -117,6 +120,7 @@ exports.updatePersonnelProfile = async (req, res) => {
 };
 
 //Handle profile picture upload
+// Handle profile picture upload
 exports.uploadProfilePicture = async (req, res) => {
     if (!req.session.user) {
         return res.status(401).json({ message: 'Unauthorized' });
@@ -132,15 +136,16 @@ exports.uploadProfilePicture = async (req, res) => {
         return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    // Attempt to save profile picture
-    const saveResult = await personnel.save().catch((error) => error);
+    // Update the profile picture field with the filename
+    personnel.profilePicture = req.file.filename;
 
-    if (saveResult instanceof Error) {
-        console.error(saveResult);
+    try {
+        await personnel.save(); // Save the updated personnel document with the new profile picture
+        res.json({ message: 'Profile picture uploaded successfully.', filename: req.file.filename });
+    } catch (error) {
+        console.error('Error saving profile picture:', error);
         return res.status(500).json({ message: 'Failed to save profile picture' });
     }
-
-    res.json({ message: 'Profile picture uploaded successfully.', filename: req.file.filename });
 };
 
 //Handle profile picture deletion
@@ -193,7 +198,7 @@ async function getMedicalPersonnelByEmail(req, res) {
 //controller to get all medical personnel
 exports.getAllMedicalPersonnel = async (req, res) => {
     try {
-        const personnelList = await MedicalPersonnel.find({}, 'firstName middleName lastName birthday email');
+        const personnelList = await MedicalPersonnel.find({}, 'firstName middleName lastName birthday email isAuthorizedPersonnel');
         res.status(200).json(personnelList);
     } catch (error) {
         console.error("Error fetching medical personnel list:", error);

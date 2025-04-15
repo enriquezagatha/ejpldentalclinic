@@ -1,5 +1,5 @@
 let currentPage = 1;
-const pageSize = 10; 
+const pageSize = 10;
 let totalPages = 1;
 let lastSyncedPayments = [];
 let lastSyncTimestamp = 0;
@@ -24,18 +24,38 @@ function fetchPayments(page = 1) {
 
 function updateTable(payments) {
     console.log(`🔄 Updating table with ${payments.length} payments.`);
-    const tableBody = document.getElementById("payment-tbody"); // Ensure correct tbody ID
+    const tableBody = document.getElementById("payment-tbody");
     tableBody.innerHTML = "";
 
     payments.forEach(payment => {
+        const patientName = payment?.patientName || "N/A";
+        const email = payment?.email || "N/A";
+        const treatment = payment?.treatment || "N/A";
+        const amount = typeof payment?.amount === "number" ? payment.amount / 100 : 0;
+        const createdAt = payment?.createdAt ? new Date(payment.createdAt).toLocaleString() : "N/A";
+
+        // Check if status is available
+        const status = payment?.status ?? "unknown";
+        const statusDisplay = status.charAt(0).toUpperCase() + status.slice(1);
+
+        let statusColor = "gray"; // default/fallback
+        if (status === "paid") statusColor = "green";
+        else if (["unpaid", "failed"].includes(status)) statusColor = "red";
+
+        // Check for malformed payment data
+        if (!payment?.status || !payment?.referenceId) {
+            console.warn("⚠ Malformed payment object:", payment);
+        }
+
+        // Create a table row
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td class="px-6 py-4 text-sm text-gray-700">${payment.patientName}</td>
-            <td class="px-6 py-4 text-sm text-gray-700">${payment.email}</td>
-            <td class="px-6 py-4 text-sm text-gray-700">${payment.treatment}</td>
-            <td class="px-6 py-4 text-sm text-gray-700">₱${(payment.amount / 100).toFixed(2)}</td>
-            <td class="px-6 py-4 text-sm font-semibold" style="color: ${payment.status === "paid" ? "green" : "red"};">${payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}</td>
-            <td class="px-6 py-4 text-sm text-gray-700">${new Date(payment.createdAt).toLocaleString()}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">${patientName}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">${email}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">${treatment}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">₱${amount.toFixed(2)}</td>
+            <td class="px-6 py-4 text-sm font-semibold" style="color: ${statusColor};">${statusDisplay}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">${createdAt}</td>
         `;
         tableBody.appendChild(row);
     });
@@ -74,11 +94,11 @@ function autoSyncPayments() {
         })
         .then(data => {
             const now = Date.now();
-            if (now - lastSyncTimestamp < 60000) return; // Prevent duplicate logs
-            lastSyncTimestamp = now; // ✅ Correctly update the timestamp
+            if (now - lastSyncTimestamp < 60000) return;
+            lastSyncTimestamp = now;
 
             console.log(`✅ Auto-sync completed at ${new Date().toLocaleTimeString()}`);
-            fetchPayments(currentPage); // Refresh table after syncing
+            fetchPayments(currentPage);
         })
         .catch(error => console.error("❌ Error syncing payments:", error));
 }
@@ -86,9 +106,9 @@ function autoSyncPayments() {
 // 📌 Initial load
 document.addEventListener("DOMContentLoaded", () => {
     console.log("📌 Page loaded, fetching initial payments...");
-    fetchPayments();  // Load payments on first load
-    autoSyncPayments(); // Run initial sync
+    fetchPayments();
+    autoSyncPayments();
 });
 
 // 🕒 Run Auto-Sync Every 2 Minutes
-setInterval(autoSyncPayments, 120000); // 120,000 ms = 2 minutes
+setInterval(autoSyncPayments, 120000);

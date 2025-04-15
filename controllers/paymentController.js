@@ -43,7 +43,7 @@ exports.createPaymentLink = async (req, res) => {
             email: patientEmail,
             treatment: treatmentType,
             amount: amount * 100, // Store in cents
-            status: "unpaid",
+            status: "unpaid", // Default status
             paymentLink: result.data.attributes.checkout_url,
             referenceId: result.data.id
         });
@@ -102,12 +102,11 @@ exports.updatePaymentStatus = async (req, res) => {
     }
 };
 
-// ✅ Sync Payments from PayMongo
+// ✅ Sync Payments from PayMongo (Updated: don't skip non-link types)
 exports.syncPayments = async (req, res) => {
     try {
         console.log("🔄 Syncing payments with PayMongo...");
 
-        // Fetch payments directly
         let paymongoPayments = [];
         let url = `${PAYMONGO_API_URL}/payments`;
 
@@ -119,8 +118,6 @@ exports.syncPayments = async (req, res) => {
                 }
             });
 
-            console.log("🔍 PayMongo API Response:", JSON.stringify(response.data, null, 2)); // Debugging log
-            
             const data = response.data;
             if (data && data.data) {
                 paymongoPayments = paymongoPayments.concat(data.data);
@@ -129,29 +126,43 @@ exports.syncPayments = async (req, res) => {
             url = data.links?.next || null;
         }
 
-        console.log(`✅ Retrieved ${paymongoPayments.length} payments from PayMongo.`);
+        console.log(`✅ Retrieved ${paymongoPayments.length} total payments from PayMongo.`);
+
         let updateCount = 0;
         let newCount = 0;
 
         for (const paymongoPayment of paymongoPayments) {
-            if (!paymongoPayment || !paymongoPayment.attributes) {
-                console.warn("⚠️ Skipping invalid payment record:", paymongoPayment);
+            const attrs = paymongoPayment?.attributes;
+
+            // Safe check: Ensure attributes exist
+            if (!attrs) {
+                console.warn(`⚠ Skipping payment with missing attributes: ${paymongoPayment?.id || "unknown ID"}`);
+                continue;
+            }
+
+            const { source, status, amount, created_at, billing, description, checkout_url } = attrs;
+
+            // Safe check: Ensure the required fields are present
+            if (!status || !amount || !created_at) {
+                console.warn(`⚠ Skipping incomplete payment: ${paymongoPayment?.id || "unknown ID"}`);
                 continue;
             }
 
             const paymongoId = paymongoPayment.id;
-            const attributes = paymongoPayment.attributes;
 
-            if (!attributes || !attributes.status) {
-                console.warn("⚠️ Skipping payment due to missing attributes or status:", paymongoPayment);
-                continue;
-            }
-
-            const { status, amount, created_at, billing, description, checkout_url } = attributes;
+            // Ensure source exists and was linked to a payment
             const email = billing?.email || "unknown@example.com";
             const treatment = description || "Unknown Treatment";
             const createdAt = new Date(created_at * 1000);
-            const formattedStatus = status === "paid" ? "paid" : "unpaid";
+
+            let formattedStatus;
+            if (status === "paid") {
+                formattedStatus = "paid";
+            } else if (["awaiting_payment", "processing", "succeeded"].includes(status)) {
+                formattedStatus = "unpaid";
+            } else {
+                formattedStatus = "failed";
+            }
 
             let existingPayment = await Payment.findOne({ referenceId: paymongoId }) || await Payment.findOne({ email });
 
@@ -181,6 +192,7 @@ exports.syncPayments = async (req, res) => {
 
         console.log(`✅ Sync completed. Updated: ${updateCount}, Added: ${newCount}`);
         res.status(200).json({ message: "Payments synced successfully!" });
+
     } catch (error) {
         console.error("❌ Error syncing payments:", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to sync payments" });

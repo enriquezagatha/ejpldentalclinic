@@ -49,6 +49,7 @@
                     <button class="pending-button w-full sm:w-auto px-4 py-2 rounded-md text-[#2C4A66] font-semibold bg-white border-2 border-[#2C4A66] hover:bg-[#2C4A66] hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400" onclick="filterAppointments('Pending')">PENDING</button>
                     <button class="confirm-button w-full sm:w-auto px-4 py-2 rounded-md text-[#2C4A66] font-semibold bg-white border-2 border-[#2C4A66] hover:bg-[#2C4A66] hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400" onclick="filterAppointments('Confirmed')">CONFIRMED</button>
                     <button class="cancel-button w-full sm:w-auto px-4 py-2 rounded-md text-[#2C4A66] font-semibold bg-white border-2 border-[#2C4A66] hover:bg-[#2C4A66] hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400" onclick="filterAppointments('Cancelled')">CANCELLED</button>
+                    <button class="completed-button w-full sm:w-auto px-4 py-2 rounded-md text-[#2C4A66] font-semibold bg-white border-2 border-[#2C4A66] hover:bg-[#2C4A66] hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400" onclick="filterAppointments('Completed')">COMPLETED</button>
                 </div>
            
             <div id="appointments-container" class="overflow-x-auto">
@@ -141,7 +142,8 @@
                 'All': '.all-button',
                 'Pending': '.pending-button',
                 'Confirmed': '.confirm-button',
-                'Cancelled': '.cancel-button'
+                'Cancelled': '.cancel-button',
+                'Completed': '.completed-button'
             };
             if (buttonMap[status]) {
                 const activeButton = document.querySelector(buttonMap[status]);

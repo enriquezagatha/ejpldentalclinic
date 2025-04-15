@@ -128,13 +128,16 @@
                 const result = await response.json();
                 showNotification('Login successful.', 'green');
 
+                // Store the authorization status in local storage
+                localStorage.setItem('isAuthorizedPersonnel', result.isAuthorizedPersonnel);
+
                 if (result.isGeneratedPassword) {
                     // If the password is generated, show the modal
                     setTimeout(() => {
                         showChangePasswordModal();
                     }, 1000);
                 } else {
-                    // Redirect to home page
+                    // Redirect to home page after storing the authorization status
                     setTimeout(() => {
                         window.location.href = 'personnel-home.html';
                     }, 1000);
@@ -144,6 +147,7 @@
                 showNotification(result.message || 'An unknown error occurred.', 'red');
             }
         }
+
 
         // Show the change password modal
         function showChangePasswordModal() {
