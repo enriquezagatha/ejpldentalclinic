@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .scroll-if-short {
+        @apply overflow-y-hidden;
+    }
+
+    @media (max-height: 899px) {
+        .scroll-if-short {
+            @apply overflow-y-auto;
+        }
+    }
+}
