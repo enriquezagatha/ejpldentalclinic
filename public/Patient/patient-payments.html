@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,123 +10,144 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-patient/navbarfetch-patients.js"></script>
-    <script src="../components/footerfetch.js"></script>    
+    <script src="../components/footerfetch.js"></script>
 </head>
+
 <body class="bg-slate-50 flex flex-col font-inter">
     <!-- Navbar -->
     <header>
         <div id="navbar-container"></div>
-    </header>        
-    
-        <!-- Mobile Bottom Nav (outside the container) -->
-        <aside class="bg-[#2C4A66] fixed bottom-0 left-0 w-full h-16 flex justify-around items-center xl:hidden z-50 shadow-lg border-t border-gray-100">
-            <button onclick="location.href='patient-profile.html'" class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
-                <i class="fas fa-user text-lg"></i>
-                <span class="text-[10px]">Profile</span>
-            </button>
-            <button onclick="location.href='patient-appointments.html'" class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
-                <i class="fas fa-calendar-alt text-lg"></i>
-                <span class="text-[10px]">Appointments</span>
-            </button>
-            <button onclick="location.href='patient-payments.html'" class="bg-[#1E354A] flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
-                <i class="fas fa-credit-card text-lg"></i>
-                <span class="text-[10px]">Payments</span>
-            </button>
+    </header>
+
+    <!-- Mobile Bottom Nav (outside the container) -->
+    <aside
+        class="bg-[#2C4A66] fixed bottom-0 left-0 w-full h-16 flex justify-around items-center xl:hidden z-50 shadow-lg border-t border-gray-100">
+        <button onclick="location.href='patient-profile.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-[10px]">Profile</span>
+        </button>
+        <button onclick="location.href='patient-appointments.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-calendar-alt text-lg"></i>
+            <span class="text-[10px]">Appointments</span>
+        </button>
+        <button onclick="location.href='patient-payments.html'"
+            class="bg-[#1E354A] flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-credit-card text-lg"></i>
+            <span class="text-[10px]">Payments</span>
+        </button>
+    </aside>
+
+    <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full">
+        <!-- Sidebar -->
+        <aside class="hidden xl:block w-64 bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
+            <div class="flex flex-col items-center mt-4">
+                <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture"
+                    alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
+                <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
+                <p class="text-xs text-white">Patient</p>
+            </div>
+            <nav class="mt-12">
+                <ul class="space-y-3">
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-profile.html'">
+                            <i class="fas fa-user mr-3"></i> Patient Profile
+                        </button>
+                    </li>
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-appointments.html'">
+                            <i class="fas fa-calendar-alt mr-3"></i> Appointments
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-payments.html'">
+                            <i class="fas fa-credit-card mr-3"></i> Payment
+                        </button>
+                    </li>
+                </ul>
+            </nav>
         </aside>
 
-        <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full">
-            <!-- Sidebar -->
-            <aside class="hidden xl:block w-64 bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
-                <div class="flex flex-col items-center mt-4">
-                    <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture" alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
-                    <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
-                    <p class="text-xs text-white">Patient</p>
-                </div>
-                <nav class="mt-12">
-                    <ul class="space-y-3">
-                        <li>
-                            <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-profile.html'">
-                                <i class="fas fa-user mr-3"></i> Patient Profile
-                            </button>
-                        </li>
-                        <li>
-                            <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-appointments.html'">
-                                <i class="fas fa-calendar-alt mr-3"></i> Appointments
-                            </button>
-                        </li>
-                        <li>
-                            <button class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-payments.html'">
-                                <i class="fas fa-credit-card mr-3"></i> Payment
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
+        <div class="flex-1 p-4 w-full bg-[#FCFCFC] max-h-screen mt-6 mb-6 shadow-md border">
+            <main>
+                <!-- PAYMENT MODAL -->
+                <div id="paymentModal"
+                    class="paymentmodal fixed inset-0 items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+                    <div class="paymentmodal-content bg-white p-6 rounded-lg shadow-lg w-[95%] sm:w-96 max-w-md">
+                        <span
+                            class="close text-gray-500 hover:text-gray-800 cursor-pointer text-xl font-bold float-right"
+                            id="closeModal">&times;</span>
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">PayMongo Payment Link</h2>
 
-            <div class="flex-1 p-4 w-full bg-[#FCFCFC] max-h-screen mt-6 mb-6 shadow-md border">
-                <main>
-                    <!-- PAYMENT MODAL -->
-                    <div id="paymentModal" class="paymentmodal fixed inset-0 items-center justify-center bg-black bg-opacity-50 z-50 hidden">
-                        <div class="paymentmodal-content bg-white p-6 rounded-lg shadow-lg w-[95%] sm:w-96 max-w-md">
-                            <span class="close text-gray-500 hover:text-gray-800 cursor-pointer text-xl font-bold float-right" id="closeModal">&times;</span>
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-4">PayMongo Payment Link</h2>
-                
-                            <label for="patientName" class="block text-sm font-medium text-gray-700">Enter Patient Name:</label>
-                            <input type="text" id="patientName" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter patient name" required>
-                
-                            <label for="patientEmail" class="block text-sm font-medium text-gray-700">Enter Patient Email:</label>
-                            <input type="email" id="patientEmail" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter patient email" required>
-                
-                            <label for="treatmentType" class="block text-sm font-medium text-gray-700">Enter Type of Treatment:</label>
-                            <input type="text" id="treatmentType" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter type of treatment" required>
-                
-                            <label class="block text-sm font-medium text-gray-700">
-                                <input type="checkbox" id="seniorDiscount" class="mr-2"> Apply Senior Discount (20%)
-                            </label>
-                
-                            <div id="seniorDiscountForm" class="mt-4 hidden">
-                                <label for="seniorName" class="block text-sm font-medium text-gray-700">Name on Card:</label>
-                                <input type="text" id="seniorName" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter name on card">
-                
-                                <label for="seniorID" class="block text-sm font-medium text-gray-700">Senior ID No:</label>
-                                <input type="text" id="seniorID" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter senior ID number">
-                            </div>
-                
-                            <label for="amount" class="block text-sm font-medium text-gray-700">Enter Amount (PHP):</label>
-                            <input type="number" id="amount" class="w-full p-2 border border-gray-300 rounded mb-4" placeholder="Enter amount in PHP" min="1" required>
-                
-                            <button id="submitPayment" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Submit Payment</button>
-                
-                            <p id="paymentLink" class="mt-4 text-blue-600"></p>
-                            <p id="validationMessage" class="mt-2 text-red-600 hidden"></p>
+                        <label for="patientName" class="block text-sm font-medium text-gray-700">Enter Patient
+                            Name:</label>
+                        <input type="text" id="patientName" class="w-full p-2 border border-gray-300 rounded mb-4"
+                            placeholder="Enter patient name" required>
+
+                        <label for="patientEmail" class="block text-sm font-medium text-gray-700">Enter Patient
+                            Email:</label>
+                        <input type="email" id="patientEmail" class="w-full p-2 border border-gray-300 rounded mb-4"
+                            placeholder="Enter patient email" required>
+
+                        <label for="treatmentType" class="block text-sm font-medium text-gray-700">Enter Type of
+                            Treatment:</label>
+                        <input type="text" id="treatmentType" class="w-full p-2 border border-gray-300 rounded mb-4"
+                            placeholder="Enter type of treatment" required>
+
+                        <label class="block text-sm font-medium text-gray-700">
+                            <input type="checkbox" id="seniorDiscount" class="mr-2"> Apply Senior Discount (20%)
+                        </label>
+
+                        <div id="seniorDiscountForm" class="mt-4 hidden">
+                            <label for="seniorName" class="block text-sm font-medium text-gray-700">Name on
+                                Card:</label>
+                            <input type="text" id="seniorName" class="w-full p-2 border border-gray-300 rounded mb-4"
+                                placeholder="Enter name on card">
+
+                            <label for="seniorID" class="block text-sm font-medium text-gray-700">Senior ID No:</label>
+                            <input type="text" id="seniorID" class="w-full p-2 border border-gray-300 rounded mb-4"
+                                placeholder="Enter senior ID number">
                         </div>
+
+                        <label for="amount" class="block text-sm font-medium text-gray-700">Enter Amount (PHP):</label>
+                        <input type="number" id="amount" class="w-full p-2 border border-gray-300 rounded mb-4"
+                            placeholder="Enter amount in PHP" min="1" required>
+
+                        <button id="submitPayment"
+                            class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Submit Payment</button>
+
+                        <p id="paymentLink" class="mt-4 text-blue-600"></p>
+                        <p id="validationMessage" class="mt-2 text-red-600 hidden"></p>
                     </div>
-               
-                   <!-- APPOINTMENTS TABLE -->
-                   <div id="appointments-container">
-                       <div class="mb-4 w-full sm:w-3/6 relative">
-                            <input 
-                                type="text" 
-                                id="searchAppointments" 
-                                class="w-full p-2 pl-10 border border-gray-300 rounded" 
-                                placeholder="Search Payments"
-                            />
-                            <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
-                        </div>
+                </div>
+
+                <!-- APPOINTMENTS TABLE -->
+                <div id="appointments-container">
+                    <div class="mb-4 w-full sm:w-3/6 relative">
+                        <input type="text" id="searchAppointments"
+                            class="w-full p-2 pl-10 border border-gray-300 rounded" placeholder="Search Payments" />
+                        <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                    </div>
                     <div class="overflow-x-auto">
                         <div class="min-w-[1024px]">
-                            <table id="appointments" class="w-full border-collapse border border-gray-300 text-sm text-left">
+                            <table id="appointments"
+                                class="w-full border-collapse border border-gray-300 text-sm text-left">
                                 <thead class="bg-[#2C4A66] text-white">
                                     <tr>
-                                    <!-- <th class="border border-gray-300 px-4 py-2">Status</th> -->
-                                    <th class="border border-gray-300 px-4 py-2">Reference Number</th>
-                                    <th class="border border-gray-300 px-4 py-2">Name</th>
-                                    <th class="border border-gray-300 px-4 py-2">Contact Number</th>
-                                    <!-- <th class="border border-gray-300 px-4 py-2">Date</th>
+                                        <!-- <th class="border border-gray-300 px-4 py-2">Status</th> -->
+                                        <th class="border border-gray-300 px-4 py-2">Reference Number</th>
+                                        <th class="border border-gray-300 px-4 py-2">Name</th>
+                                        <th class="border border-gray-300 px-4 py-2">Contact Number</th>
+                                        <!-- <th class="border border-gray-300 px-4 py-2">Date</th>
                                     <th class="border border-gray-300 px-4 py-2">Time</th> -->
-                                    <th class="border border-gray-300 px-4 py-2">Treatment Type</th>
-                                    <th class="border border-gray-300 px-4 py-2">Treatment Price</th>
-                                    <th class="border border-gray-300 px-4 py-2">Action</th> 
+                                        <th class="border border-gray-300 px-4 py-2">Treatment Type</th>
+                                        <th class="border border-gray-300 px-4 py-2">Treatment Price</th>
+                                        <th class="border border-gray-300 px-4 py-2">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -134,229 +156,246 @@
                             </table>
                         </div>
                     </div>
-                       <div id="pagination" class="pagination-container mt-4 flex justify-center"></div>
-                   </div>
-                </main>
-            </div>
+                    <div id="pagination" class="pagination-container mt-4 flex justify-center"></div>
+                </div>
+            </main>
         </div>
-        <footer>
-            <div id="footer-container"></div>
-        </footer>
+    </div>
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
 </body>
+
 </html>
 <script>
-
     document.addEventListener('DOMContentLoaded', async () => {
-            await fetchProfile();
-            await fetchAppointments();
-        });
-        function displayAppointments(appointments) {
-            const appointmentsTableBody = document.querySelector('#appointments tbody');
-            const paginationContainer = document.getElementById('pagination');
-            const appointmentsPerPage = 5;
-            let currentPage = 1;
+        await fetchProfile();
+        await fetchAppointments();
+    });
 
+    function displayAppointments(appointments) {
+        const appointmentsTableBody = document.querySelector('#appointments tbody');
+        const paginationContainer = document.getElementById('pagination');
+        const appointmentsPerPage = 5;
+        let currentPage = 1;
+
+        appointmentsTableBody.innerHTML = '';
+        paginationContainer.innerHTML = '';
+
+        if (appointments.length === 0) {
+            appointmentsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center text-gray-500 py-6">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-credit-card text-4xl mb-2 text-gray-400"></i>
+                            <p class="text-lg font-semibold">No payments found</p>
+                            <p class="text-sm text-gray-400">Try adjusting your search or check back later.</p>
+                        </div>
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        function renderPage(page) {
             appointmentsTableBody.innerHTML = '';
-            paginationContainer.innerHTML = '';
+            const startIndex = (page - 1) * appointmentsPerPage;
+            const endIndex = Math.min(startIndex + appointmentsPerPage, appointments.length);
 
-            if (appointments.length === 0) {
-                appointmentsTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No appointments found</td></tr>';
+            for (let i = startIndex; i < endIndex; i++) {
+                const appointment = appointments[i];
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.referenceNumber}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.firstName} ${appointment.lastName}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.contactNumber}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentType}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentPrice}</td>
+                    <td class="border-y border-gray-300 px-4 py-6 break-words">
+                        <button class="payButton bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-[#1E354A]" 
+                            data-name="${appointment.firstName} ${appointment.lastName}"
+                            data-email="${appointment.emailAddress}"
+                            data-treatment="${appointment.treatmentType}"
+                            data-amount="${appointment.treatmentPrice}">
+                            Generate Payment
+                        </button>
+                    </td>
+                `;
+
+                appointmentsTableBody.appendChild(row);
+            }
+
+            attachPaymentEventListeners();
+        }
+
+        function renderPagination() {
+            paginationContainer.innerHTML = '';
+            const totalPages = Math.ceil(appointments.length / appointmentsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.innerText = i;
+                button.className = `px-3 py-1 mx-1 rounded ${i === currentPage ? 'bg-[#2C4A66] text-white' : 'bg-gray-200 text-gray-700'}`;
+                button.addEventListener('click', () => {
+                    currentPage = i;
+                    renderPage(currentPage);
+                    renderPagination();
+                });
+                paginationContainer.appendChild(button);
+            }
+        }
+
+        renderPage(currentPage);
+        renderPagination();
+    }
+
+    function attachPaymentEventListeners() {
+        document.querySelectorAll('.payButton').forEach(button => {
+            button.addEventListener('click', function () {
+                const patientName = this.getAttribute('data-name');
+                const patientEmail = this.getAttribute('data-email');
+                const treatmentType = this.getAttribute('data-treatment');
+                const treatmentPrice = this.getAttribute('data-amount').replace(/,/g, '');
+
+                console.log("Debugging - Button Clicked:");
+                console.log("Patient Name:", patientName);
+                console.log("Patient Email:", patientEmail);
+                console.log("Treatment Type:", treatmentType);
+                console.log("Treatment Price (string):", treatmentPrice);
+
+                document.getElementById('patientName').value = patientName;
+                document.getElementById('patientEmail').value = patientEmail;
+                document.getElementById('treatmentType').value = treatmentType;
+
+                // Convert treatmentPrice to a number before assigning (if necessary)
+                document.getElementById('amount').value = treatmentPrice.trim(); // Trim any spaces
+
+                document.getElementById('seniorDiscount').checked = false;
+                document.getElementById('seniorDiscountForm').style.display = "none";
+
+                modal.style.display = "flex";
+            });
+        });
+    }
+
+    const modal = document.getElementById("paymentModal");
+    const closeModal = document.getElementById("closeModal");
+    const seniorDiscountCheckbox = document.getElementById("seniorDiscount");
+    const seniorDiscountForm = document.getElementById("seniorDiscountForm");
+    const amountInput = document.getElementById("amount");
+
+    closeModal.onclick = function () {
+        modal.style.display = "none";
+    };
+
+    window.onclick = function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", async function () {
+        let amountInput = document.getElementById("amount");
+        let seniorDiscountCheckbox = document.getElementById("seniorDiscount");
+        let seniorDiscountForm = document.getElementById("seniorDiscountForm");
+        let submitPayment = document.getElementById("submitPayment");
+
+        let discountPercentage = 0; // Default to 0%
+
+        // Fetch discount from API
+        async function fetchDiscount() {
+            try {
+                const response = await fetch("http://localhost:3000/api/discounts");
+                if (!response.ok) throw new Error("Failed to fetch discounts");
+
+                const discounts = await response.json();
+
+                // Assume "Senior Discount" is the one applied for seniors
+                const seniorDiscount = discounts.find(d => d.name.toLowerCase() === "senior discount");
+
+                if (seniorDiscount) {
+                    discountPercentage = seniorDiscount.percentage; // Set discount value
+                }
+            } catch (error) {
+                console.error("Error fetching discount:", error);
+            }
+        }
+
+        // Apply Discount to the Amount
+        function applyDiscount() {
+            if (!amountInput) {
+                console.error("amountInput is not found.");
                 return;
             }
 
-            function renderPage(page) {
-                appointmentsTableBody.innerHTML = '';
-                const startIndex = (page - 1) * appointmentsPerPage;
-                const endIndex = Math.min(startIndex + appointmentsPerPage, appointments.length);
+            // Store the original amount if not already stored
+            if (!amountInput.dataset.originalAmount) {
+                amountInput.dataset.originalAmount = amountInput.value;
+            }
 
-                for (let i = startIndex; i < endIndex; i++) {
-                    const appointment = appointments[i];
-                    const row = document.createElement('tr');
-                    let statusClass = '';
+            let originalAmount = parseFloat(amountInput.dataset.originalAmount.replace(/,/g, "")) || 0;
 
-                    if (appointment.status === 'Confirmed') {
-                        statusClass = 'status-confirmed';
-                    } else if (appointment.status === 'Cancelled') {
-                        statusClass = 'status-canceled';
-                    } else if (appointment.status === 'Pending') {
-                        statusClass = 'status-pending';
-                    }
-
-                    const formattedDate = formatDate(appointment.preferredDate);
-
-                    row.innerHTML = `
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.referenceNumber}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.firstName} ${appointment.lastName}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.contactNumber}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentType}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentPrice}</td>
-                        <td class="border-y border-gray-300 px-4 py-6 break-words">
-                            <button class="payButton bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-[#1E354A]" 
-                                data-name="${appointment.firstName} ${appointment.lastName}"
-                                data-email="${appointment.emailAddress}"
-                                data-treatment="${appointment.treatmentType}"
-                                data-amount="${appointment.treatmentPrice}">
-                                Generate Payment
-                            </button>
-                        </td>
-                    `;
-
-                    appointmentsTableBody.appendChild(row);
-                }
-
-                attachPaymentEventListeners();
-            }   
-
-            renderPage(currentPage);
+            if (seniorDiscountCheckbox.checked) {
+                const discountedAmount = originalAmount * ((100 - discountPercentage) / 100);
+                amountInput.value = discountedAmount.toFixed(2);
+                seniorDiscountForm.style.display = "block";
+            } else {
+                amountInput.value = originalAmount.toFixed(2);
+                seniorDiscountForm.style.display = "none";
+            }
         }
 
-        function attachPaymentEventListeners() {
-            document.querySelectorAll('.payButton').forEach(button => {
-                button.addEventListener('click', function () {
-                    const patientName = this.getAttribute('data-name');
-                    const patientEmail = this.getAttribute('data-email');
-                    const treatmentType = this.getAttribute('data-treatment');
-                    const treatmentPrice = this.getAttribute('data-amount').replace(/,/g, '');
+        // Fetch discount before allowing interaction
+        await fetchDiscount();
 
-                    console.log("Debugging - Button Clicked:");
-                    console.log("Patient Name:", patientName);
-                    console.log("Patient Email:", patientEmail);
-                    console.log("Treatment Type:", treatmentType);
-                    console.log("Treatment Price (string):", treatmentPrice);
+        // Attach event listener to senior discount checkbox
+        seniorDiscountCheckbox.addEventListener("change", applyDiscount);
 
-                    document.getElementById('patientName').value = patientName;
-                    document.getElementById('patientEmail').value = patientEmail;
-                    document.getElementById('treatmentType').value = treatmentType;
+        // Payment submission logic (unchanged)
+        submitPayment.addEventListener("click", async function () {
+            const patientName = document.getElementById("patientName").value;
+            const patientEmail = document.getElementById("patientEmail").value;
+            const treatmentType = document.getElementById("treatmentType").value;
+            const amountInPHP = document.getElementById("treatmentPrice").value;
+            const validationMessage = document.getElementById("validationMessage");
 
-                    // Convert treatmentPrice to a number before assigning (if necessary)
-                    document.getElementById('amount').value = treatmentPrice.trim(); // Trim any spaces
+            if (!patientName || !patientEmail || !treatmentType || !amountInPHP || isNaN(amountInPHP) || amountInPHP <= 0) {
+                validationMessage.innerText = "Please fill out all fields with valid information.";
+                validationMessage.style.display = "block";
+            } else if (amountInPHP < 100) {
+                validationMessage.innerText = "The minimum payment amount is PHP 100.";
+                validationMessage.style.display = "block";
+            } else {
+                validationMessage.style.display = "none";
 
-                    document.getElementById('seniorDiscount').checked = false;
-                    document.getElementById('seniorDiscountForm').style.display = "none";
+                const amountInCents = amountInPHP * 100;
+                const paymentData = { patientName, patientEmail, treatmentType, amount: amountInCents };
 
-                    modal.style.display = "flex";
+                const response = await fetch("http://localhost:3000/api/payment/create-payment-link", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(paymentData)
                 });
-            });
-        }
 
-        const modal = document.getElementById("paymentModal");
-        const closeModal = document.getElementById("closeModal");
-        const seniorDiscountCheckbox = document.getElementById("seniorDiscount");
-        const seniorDiscountForm = document.getElementById("seniorDiscountForm");
-        const amountInput = document.getElementById("amount");
-
-        closeModal.onclick = function () {
-            modal.style.display = "none";
-        };
-
-        window.onclick = function (event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        };
-
-        document.addEventListener("DOMContentLoaded", async function () {
-            let amountInput = document.getElementById("amount");
-            let seniorDiscountCheckbox = document.getElementById("seniorDiscount");
-            let seniorDiscountForm = document.getElementById("seniorDiscountForm");
-            let submitPayment = document.getElementById("submitPayment");
-
-            let discountPercentage = 0; // Default to 0%
-
-            // Fetch discount from API
-            async function fetchDiscount() {
-                try {
-                    const response = await fetch("http://localhost:3000/api/discounts");
-                    if (!response.ok) throw new Error("Failed to fetch discounts");
-
-                    const discounts = await response.json();
-                    
-                    // Assume "Senior Discount" is the one applied for seniors
-                    const seniorDiscount = discounts.find(d => d.name.toLowerCase() === "senior discount");
-                    
-                    if (seniorDiscount) {
-                        discountPercentage = seniorDiscount.percentage; // Set discount value
-                    }
-                } catch (error) {
-                    console.error("Error fetching discount:", error);
-                }
-            }
-
-            // Apply Discount to the Amount
-            function applyDiscount() {
-                if (!amountInput) {
-                    console.error("amountInput is not found.");
-                    return;
-                }
-
-                // Store the original amount if not already stored
-                if (!amountInput.dataset.originalAmount) {
-                    amountInput.dataset.originalAmount = amountInput.value;
-                }
-
-                let originalAmount = parseFloat(amountInput.dataset.originalAmount.replace(/,/g, "")) || 0;
-
-                if (seniorDiscountCheckbox.checked) {
-                    const discountedAmount = originalAmount * ((100 - discountPercentage) / 100);
-                    amountInput.value = discountedAmount.toFixed(2);
-                    seniorDiscountForm.style.display = "block";
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Server Error: ", errorText);
+                    alert("An error occurred while processing the payment link.");
                 } else {
-                    amountInput.value = originalAmount.toFixed(2);
-                    seniorDiscountForm.style.display = "none";
-                }
-            }
+                    const result = await response.json();
+                    console.log("API Response:", result);
 
-            // Fetch discount before allowing interaction
-            await fetchDiscount();
-
-            // Attach event listener to senior discount checkbox
-            seniorDiscountCheckbox.addEventListener("change", applyDiscount);
-
-            // Payment submission logic (unchanged)
-            submitPayment.addEventListener("click", async function () {
-                const patientName = document.getElementById("patientName").value;
-                const patientEmail = document.getElementById("patientEmail").value;
-                const treatmentType = document.getElementById("treatmentType").value;
-                const amountInPHP = document.getElementById("treatmentPrice").value;
-                const validationMessage = document.getElementById("validationMessage");
-
-                if (!patientName || !patientEmail || !treatmentType || !amountInPHP || isNaN(amountInPHP) || amountInPHP <= 0) {
-                    validationMessage.innerText = "Please fill out all fields with valid information.";
-                    validationMessage.style.display = "block";
-                } else if (amountInPHP < 100) {
-                    validationMessage.innerText = "The minimum payment amount is PHP 100.";
-                    validationMessage.style.display = "block";
-                } else {
-                    validationMessage.style.display = "none";
-
-                    const amountInCents = amountInPHP * 100;
-                    const paymentData = { patientName, patientEmail, treatmentType, amount: amountInCents };
-
-                    const response = await fetch("http://localhost:3000/api/payment/create-payment-link", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(paymentData)
-                    });
-
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error("Server Error: ", errorText);
-                        alert("An error occurred while processing the payment link.");
+                    if (result.paymentLink) {
+                        const paymentUrl = result.paymentLink;
+                        document.getElementById("paymentLink").innerHTML = `<a href="${paymentUrl}" target="_blank">Click here to pay</a>`;
                     } else {
-                        const result = await response.json();
-                        console.log("API Response:", result);
-
-                        if (result.paymentLink) {
-                            const paymentUrl = result.paymentLink;
-                            document.getElementById("paymentLink").innerHTML = `<a href="${paymentUrl}" target="_blank">Click here to pay</a>`;
-                        } else {
-                            console.error("Invalid response structure:", result);
-                            alert("Failed to generate payment link. Please try again.");
-                        }
+                        console.error("Invalid response structure:", result);
+                        alert("Failed to generate payment link. Please try again.");
                     }
                 }
-            });
+            }
         });
+    });
 </script>
 <script src="patientappointments.js"></script>
 <script src="patientnotifications.js"></script>

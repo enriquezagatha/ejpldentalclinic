@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Appointment</title>
+    <!-- <link rel="stylesheet" href="appointment/patientappointment.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-patient/navbarfetch-patients.js"></script>
+    <script src="../components/footerfetch.js"></script>
+</head>
+
+<body class="min-h-screen bg-slate-50 font-inter">
+    <header>
+        <div id="navbar-container"></div>
+    </header>
+    <main class="flex justify-center items-center min-h-[calc(100vh-6rem)]">
+        <section class="container flex justify-center items-center max-w-[95%] sm:max-w-full mt-8 mb-8 sm:mt-6 sm:mb-6">
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 w-full max-w-2xl">
+                <h1 class="text-2xl sm:text-4xl font-bold font-inter text-center">Confirm Appointment Form</h1>
+                <div class="flex flex-col items-center justify-center gap-1 mt-1 mb-2">
+                    <label class="text-xs sm:text-lg font-inter text-gray-700 text-center" for="email">New
+                        Patient</label>
+                </div>
+                <div class="confirmation-info">
+                    <!-- Confirmation details will be dynamically inserted here -->
+                </div>
+                <div class="sm:flex-row flex flex-col justify-between">
+                    <button
+                        class="appointment-back-button bg-[#2C4A66] hover:bg-[#1E3A56] text-white font-bold py-2 px-4 rounded w-full sm:w-1/6 mt-4"
+                        onclick="goToAppointmentBack()">Back</button>
+                    <button
+                        class="appointment-next-button bg-[#2C4A66] hover:bg-[#1E3A56] text-white font-bold py-2 px-4 rounded w-full sm:w-1/6 mt-4"
+                        onclick="confirmAppointment()">Confirm</button>
+                </div>
+
+                <!-- Modal for Confirmation Message -->
+                <div id="confirmation-modal"
+                    class="fixed inset-0 items-center justify-center bg-black bg-opacity-50 hidden">
+                    <div class="bg-white rounded-lg shadow-lg p-6 w-11/12 sm:w-1/3">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h2 class="text-lg font-semibold text-gray-800">Confirmation</h2>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="closeModal()">&times;</button>
+                        </div>
+                        <div class="mt-4">
+                            <p id="confirmation-text" class="text-sm text-gray-600"></p>
+                        </div>
+                        <div class="mt-6 flex justify-end gap-4">
+                            <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded"
+                                onclick="closeModal()">Cancel</button>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+                                onclick="confirmAppointment()">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Receipt Section -->
+                <div id="appointment-receipt" style="display: none;">
+                    <h2>Appointment Confirmation Receipt</h2>
+                    <p><strong>Clinic Name:</strong> EJPL Dental Clinic</p>
+                    <div class="receipt-info">
+                        <!-- Receipt details will be dynamically inserted here -->
+                    </div>
+                    <p><strong>Date of Confirmation:</strong> <span id="confirmation-date"></span></p>
+                    <p>Please bring this receipt to the clinic on the day of your appointment.</p>
+                </div>
+                <!-- <div id="notification" class="notification">Appointment confirmed successfully!</div> -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
+    <script>
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        const appointmentRecords = JSON.parse(localStorage.getItem('appointmentRecords')) || {}; // Load from localStorage or initialize as empty object
+
+        function formatDate(dateStr) {
+            const [year, month, day] = dateStr.split('-');
+            const monthName = monthNames[parseInt(month, 10) - 1];
+            return `${monthName}-${day}-${year}`;
+        }
+
+        function loadConfirmationData() {
+            const savedFormData = JSON.parse(sessionStorage.getItem('formData'));
+            const savedScheduleData = {
+                preferredDate: localStorage.getItem('preferredDate'),
+                preferredTime: localStorage.getItem('preferredTime'),
+                treatmentType: localStorage.getItem('treatmentType'),
+                treatmentPrice: localStorage.getItem('treatmentPrice'),
+            };
+
+            if (savedFormData) {
+                const confirmationHTML = `
+    <div class="space-y-2">
+        <div class="flex items-center mt-4">
+            <hr class="w-8 border-black mr-4">
+            <span class="text-sm sm:text-xl text-black font-semibold">Personal Information</span>
+            <hr class="flex-grow border-black ml-4">
+        </div>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Patient Name:</strong> <span class="font-normal">${savedFormData.firstName || 'N/A'} ${savedFormData.lastName || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Age:</strong> <span class="font-normal">${savedFormData.age || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Gender:</strong> <span class="font-normal">${savedFormData.gender || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Address:</strong> <span class="font-normal">${savedFormData.address || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Contact Number:</strong> <span class="font-normal">${savedFormData.contactNumber || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Email Address:</strong> <span class="font-normal">${savedFormData.emailAddress || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Medical History:</strong> <span class="font-normal">${savedFormData.selectedHistory || 'N/A'}</span></p>
+        <div class="flex items-center mt-4 pt-4">
+            <hr class="w-8 border-black mr-4">
+            <span class="text-sm sm:text-xl text-black font-semibold">Contact Details</span>
+            <hr class="flex-grow border-black ml-4">
+        </div>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Emergency Contact Person:</strong> <span class="font-normal">${savedFormData.emergencyContact || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Emergency Contact Number:</strong> <span class="font-normal">${savedFormData.emergencyContactNumber || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Emergency Contact Relationship:</strong> <span class="font-normal">${savedFormData.emergencyContactRelationship || 'N/A'}</span></p>
+        <div class="flex items-center mt-4">
+            <hr class="w-8 border-black mr-4 pt-4">
+            <span class="text-sm sm:text-xl text-black font-semibold">Appointment Details</span>
+            <hr class="flex-grow border-black ml-4">
+        </div>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Preferred Date:</strong> <span class="font-normal">${savedScheduleData.preferredDate ? formatDate(savedScheduleData.preferredDate) : 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Preferred Time:</strong> <span class="font-normal">${savedScheduleData.preferredTime || 'N/A'}</span></p>
+        <div class="flex items-center mt-4">
+            <hr class="w-8 border-black mr-4 pt-4">
+            <span class="text-sm sm:text-xl text-black font-semibold">Treatment Details</span>
+            <hr class="flex-grow border-black ml-4">
+        </div>
+        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Type of Treatment:</strong> <span class="font-normal">${savedScheduleData.treatmentType || 'N/A'}</span></p>
+        <p class="text-sm sm:text-base pb-4 pl-4 sm:pl-12 pt-4 text-black"><strong>Treatment Price:</strong> <span class="font-normal">${savedScheduleData.treatmentPrice || 'N/A'}</span></p>
+    </div>
+`;
+                document.querySelector('.confirmation-info').innerHTML = confirmationHTML;
+                document.querySelector('.receipt-info').innerHTML = confirmationHTML;
+                document.getElementById('confirmation-date').innerText = new Date().toLocaleDateString();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadConfirmationData);
+
+        function goToAppointmentBack() {
+            window.location.href = "patient-newpatientdetails.html";
+        }
+
+        function openModal(message) {
+            document.getElementById('confirmation-text').innerText = message;
+            const modal = document.getElementById('confirmation-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmation-modal').classList.add('hidden');
+        }
+
+        function confirmAppointment() {
+            const preferredTime = localStorage.getItem('preferredTime');
+
+            const savedFormData = JSON.parse(sessionStorage.getItem('formData')) || {};
+            const savedScheduleData = {
+                preferredDate: localStorage.getItem('preferredDate'),
+                preferredTime: preferredTime,
+                treatmentType: localStorage.getItem('treatmentType'),
+                treatmentPrice: localStorage.getItem('treatmentPrice'),
+            };
+
+            const appointmentData = {
+                firstName: savedFormData.firstName || 'N/A',
+                lastName: savedFormData.lastName || 'N/A',
+                age: savedFormData.age || 'N/A',
+                gender: savedFormData.gender || 'N/A',
+                address: savedFormData.address || 'N/A',
+                contactNumber: savedFormData.contactNumber || 'N/A',
+                emailAddress: savedFormData.emailAddress || 'N/A',
+                selectedHistory: savedFormData.selectedHistory || 'N/A',
+                emergencyContact: savedFormData.emergencyContact || 'N/A',
+                preferredDate: savedScheduleData.preferredDate || 'N/A',
+                preferredTime: savedScheduleData.preferredTime || 'N/A',
+                treatmentType: savedScheduleData.treatmentType || 'N/A',
+                treatmentPrice: savedScheduleData.treatmentPrice || 'N/A',
+                emergencyContactNumber: savedFormData.emergencyContactNumber || 'N/A',
+                emergencyContactRelationship: savedFormData.emergencyContactRelationship || 'N/A',
+            };
+
+            fetch('/api/appointments/patient/appointments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(appointmentData)
+            })
+                .then(response => {
+                    if (response.status === 401) {
+                        displayError('Unauthorized. Please log in to confirm your appointment.');
+                    } else if (response.status === 400) {
+                        response.json().then(errorData => {
+                            displayError(errorData.message || 'Appointment slot is full for this time.');
+                        });
+                    } else if (!response.ok) {
+                        response.json().then(errorData => {
+                            displayError(errorData.message || 'Network response was not ok');
+                        });
+                    } else {
+                        return response.json();
+                    }
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        fetch('api/notifications', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: 'Appointment confirmed successfully!',
+                                appointmentData: appointmentData
+                            })
+                        });
+
+                        const receiptUrl = `patient-receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
+                        window.location.href = receiptUrl;
+
+                        sessionStorage.removeItem('formData');
+                        localStorage.removeItem('preferredDate');
+                        localStorage.removeItem('preferredTime');
+                        localStorage.removeItem('treatmentType');
+                        localStorage.removeItem('treatmentPrice');
+
+                        document.querySelector('.confirmation-info').innerHTML = '';
+                        document.getElementById('confirmation-message').style.display = 'none';
+                        document.getElementById('confirmation-text').innerText = '';
+                    }
+                });
+        }
+
+        function displayError(message) {
+            openModal(message);
+        }
+
+        function printReceipt() {
+            const receiptSection = document.getElementById('appointment-receipt').innerHTML;
+            const originalContent = document.body.innerHTML;
+
+            document.body.innerHTML = receiptSection;
+            window.print();
+            document.body.innerHTML = originalContent;
+            location.reload();
+        }
+
+
+    </script>
+    <script src="patientnotifications.js"></script>
+</body>
+
+</html>

@@ -35,14 +35,12 @@ function validateForm() {
 
 function goBackAppointment() {
     sessionStorage.removeItem('formData'); // Clear the form data from session storage
-    window.location.href = "step2appointment.html";
+    window.location.href = "patient-newappointmentdetails.html";
 }
 
-function goNextAppointment() {
-    
-       saveFormData();  // Save form data before navigating
-        window.location.href = "step3appointment.html";
-    
+function goNextAppointment(event) {
+    saveFormData();  // Save form data before navigating
+    window.location.href = "patient-newconfirmdetails.html";
 }
 
 // Save form data to session storage
@@ -89,13 +87,22 @@ document.addEventListener('DOMContentLoaded', function () {
     loadFormData();
 
     // Add event listener to the dropdown button
-    document.querySelector('.dropdown-btn').addEventListener('click', function () {
+    document.querySelector('.dropdown-btn').addEventListener('click', function (event) {
         var dropdownContent = document.querySelector('.dropdown-content');
         if (dropdownContent) {
             // Toggle visibility of dropdown content
             dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
         } else {
             console.error('Dropdown content element not found');
+        }
+        event.stopPropagation(); // Prevent click from propagating to the document
+    });
+
+    // Hide dropdown content when clicking outside
+    document.addEventListener('click', function () {
+        var dropdownContent = document.querySelector('.dropdown-content');
+        if (dropdownContent) {
+            dropdownContent.style.display = 'none';
         }
     });
 
@@ -124,7 +131,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Update button text
-            document.querySelector('.dropdown-btn').textContent = selected.length > 0 ? selected.join(', ') : 'Select Medical History';
+            var dropdownBtn = document.querySelector('.dropdown-btn');
+            dropdownBtn.innerHTML = (selected.length > 0 ? selected.join(', ') : 'Select Medical History') + 
+                ' <i class="fas fa-chevron-down text-[0.7rem] text-gray-400"></i>';
+
+            // Update button text color
+            dropdownBtn.classList.toggle('text-black', selected.length > 0);
+            dropdownBtn.classList.toggle('text-gray-400', selected.length === 0);
 
             // Update hidden input value
             document.getElementById('selected-history').value = selected.join(', ');
@@ -150,7 +163,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Update button text
-        document.querySelector('.dropdown-btn').textContent = selected.length > 0 ? selected.join(', ') : 'Select Medical History';
+        document.querySelector('.dropdown-btn').innerHTML = (selected.length > 0 ? selected.join(', ') : 'Select Medical History') + 
+            ' <i class="fas fa-chevron-down text-[0.7rem] text-gray-400"></i>';
 
         // Update hidden input value
         document.getElementById('selected-history').value = selected.join(', ');
@@ -188,3 +202,13 @@ document.addEventListener('DOMContentLoaded', function () {
 window.onload = function() {
     document.getElementById('contact-form').reset();
 };
+
+function updateSelectColor(selectElement) {
+    if (selectElement.value === "") {
+        selectElement.classList.remove("text-black");
+        selectElement.classList.add("text-gray-400");
+    } else {
+        selectElement.classList.remove("text-gray-400");
+        selectElement.classList.add("text-black");
+    }
+}

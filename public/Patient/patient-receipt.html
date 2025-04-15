@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Receipt</title>
+    <!-- <link rel="stylesheet" href="patientappointment.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-patient/navbarfetch-patients.js"></script>
+    <script src="../components/footerfetch.js"></script>
+
+</head>
+
+<body class="min-h-screen bg-gray-100 font-inter">
+    <header>
+        <div id="navbar-container"></div>
+    </header>
+    <main class="flex justify-center items-center py-10">
+        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-3xl">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Appointment Confirmation Receipt</h2>
+            <div class="receipt-info space-y-4">
+                <p class="text-lg font-semibold text-black"><strong>Clinic Name:</strong> EJPL Dental Clinic</p>
+                <p class="text-base text-black"><strong>Reference Number:</strong> <span
+                        id="receipt-reference-number"></span></p>
+
+                <h3 class="text-lg text-center font-semibold text-black pt-4">Appointment Status:
+                    <span id="appointment-status" class="text-orange-500">Pending</span>
+                </h3>
+
+                <h3 class="text-lg font-semibold text-black mt-8 pt-8">Confirmation Details</h3>
+                <p class="text-sm text-black"><strong>Date of Confirmation:</strong> <span
+                        id="receipt-confirmation-date"></span></p>
+                <p class="text-sm text-black"><strong>Time of Confirmation:</strong> <span
+                        id="receipt-confirmation-time"></span></p>
+
+                <h3 class="text-lg font-semibold text-black mt-6 pt-4">Patient Information</h3>
+                <p class="text-sm text-black"><strong>Name:</strong> <span id="patient-name"></span></p>
+                <p class="text-sm text-black"><strong>Age:</strong> <span id="patient-age"></span></p>
+                <p class="text-sm text-black"><strong>Gender:</strong> <span id="patient-gender"></span></p>
+                <p class="text-sm text-black"><strong>Address:</strong> <span id="patient-address"></span></p>
+                <p class="text-sm text-black"><strong>Contact Number:</strong> <span id="patient-contact"></span></p>
+                <p class="text-sm text-black"><strong>Email Address:</strong> <span id="patient-email"></span></p>
+
+                <h3 class="text-lg font-semibold text-black mt-6 pt-4">Medical Information</h3>
+                <p class="text-sm text-black"><strong>Medical History:</strong> <span id="medical-history"></span>
+                </p>
+                <p class="text-sm text-black"><strong>Emergency Contact Person:</strong> <span
+                        id="emergency-contact"></span></p>
+                <p class="text-sm text-black"><strong>Emergency Contact Number:</strong> <span
+                        id="emergency-contact-number"></span></p>
+                <p class="text-sm text-black"><strong>Emergency Contact Relationship:</strong> <span
+                        id="emergency-contact-relationship"></span></p>
+
+                <h3 class="text-lg font-semibold text-black mt-6 pt-4">Appointment Details</h3>
+                <p class="text-sm text-black"><strong>Preferred Date:</strong> <span id="preferred-date"></span></p>
+                <p class="text-sm text-black"><strong>Preferred Time:</strong> <span id="preferred-time"></span></p>
+                <p class="text-sm text-black"><strong>Type of Treatment:</strong> <span id="treatment-type"></span>
+                </p>
+                <p class="text-sm text-black"><strong>Price:</strong> <span id="treatment-price"></span></p>
+
+                <p class="text-sm text-center text-gray-500 sm:pt-0 pt-12 sm:mt-6">Please keep this receipt for
+                    reference.</p>
+                <p class="text-sm text-center text-gray-500">You will be contacted by the clinic staff to confirm your
+                    appointment
+                    and further instructions will be provided. Thank you for your patience and God bless!</p>
+            </div>
+
+            <div class="flex flex-col gap-4 sm:flex-row justify-between mt-8">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+                    onclick="goToHomepage()">Go to Homepage</button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded"
+                    onclick="printReceipt()">Print Receipt</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
+
+    <script>
+        function generateReferenceNumber() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            let randomString = 'EJPL';  // The fixed prefix
+
+            randomString += '-';  // Add a dash
+
+            // Generate 9 random characters (letters and numbers mixed)
+            for (let i = 0; i < 9; i++) {
+                if (Math.random() < 0.5) {
+                    randomString += letters.charAt(Math.floor(Math.random() * letters.length));
+                } else {
+                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length));
+                }
+            }
+
+            return randomString;
+        }
+
+        function loadReceiptData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let referenceNumber = localStorage.getItem('referenceNumber'); // Check local storage
+            let confirmationDate = localStorage.getItem('confirmationDate'); // Check local storage for date
+            let confirmationTime = localStorage.getItem('confirmationTime'); // Check local storage for time
+
+            if (!referenceNumber) {
+                referenceNumber = generateReferenceNumber();
+                localStorage.setItem('referenceNumber', referenceNumber); // Store in local storage
+            }
+
+            document.getElementById('receipt-reference-number').innerText = referenceNumber;
+
+            // If confirmation date and time do not exist, create them
+            if (!confirmationDate || !confirmationTime) {
+                const now = new Date();
+                confirmationDate = now.toLocaleDateString(); // Format date
+                confirmationTime = now.toLocaleTimeString(); // Format time
+                localStorage.setItem('confirmationDate', confirmationDate); // Store date
+                localStorage.setItem('confirmationTime', confirmationTime); // Store time
+            }
+
+            // Set date and time in the receipt
+            document.getElementById('receipt-confirmation-date').innerText = confirmationDate;
+            document.getElementById('receipt-confirmation-time').innerText = confirmationTime;
+
+            const receiptDetails = JSON.parse(decodeURIComponent(urlParams.get('receiptDetails')));
+
+            if (receiptDetails) {
+                document.getElementById('patient-name').innerText = `${receiptDetails.firstName} ${receiptDetails.lastName}`;
+                document.getElementById('patient-age').innerText = receiptDetails.age;
+                document.getElementById('patient-gender').innerText = receiptDetails.gender;
+                document.getElementById('patient-address').innerText = receiptDetails.address || 'N/A';
+                document.getElementById('patient-contact').innerText = receiptDetails.contactNumber || 'N/A';
+                document.getElementById('patient-email').innerText = receiptDetails.emailAddress || 'N/A';
+                document.getElementById('medical-history').innerText = receiptDetails.selectedHistory || 'Undefined';
+                document.getElementById('emergency-contact').innerText = receiptDetails.emergencyContact || 'N/A';
+                document.getElementById('emergency-contact-number').innerText = receiptDetails.emergencyContactNumber;
+                document.getElementById('emergency-contact-relationship').innerText = receiptDetails.emergencyContactRelationship;
+                document.getElementById('preferred-date').innerText = formatPreferredDate(receiptDetails.preferredDate);
+                document.getElementById('preferred-time').innerText = receiptDetails.preferredTime;
+                document.getElementById('treatment-type').innerText = receiptDetails.treatmentType;
+                document.getElementById('treatment-price').innerText = receiptDetails.treatmentPrice;
+
+            } else {
+                console.error('Receipt details not found');
+            }
+            // Set appointment status
+            const appointmentStatus = localStorage.getItem('appointmentStatus') || 'Pending';
+            document.getElementById('appointment-status').innerText = appointmentStatus;
+        }
+
+        function formatPreferredDate(preferredDate) {
+            const date = new Date(preferredDate);
+            const monthNames = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            const day = date.getDate();
+            const monthIndex = date.getMonth();
+            const year = date.getFullYear();
+
+            return `${monthNames[monthIndex]} ${day}, ${year}`; // Format: Month Day, Year
+        }
+
+        function goToHomepage() {
+            window.location.href = "patient-home.html"; // Navigate to homepage
+        }
+
+        function printReceipt() {
+            window.print();
+        }
+
+        window.onload = function () {
+            loadReceiptData();
+        };
+    </script>
+</body>
+
+</html>
