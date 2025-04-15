@@ -39,6 +39,39 @@
         </button>
     </aside>
 
+    <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full">
+        <!-- Sidebar (hidden on small screens) -->
+        <aside class="hidden xl:block w-64 bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
+            <div class="flex flex-col items-center mt-4">
+                <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture"
+                    alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
+                <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
+                <p class="text-xs text-white">Patient</p>
+            </div>
+            <nav class="mt-12">
+                <ul class="space-y-3">
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-profile.html'">
+                            <i class="fas fa-user mr-3"></i> Patient Profile
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-appointments.html'">
+                            <i class="fas fa-calendar-alt mr-3"></i> Appointments
+                        </button>
+                    </li>
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-payments.html'">
+                            <i class="fas fa-credit-card mr-3"></i> Payment
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
         <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full">
             <!-- Sidebar (hidden on small screens) -->
             <aside class="hidden xl:block w-64 bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
@@ -59,6 +92,11 @@
                                 <i class="fas fa-calendar-alt mr-3"></i> Appointments
                             </button>
                         </li>
+                        <!-- <li>
+                            <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-records.html'">
+                                <i class="fas fa-credit-card mr-3"></i> Records
+                            </button>
+                        </li> -->
                         <li>
                             <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-payments.html'">
                                 <i class="fas fa-credit-card mr-3"></i> Payment
