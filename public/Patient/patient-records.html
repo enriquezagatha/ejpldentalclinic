@@ -1,46 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Records</title>
-    <link rel="stylesheet" href="../Patient/patientstyle.css">
+    <!-- <link rel="stylesheet" href="../Patient/patientstyle.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-patient/navbarfetch-patients.js"></script>
+    <script src="../components/footerfetch.js"></script>
 </head>
-<body>
+
+<body class="bg-slate-50 flex flex-col font-inter">
+    <!-- Navbar -->
     <header>
-        <nav class="nav-container">
-            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='patient-home.html';" style="cursor: pointer;">
-            <div class="nav-links">
-                <a href="../Patient/patient-home.html">Home</a>
-                <a href="../Patient/patient-aboutus.html">About Us</a>
-                <a href="../Patient/patient-doctors.html">Doctors</a>
-                <a href="../Patient/patient-services.html">Services</a>
-                <a href="../Patient/patient-contact.html">Contact Us</a>
-                <a href="../Patient/patient-location.html">Location</a>
-                <a href="../Patient/patient-records.html" class="active">Records</a>
-            </div>
-            <a href="../Patient/patient-profile.html">
-                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
-            </a>
-        </nav>
+        <div id="navbar-container"></div>
     </header>
 
-    <main>
-        <h2>Patient Records</h2>
-        <table id="patient-table">
-            <thead>
-                <tr>
-                    <th>Patient Name</th>
-                </tr>
-            </thead>
-            <tbody id="patient-table-body">
-                <tr><td>Loading records...</td></tr>
-            </tbody>
-        </table>
-    </main>
+    <!-- Mobile Bottom Nav (outside the container) -->
+    <aside
+        class="bg-[#2C4A66] fixed bottom-0 left-0 w-full h-16 flex justify-around items-center xl:hidden z-50 shadow-lg border-t border-gray-100 overflow-x-auto">
+        <button onclick="location.href='patient-profile.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-[10px]">Profile</span>
+        </button>
+        <button onclick="location.href='patient-appointments.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-calendar-alt text-lg"></i>
+            <span class="text-[10px]">Appointments</span>
+        </button>
+        <button onclick="location.href='patient-payments.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-credit-card text-lg"></i>
+            <span class="text-[10px]">Payments</span>
+        </button>
+        <button onclick="location.href='patient-records.html'"
+            class="bg-[#1E354A] flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-folder-open text-lg"></i>
+            <span class="text-[10px]">Records</span>
+        </button>
+    </aside>
+
+    <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full mt-20">
+        <!-- Sidebar -->
+        <aside class="hidden xl:block w-[13.9rem] bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
+            <div class="flex flex-col items-center mt-4">
+                <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture"
+                    alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
+                <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
+                <p class="text-xs text-white">Patient</p>
+            </div>
+            <nav class="mt-12">
+                <ul class="space-y-3">
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-profile.html'">
+                            <i class="fas fa-user mr-3"></i> Patient Profile
+                        </button>
+                    </li>
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-appointments.html'">
+                            <i class="fas fa-calendar-alt mr-3"></i> Appointments
+                        </button>
+                    </li>
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-payments.html'">
+                            <i class="fas fa-credit-card mr-3"></i> Payment
+                        </button>
+                    </li>
+                    <li>
+                        <button
+                            class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-records.html'">
+                            <i class="fas fa-folder-open mr-3"></i> Records
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="flex-1 p-4 w-full bg-[#FCFCFC] max-h-screen mt-6 mb-6 shadow-md border">
+            <main>
+                <div id="records-container">
+                    <div class="mb-4 w-full sm:w-3/6 relative">
+                        <input type="text" id="searchRecords" class="w-full p-2 pl-10 border border-gray-300 rounded"
+                            placeholder="Search Records" />
+                        <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <div class="min-w-[1024px]">
+
+                            <table id="patient-table"
+                                class="w-full border-collapse border border-gray-300 text-sm text-left table-fixed">
+                                <thead class="bg-[#2C4A66] text-white">
+                                    <tr>
+                                        <th class="border border-gray-300 px-4 py-2 truncate">Patient Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="patient-table-body">
+                                    <tr>
+                                        <td class="border-y border-gray-300 px-4 py-6 text-center">Loading records...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+            </main>
+        </div>
+    </div>
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
 
     <script>
-       document.addEventListener("DOMContentLoaded", async function () {
+        document.addEventListener("DOMContentLoaded", async function () {
+            await fetchProfile();
+
             const tableBody = document.getElementById("patient-table-body");
 
             try {
@@ -63,7 +146,7 @@
                 // Display the single patient record
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>
+                    <td class="border-y border-gray-300 px-4 py-6 text-center>
                         <a href="patient-recorddetails.html?id=${patient._id}" class="patient-link">
                             ${patient.firstName} ${patient.lastName}
                         </a>
@@ -76,7 +159,37 @@
             }
         });
 
-    </script>
+        function displayProfileInfo(data) {
+            const sidebarFullName = document.getElementById('sidebar-full-name');
+            const sidebarProfilePicture = document.getElementById('sidebar-profile-picture');
 
+            if (sidebarFullName) {
+                sidebarFullName.innerText = `${data.firstName} ${data.lastName}`;
+            }
+
+            if (sidebarProfilePicture) {
+                const profilePicture = data.profilePicture
+                    ? `/uploads/${data.profilePicture}`
+                    : "../media/logo/default-profile.png";
+                sidebarProfilePicture.src = profilePicture;
+            }
+        }
+
+        async function fetchProfile() {
+            const response = await fetch('/api/patient/profile');
+            if (response.ok) {
+                const data = await response.json();
+                displayProfileInfo(data);
+            } else {
+                console.error('Error fetching profile data');
+            }
+        }
+
+
+
+
+    </script>
+    <script src="patientnotifications.js"></script>
 </body>
+
 </html>

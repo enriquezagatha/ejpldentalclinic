@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,205 +10,259 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-patient/navbarfetch-patients.js"></script>
-    <script src="../components/footerfetch.js"></script>    
+    <script src="../components/footerfetch.js"></script>
 </head>
+
 <body class="bg-slate-50 flex flex-col font-inter">
     <!-- Navbar -->
     <header>
         <div id="navbar-container"></div>
-    </header>       
-        <!-- Mobile Bottom Nav (outside the container) -->
-            <aside class="fixed bottom-0 left-0 w-full h-16 bg-[#2C4A66] flex justify-around items-center xl:hidden z-50 shadow-lg border-t border-gray-100">
-            <button onclick="location.href='patient-profile.html'" class="bg-[#1E354A] flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
-                <i class="fas fa-user text-lg"></i>
-                <span class="text-[10px]">Profile</span>
-            </button>
-            <button onclick="location.href='patient-appointments.html'" class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
-                <i class="fas fa-calendar-alt text-lg"></i>
-                <span class="text-[10px]">Appointments</span>
-            </button>
-            <button onclick="location.href='patient-payments.html'" class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
-                <i class="fas fa-credit-card text-lg"></i>
-                <span class="text-[10px]">Payments</span>
-            </button>
-        </aside>
-        
-        
+    </header>
+    <!-- Mobile Bottom Nav (outside the container) -->
+    <aside
+        class="fixed bottom-0 left-0 w-full h-16 bg-[#2C4A66] flex justify-around items-center xl:hidden z-50 shadow-lg border-t border-gray-100 overflow-x-auto">
+        <button onclick="location.href='patient-profile.html'"
+            class="bg-[#1E354A] flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-user text-lg"></i>
+            <span class="text-[10px]">Profile</span>
+        </button>
+        <button onclick="location.href='patient-appointments.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-calendar-alt text-lg"></i>
+            <span class="text-[10px]">Appointments</span>
+        </button>
+        <button onclick="location.href='patient-payments.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-credit-card text-lg"></i>
+            <span class="text-[10px]">Payments</span>
+        </button>
+        <button onclick="location.href='patient-records.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-folder-open text-lg"></i>
+            <span class="text-[10px]">Records</span>
+        </button>
+    </aside>
 
-        <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full">
-           <!-- Sidebar (hidden on small screens) -->
-            <aside class="hidden xl:block w-[13.9rem] bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
-                <div class="flex flex-col items-center mt-4">
-                    <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture" alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
-                    <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
-                    <p class="text-xs text-white">Patient</p>
-                </div>
-                <nav class="mt-12">
-                    <ul class="space-y-3">
-                        <li>
-                            <button class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]">
-                                <i class="fas fa-user mr-3"></i> Patient Profile
-                            </button>
-                        </li>
-                        <li>
-                            <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-appointments.html'">
-                                <i class="fas fa-calendar-alt mr-3"></i> Appointments
-                            </button>
-                        </li>
-                        <li>
-                            <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]" onclick="window.location.href='patient-payments.html'">
-                                <i class="fas fa-credit-card mr-3"></i> Payment
-                            </button>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
 
-    
-            <!-- Main Content -->
-            <div class="flex-1 p-4 w-full bg-[#FCFCFC] max-h-screen mt-6 mb-6 shadow-md border">
-                <main>
-                    <div class="bg-white shadow-md shadow-t-lg rounded-lg p-6 border flex relative flex-col items-center text-center sm:flex-row sm:items-start sm:text-left">
-                        <!-- Profile Picture -->
-                        <div class="w-36 flex justify-center relative group mb-4 sm:justify-start sm:mb-0">
-                            <img src="../media/logo/default-profile.png?nocache=1" id="profile-picture" alt="Profile Picture" class="w-32 h-32 rounded-lg object-cover">
-                            <div class="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 w-36 sm:w-32 h-32 rounded-lg transition-opacity" onclick="openPictureModal()">
-                                <i class="fas fa-edit text-gray-100 text-2xl"></i>
-                            </div>
-                        </div>  
 
-                        <!-- Profile Info -->
-                        <div class="w-full sm:w-3/4 sm:ml-3">
-                            <h1 id="full-name" class="text-2xl font-semibold mb-2">N/A</h1>
-                            <p class="text-sm text-black mb-4">Patient</p>
-                        </div>
-
-                        <!-- Edit Button -->
-                        <button class="bg-white text-[#2C4A66] px-4 py-1 rounded font-bold hover:bg-[#2C4A66] hover:text-white flex items-center border-2 border-[#2C4A66] mt-4 sm:absolute sm:top-4 sm:right-4 sm:mt-0" onclick="toggleEditForm()">
-                            Edit Password <i class="fas fa-edit ml-2"></i>
-                        </button>
-                    </div>
-
-                    <div class="mt-8">
-                        <div class="relative flex items-center">
-                            <hr class="w-8 border-black mr-4">
-                            <span class="text-black font-semibold">Patient Information</span>
-                            <hr class="flex-grow border-black ml-4">
-                        </div>
-                    </div>
-
-                    <div class="w-[90%] mx-auto mt-6">
-                        <div class="mb-8">
-                            <label class="text-gray-600">Birthday</label>
-                            <p id="birthday-info" class="text-black font-bold">N/A</p>
-                        </div>
-                        <div class="mb-8">
-                            <label class="text-gray-600">Age</label>
-                            <p id="age-info" class="text-black font-bold">N/A</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-8">
-                        <div class="relative flex items-center">
-                            <hr class="w-8 border-black mr-4">
-                            <span class="text-black font-semibold">Contact Information</span>
-                            <hr class="flex-grow border-black ml-4">
-                        </div>
-                    </div>
-
-                    <div class="w-[90%] mx-auto mt-6">
-                        <div class="mb-8">
-                            <label class="text-gray-600">Email</label>
-                            <p id="email-info" class="text-black font-bold">N/A</p>
-                        </div>
-                    </div>
-
-    
-                    <!-- Picture Picture Modal -->
-                    <div id="picture-options-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" style="display: none;">
-                        <div class="bg-white rounded-lg shadow-lg p-6 w-[95%] sm:w-96 relative">
-                            <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700" onclick="closePictureModal()">&times;</button>
-                            <h2 class="text-lg font-semibold mb-4">Edit Profile Picture</h2>
-                            <img id="profile-preview" src="" alt="Preview" class="w-32 h-32 rounded-full mx-auto mb-4">
-                            <label for="upload-picture" class="block text-sm font-medium text-gray-700 mb-2">Change Profile Picture:</label>
-                            <input type="file" id="upload-picture" name="profilePicture" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <div class="flex justify-between mt-4">
-                                <button class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600" onclick="showDeleteConfirmation()">Remove</button>
-                                <button class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600" onclick="showUploadConfirmation()">Upload</button>
-                            </div>
-
-                            <!-- Delete Confirmation Modal -->
-                            <div id="delete-confirmation-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" style="display: none;">
-                                <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative">   
-                                    <h3 class="text-lg font-semibold mb-4">Confirm Delete</h3>
-                                    <p class="text-sm text-gray-600 mb-4 text-center">Are you sure you want to delete your profile picture?</p>
-                                    <div class="flex justify-between">
-                                        <button class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600" onclick="confirmDelete(false)">No</button>
-                                        <button class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600" onclick="confirmDelete(true)">Yes</button>
-                                    </div>
-                                    <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700" onclick="closeDeleteConfirmation()">&times;</button>
-                                </div>
-                            </div>
-
-                            <!-- Success Message -->
-                            <div id="modal-success-message" class="text-green-500 text-center mt-4 hidden">
-                                Profile picture uploaded successfully.
-                            </div>
-
-                            <!-- Error Message -->
-                            <div id="modal-error-message" class="text-red-500 text-center mt-4 hidden"> 
-                                Profile picture cancelled.
-                            </div>
-
-                            <!-- Upload Confirmation Modal -->
-                            <div id="upload-confirmation-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" style="display: none;">
-                                <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative">
-                                    <h3 class="text-lg font-semibold mb-4">Confirm Upload</h3>
-                                    <p class="text-sm text-gray-600 mb-4 text-center">Are you sure you want to upload this picture as your profile picture?</p>
-                                    <div class="flex justify-between">
-                                        <button class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600" onclick="confirmUpload(true)">Yes</button>
-                                        <button class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600" onclick="confirmUpload(false)">No</button>
-                                    </div>
-                                    <button class="absolute top-2 right-1 text-gray-500 hover:text-gray-700" onclick="closeUploadConfirmation()">&times;</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" id="overlay" style="display:none;">
-                        <div class="bg-white rounded-lg shadow-lg p-6  w-[95%] sm:w-96 relative">
-                            <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700" onclick="toggleEditForm()">&times;</button>
-                            <h2 class="text-lg font-semibold mb-4">Change Password</h2>
-                            <form id="edit-form" class="space-y-4">
-                                <div>
-                                    <label for="edit-email" class="block text-sm font-medium text-gray-700">Email:</label>
-                                    <input type="email" id="edit-email" name="email" required class="text-gray-500 pl-2 mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 read-only:">
-                                </div>
-                                <div>
-                                    <label for="current-password" class="block text-sm font-medium text-gray-700">Current Password:</label>
-                                    <input type="password" id="current-password" name="currentPassword" required class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                </div>
-                                <div>
-                                    <label for="new-password" class="block text-sm font-medium text-gray-700">New Password:</label>
-                                    <input type="password" id="new-password" name="newPassword" class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                </div>
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="toggle-password" onclick="togglePasswordVisibility()" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                    <label for="toggle-password" class="ml-2 block text-sm text-gray-700">Show Password</label>
-                                </div>
-                                <div id="edit-error-message" class="text-red-500 text-sm hidden"></div>
-                                <div id="edit-success-message" class="text-green-500 text-sm hidden"></div>
-                                <button type="button" onclick="confirmSave()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Save</button>
-                            </form>
-                        </div>
-                    </div>
-                </main>
+    <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full mt-20">
+        <!-- Sidebar (hidden on small screens) -->
+        <aside class="hidden xl:block w-[13.9rem] bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
+            <div class="flex flex-col items-center mt-4">
+                <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture"
+                    alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
+                <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
+                <p class="text-xs text-white">Patient</p>
             </div>
-        </div>
+            <nav class="mt-12">
+                <ul class="space-y-3">
+                    <li>
+                        <button
+                            class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]">
+                            <i class="fas fa-user mr-3"></i> Patient Profile
+                        </button>
+                    </li>
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-appointments.html'">
+                            <i class="fas fa-calendar-alt mr-3"></i> Appointments
+                        </button>
+                    </li>
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-payments.html'">
+                            <i class="fas fa-credit-card mr-3"></i> Payment
+                        </button>
+                    </li>
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-records.html'">
+                            <i class="fas fa-folder-open mr-3"></i> Records
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
-        <footer>
-            <div id="footer-container"></div>
-        </footer>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-4 w-full bg-[#FCFCFC] max-h-screen mt-6 mb-6 shadow-md border">
+            <main>
+                <div
+                    class="bg-white shadow-md shadow-t-lg rounded-lg p-6 border flex relative flex-col items-center text-center sm:flex-row sm:items-start sm:text-left">
+                    <!-- Profile Picture -->
+                    <div class="w-36 flex justify-center relative group mb-4 sm:justify-start sm:mb-0">
+                        <img src="../media/logo/default-profile.png?nocache=1" id="profile-picture"
+                            alt="Profile Picture" class="w-32 h-32 rounded-lg object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 w-36 sm:w-32 h-32 rounded-lg transition-opacity"
+                            onclick="openPictureModal()">
+                            <i class="fas fa-edit text-gray-100 text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <!-- Profile Info -->
+                    <div class="w-full sm:w-3/4 sm:ml-3">
+                        <h1 id="full-name" class="text-2xl font-semibold mb-2">N/A</h1>
+                        <p class="text-sm text-black mb-4">Patient</p>
+                    </div>
+
+                    <!-- Edit Button -->
+                    <button
+                        class="bg-white text-[#2C4A66] px-4 py-1 rounded font-bold hover:bg-[#2C4A66] hover:text-white flex items-center border-2 border-[#2C4A66] mt-4 sm:absolute sm:top-4 sm:right-4 sm:mt-0"
+                        onclick="toggleEditForm()">
+                        Edit Password <i class="fas fa-edit ml-2"></i>
+                    </button>
+                </div>
+
+                <div class="mt-8">
+                    <div class="relative flex items-center">
+                        <hr class="w-8 border-black mr-4">
+                        <span class="text-black font-semibold">Patient Information</span>
+                        <hr class="flex-grow border-black ml-4">
+                    </div>
+                </div>
+
+                <div class="w-[90%] mx-auto mt-6">
+                    <div class="mb-8">
+                        <label class="text-gray-600">Birthday</label>
+                        <p id="birthday-info" class="text-black font-bold">N/A</p>
+                    </div>
+                    <div class="mb-8">
+                        <label class="text-gray-600">Age</label>
+                        <p id="age-info" class="text-black font-bold">N/A</p>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <div class="relative flex items-center">
+                        <hr class="w-8 border-black mr-4">
+                        <span class="text-black font-semibold">Contact Information</span>
+                        <hr class="flex-grow border-black ml-4">
+                    </div>
+                </div>
+
+                <div class="w-[90%] mx-auto mt-6">
+                    <div class="mb-8">
+                        <label class="text-gray-600">Email</label>
+                        <p id="email-info" class="text-black font-bold">N/A</p>
+                    </div>
+                </div>
+
+
+                <!-- Picture Picture Modal -->
+                <div id="picture-options-modal"
+                    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    style="display: none;">
+                    <div class="bg-white rounded-lg shadow-lg p-6 w-[95%] sm:w-96 relative">
+                        <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700"
+                            onclick="closePictureModal()">&times;</button>
+                        <h2 class="text-lg font-semibold mb-4">Edit Profile Picture</h2>
+                        <img id="profile-preview" src="" alt="Preview" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <label for="upload-picture" class="block text-sm font-medium text-gray-700 mb-2">Change Profile
+                            Picture:</label>
+                        <input type="file" id="upload-picture" name="profilePicture" accept="image/*"
+                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <div class="flex justify-between mt-4">
+                            <button class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                                onclick="showDeleteConfirmation()">Remove</button>
+                            <button class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                                onclick="showUploadConfirmation()">Upload</button>
+                        </div>
+
+                        <!-- Delete Confirmation Modal -->
+                        <div id="delete-confirmation-modal"
+                            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                            style="display: none;">
+                            <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative">
+                                <h3 class="text-lg font-semibold mb-4">Confirm Delete</h3>
+                                <p class="text-sm text-gray-600 mb-4 text-center">Are you sure you want to delete your
+                                    profile picture?</p>
+                                <div class="flex justify-between">
+                                    <button class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600"
+                                        onclick="confirmDelete(false)">No</button>
+                                    <button class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+                                        onclick="confirmDelete(true)">Yes</button>
+                                </div>
+                                <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700"
+                                    onclick="closeDeleteConfirmation()">&times;</button>
+                            </div>
+                        </div>
+
+                        <!-- Success Message -->
+                        <div id="modal-success-message" class="text-green-500 text-center mt-4 hidden">
+                            Profile picture uploaded successfully.
+                        </div>
+
+                        <!-- Error Message -->
+                        <div id="modal-error-message" class="text-red-500 text-center mt-4 hidden">
+                            Profile picture cancelled.
+                        </div>
+
+                        <!-- Upload Confirmation Modal -->
+                        <div id="upload-confirmation-modal"
+                            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                            style="display: none;">
+                            <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative">
+                                <h3 class="text-lg font-semibold mb-4">Confirm Upload</h3>
+                                <p class="text-sm text-gray-600 mb-4 text-center">Are you sure you want to upload this
+                                    picture as your profile picture?</p>
+                                <div class="flex justify-between">
+                                    <button class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+                                        onclick="confirmUpload(true)">Yes</button>
+                                    <button class="bg-gray-500 text-white px-4 py-1 rounded hover:bg-gray-600"
+                                        onclick="confirmUpload(false)">No</button>
+                                </div>
+                                <button class="absolute top-2 right-1 text-gray-500 hover:text-gray-700"
+                                    onclick="closeUploadConfirmation()">&times;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" id="overlay"
+                    style="display:none;">
+                    <div class="bg-white rounded-lg shadow-lg p-6  w-[95%] sm:w-96 relative">
+                        <button class="absolute top-2 right-3 text-gray-500 hover:text-gray-700"
+                            onclick="toggleEditForm()">&times;</button>
+                        <h2 class="text-lg font-semibold mb-4">Change Password</h2>
+                        <form id="edit-form" class="space-y-4">
+                            <div>
+                                <label for="edit-email" class="block text-sm font-medium text-gray-700">Email:</label>
+                                <input type="email" id="edit-email" name="email" required
+                                    class="text-gray-500 pl-2 mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 read-only:">
+                            </div>
+                            <div>
+                                <label for="current-password" class="block text-sm font-medium text-gray-700">Current
+                                    Password:</label>
+                                <input type="password" id="current-password" name="currentPassword" required
+                                    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="new-password" class="block text-sm font-medium text-gray-700">New
+                                    Password:</label>
+                                <input type="password" id="new-password" name="newPassword"
+                                    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="toggle-password" onclick="togglePasswordVisibility()"
+                                    class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                <label for="toggle-password" class="ml-2 block text-sm text-gray-700">Show
+                                    Password</label>
+                            </div>
+                            <div id="edit-error-message" class="text-red-500 text-sm hidden"></div>
+                            <div id="edit-success-message" class="text-green-500 text-sm hidden"></div>
+                            <button type="button" onclick="confirmSave()"
+                                class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
@@ -215,6 +270,7 @@
         });            
     </script>
     <script src="patientprofile.js"></script>
-    <script src="patientnotifications.js"></script>        
+    <script src="patientnotifications.js"></script>
 </body>
+
 </html>

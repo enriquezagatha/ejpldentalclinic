@@ -1,29 +1,50 @@
 const dentist_API_URL = "http://localhost:3000/api/dentists"; // Backend URL
 
 async function fetchdentists() {
-    try {
-        const response = await fetch(dentist_API_URL);
-        const dentists = await response.json();
-        const dentistsList = document.getElementById("dentists-list");
+  try {
+    const response = await fetch(dentist_API_URL);
+    const dentists = await response.json();
+    const dentistsList = document.getElementById("dentists-list");
 
-        dentistsList.innerHTML = ""; // Clear existing content
-        dentists.forEach((dentist) => {
+    dentistsList.innerHTML = `
+      <ul id="team-member" class="list-none mx-auto my-12 mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center">
+        ${dentists
+          .map((dentist) => {
             // Determine the title based on gender
-            const title = dentist.gender === 'male' ? 'Dr.' : dentist.gender === 'female' ? 'Dra.' : '';
+            const title =
+              dentist.gender === "male"
+                ? "Dr."
+                : dentist.gender === "female"
+                ? "Dra."
+                : "";
 
-            // Format contact number by removing prefix (assuming contact is in the format "+1-xxx-xxx-xxxx")
-            const contactNumber = dentist.contact.replace(/^\+?\d+\s?/, ''); // Removes the country code and space
+            // Format contact number or provide a fallback if undefined
+            const contactNumber = dentist.contact
+              ? dentist.contact.replace(/^\+?\d+\s?/, "") // Removes the country code and space
+              : "N/A";
 
-            dentistsList.innerHTML += `
-                <div class="team-member">
-                    <img src="${dentist.image ? dentist.image : 'https://via.placeholder.com/150'}" alt="${dentist.name}">
-                    <h3>${title} ${dentist.firstName} ${dentist.lastName}</h3>
-                    <h4>Contact: ${dentist.contact}</h4>
-                </div>`;
-        });
-    } catch (error) {
-        console.error("Error fetching dentists:", error);
-    }
+            return `
+                <li class="flex flex-col border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] pt-4 px-2 shadow-xl">
+                    <img src="${
+                      dentist.image
+                        ? dentist.image
+                        : "https://via.placeholder.com/150"
+                    }" alt="${
+              dentist.name
+            }" class="mx-auto mb-4 w-[300px] h-[350px] object-cover">
+                    <h3 class="text-xl px-1 text-left text-black font-inter font-bold">${title} ${
+              dentist.firstName
+            } ${dentist.lastName}</h3>
+                    <p class="text-center text-black mt-8 mb-2 tracking-widest">${contactNumber} ${
+              dentist.contact
+            }</p>
+                </li>`;
+          })
+          .join("")}
+      </ul>`;
+  } catch (error) {
+    console.error("Error fetching dentists:", error);
+  }
 }
 
 // Load dentists on page load
