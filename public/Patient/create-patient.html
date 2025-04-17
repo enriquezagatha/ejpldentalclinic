@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,58 +8,99 @@
     <!-- <link rel="stylesheet" href="../Patient/patientlogin.css"> -->
     <link href="../output.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-mainpage/navbarfetch-mainpage.js"></script>
 </head>
+
 <body class="min-h-screen bg-slate-50">
     <header>
         <div id="navbar-container"></div>
     </header>
-    <main class="flex justify-center items-center min-h-[calc(100vh-6rem)]">
+    <main class="flex justify-center items-center h-screen mt-20 md:mt-0">
         <section class="container flex justify-center items-center max-w-[95%] sm:max-w-full mt-0 mb-0 sm:mt-6 sm:mb-6">
-            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 w-full max-w-lg mt-4 sm:mt-0 sm:max-w-xl">
+            <div
+                class="bg-white p-6 rounded-lg shadow-md border border-gray-200 w-full max-w-lg mt-4 sm:mt-0 sm:max-w-xl">
                 <h1 class="text-4xl font-bold font-inter text-center">Create Account</h1>
                 <div class="flex flex-row items-center justify-center gap-1 mt-1 mb-2">
-                    <label class="text-xs font-inter text-gray-700 text-center" for="email">Already have an account?</label>
-                    <a href="../Patient/login-patient.html" class="text-xs text-gray-700 hover:underline font-inter font-bold text-center">Login Here</a>
+                    <label class="text-xs font-inter text-gray-700 text-center" for="email">Already have an
+                        account?</label>
+                    <a href="../Patient/login-patient.html"
+                        class="text-xs text-gray-700 hover:underline font-inter font-bold text-center">Login Here</a>
                 </div>
                 <div class="login-form mt-6 w-full flex flex-col justify-center items-center">
                     <div class="flex flex-col w-full">
                         <div class="sm:flex sm:gap-2">
                             <div class="flex flex-col w-full">
-                                <label class="text-sm font-inter font-semibold text-black mb-2" for="firstname">First Name</label>
-                                <input type="text" id="first-name" placeholder="Jhoanna" class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2" required>
-                                <div id="first-name-error" class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
+                                <label class="text-sm font-inter font-semibold text-black mb-2" for="firstname">First
+                                    Name</label>
+                                <input type="text" id="first-name" placeholder="Jhoanna"
+                                    class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
+                                    required>
+                                <div id="first-name-error"
+                                    class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
                             </div>
                             <div class="flex flex-col w-full">
-                                <label class="text-sm font-inter font-semibold text-black mb-2" for="lastName">Last Name</label>
-                                <input type="text" id="last-name" placeholder="Robles" class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2" required>
-                                <div id="last-name-error" class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
+                                <label class="text-sm font-inter font-semibold text-black mb-2" for="lastName">Last
+                                    Name</label>
+                                <input type="text" id="last-name" placeholder="Robles"
+                                    class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
+                                    required>
+                                <div id="last-name-error"
+                                    class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
                             </div>
                         </div>
                         <div class="sm:flex sm:gap-2">
                             <div class="flex flex-col w-full">
-                                <label class="text-sm font-inter font-semibold text-black mb-2" for="email">Email Address</label>
-                                <input type="email" id="email" placeholder="jhoanna@gmail.com" class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2" required>
-                                <div id="email-error" class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
+                                <label class="text-sm font-inter font-semibold text-black mb-2" for="email">Email
+                                    Address</label>
+                                <input type="email" id="email" placeholder="jhoanna@gmail.com"
+                                    class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
+                                    required>
+                                <div id="email-error"
+                                    class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
                             </div>
                             <div class="date-picker-container flex flex-col w-full">
-                                <label class="text-sm font-inter font-semibold text-black mb-2" for="birthday">Birthday</label>
-                                <input type="date" id="birthday" class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2 date-input" required>
-                                <div id="birthday-error" class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
-                            </div> 
+                                <label class="text-sm font-inter font-semibold text-black mb-2"
+                                    for="birthday">Birthday</label>
+                                <input type="date" id="birthday"
+                                    class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2 date-input"
+                                    required>
+                                <div id="birthday-error"
+                                    class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
+                            </div>
                         </div>
                         <div class="flex flex-col w-full">
-                            <label class="text-sm font-inter font-semibold text-black mb-2" for="password">Password</label>
-                            <input type="password" id="password"  placeholder="••••••••" class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2" required>
-                            <div id="password-error" class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
+                            <label class="text-sm font-inter font-semibold text-black mb-2"
+                                for="password">Password</label>
+                            <div class="relative">
+                                <input type="password" id="password" placeholder="••••••••"
+                                    class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
+                                    required>
+                                <button type="button" id="toggle-password" class="absolute right-2 top-2 text-gray-500">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div id="password-error"
+                                class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
                         </div>
                         <div class="flex flex-col w-full">
-                            <label class="text-sm font-inter font-semibold text-black mb-2" for="changepassword">Change Password</label>
-                            <input type="password" id="confirm-password"  placeholder="••••••••" class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2" required>
-                            <div id="confirm-password-error" class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
+                            <label class="text-sm font-inter font-semibold text-black mb-2" for="changepassword">Confirm
+                                Password</label>
+                            <div class="relative">
+                                <input type="password" id="confirm-password" placeholder="••••••••"
+                                    class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
+                                    required>
+                                <button type="button" id="toggle-confirm-password"
+                                    class="absolute right-2 top-2 text-gray-500">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div id="confirm-password-error"
+                                class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
                         </div>
-                        <button id="create-account-button" class="create-button w-full bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-opacity-90 font-inter font-bold mt-4">Create Account</button>
+                        <button id="create-account-button"
+                            class="create-button w-full bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-opacity-90 font-inter font-bold mt-4">Create
+                            Account</button>
                     </div>
                 </div>
             </div>
@@ -80,14 +122,42 @@
         //     dateInput.showPicker();
         // });
 
-        document.querySelector('#birthday').addEventListener('change', function() {
+        document.querySelector('#birthday').addEventListener('change', function () {
             const dateInput = this.value;
             const [year, month, day] = dateInput.split('-');
             const formattedDate = `${monthNames[parseInt(month, 10) - 1]} ${day}, ${year}`;
             document.querySelector('#birthday-placeholder').value = formattedDate;
         });
 
-        document.getElementById('create-account-button').addEventListener('click', async function(event) {
+        document.getElementById('toggle-password').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        document.getElementById('toggle-confirm-password').addEventListener('click', function () {
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            const icon = this.querySelector('i');
+            if (confirmPasswordInput.type === 'password') {
+                confirmPasswordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                confirmPasswordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        document.getElementById('create-account-button').addEventListener('click', async function (event) {
             event.preventDefault(); // Prevent default behavior
 
             const firstName = document.getElementById('first-name').value.trim();
@@ -170,4 +240,5 @@
 
     </script>
 </body>
+
 </html>
