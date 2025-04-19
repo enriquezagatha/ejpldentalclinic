@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,61 +10,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-patient/navbarfetch-patients.js"></script>
-    <script src="../components/footerfetch.js"></script>    
+    <script src="../components/footerfetch.js"></script>
 </head>
+
 <body class="min-h-screen bg-slate-50">
     <header>
         <div id="navbar-container"></div>
     </header>
     <main class="max-w-6xl mx-auto">
-        <section id="home-section-1" class="flex flex-col-reverse justify-start sm:flex-row p-6 pt-10 items-start gap-8">
-            <article class="sm:w-1/2 mt-10">
-                <p class="max-w-md text-lg font-bold font-inter text-left text-[#223E57] tracking-widest">
+        <section id="home-section-1"
+            class="flex flex-col-reverse justify-start sm:flex-row p-6 pt-10 items-start gap-8">
+            <article class="w-full flex flex-col items-center justify-center lg:block lg:w-1/2 mt-20 lg:mt-32">
+                <p class="max-w-md text-md sm:text-lg font-bold font-inter text-left text-[#223E57] tracking-widest">
                     EJPL DENTAL CLINIC
-                </p>                
-                <h2 class="max-w-lg text-5xl font-bold font-inter mt-5 text-left text-black leading-tight">
+                </p>
+                <h2
+                    class="max-w-lg text-3xl sm:text-5xl font-bold font-inter mt-5 text-center lg:text-left text-black sm:leading-tight">
                     Quality Dental Care For a Healthy Smile
                 </h2>
-                <p class="max-w-md text-sm mt-5 text-left font-inter text-slate-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. 
+                <p class="max-w-md text-xs sm:text-sm mt-5 text-justify lg:text-left font-inter text-slate-700">
+                    Providing expert dental services including cleanings, fillings, braces, and cosmetic treatments to
+                    help you achieve a healthier, brighter smile.
                 </p>
-                <button class="w-30 mt-6 bg-[#2C4A66] font-bold text-white py-2 px-8 rounded-full font-inter hover:bg-[#223E57] transition duration-300"
+                <button
+                    class="w-30 mt-6 text-xs sm:text-base bg-[#2C4A66] font-bold text-white py-2 px-8 rounded-full font-inter hover:bg-[#223E57] transition duration-300"
                     onclick="goNextAppointment()">
                     Book an Appointment
                 </button>
             </article>
-            <img class="w-1/2" src="../media/homepage/homepage-teeth-media.png" alt="Tooth">
+            <img class="w-1/2 hidden  mt-20 sm:mt-30 lg:block" src="../media/homepage/homepage-teeth-media.png"
+                alt="Tooth">
         </section>
     </main>
 
     <main class="bg-[#F2F2F2] w-full">
         <div class="max-w-6xl mx-auto">
-            <section id="rockets" class="p-6 my-12 scroll-mt-20 widescreen:section-min-height tallscreen:section-min-height">
+            <section id="rockets"
+                class="p-6 my-12 scroll-mt-20 widescreen:section-min-height tallscreen:section-min-height">
                 <div class="text-center">
-                    <button class="w-30 mt-6 bg-white text-[#2C4A66] font-bold border-2 border-[#2C4A66] py-2 px-8 rounded-full font-inter hover:bg-[#223E57] hover:text-white hover:border-[#223E57] transition duration-300"
-                        onclick="window.location.href='../main page/services.html'">
+                    <button
+                        class="w-30 mt-6 text-xs sm:text-base bg-white text-[#2C4A66] font-bold border-2 border-[#2C4A66] py-2 px-8 rounded-full font-inter hover:bg-[#223E57] hover:text-white hover:border-[#223E57] transition duration-300"
+                        onclick="window.location.href='patient-services.html'">
                         Our Services
                     </button>
                 </div>
-                <h2 class="text-5xl font-bold font-inter text-center sm:text-5xl mt-6 text-black">
+                <h2 class="font-bold font-inter text-center text-3xl sm:text-5xl mt-6 text-black">
                     Services
                 </h2>
                 <div class="max-w-md mx-auto">
-                    <h2 class="text-sm font-inter text-center sm:text-sm mt-6 text-black">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    <h2 class="text-xs font-inter text-justify sm:text-center sm:text-sm mt-6 text-black">
+                        Expert dental solutions designed to keep your teeth healthy — ranging from checkups and
+                        cleanings
+                        to extractions and preventive care.
                     </h2>
                 </div>
                 <ul class="list-none mx-auto my-12 mt-16 flex flex-col sm:flex-row items-center gap-8">
-                    <li class="w-2/3 sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
-                        <img src="../media/services/dentalconsultation.jpg" alt="Dental Consultation" class="w-[350px] h-[200px] object-cover mx-auto mb-4">
+                    <li
+                        class="w-full sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
+                        <img src="../media/services/dentalconsultation.jpg" alt="Dental Consultation"
+                            class="w-[350px] h-[200px] object-cover mx-auto mb-4">
                         <h3 class="text-2xl text-center text-black font-inter font-bold">Dental Consultation</h3>
                     </li>
-                    <li class="w-2/3 sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
-                        <img src="../media/services/oral.jpg" alt="Oral Propophylaxis" class="w-[350px] h-[200px] object-cover mx-auto mb-4">
+                    <li
+                        class="w-full sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
+                        <img src="../media/services/oral.jpg" alt="Oral Propophylaxis"
+                            class="w-[350px] h-[200px] object-cover mx-auto mb-4">
                         <h3 class="text-2xl text-center text-black font-inter font-bold">Oral Propophylaxis</h3>
                     </li>
-                    <li class="w-2/3 sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
-                        <img src="../media/services/extraction.jpg" alt="Tooth Extraction" class="w-[350px] h-[200px] object-cover mx-auto mb-4">
+                    <li
+                        class="w-full sm:w-5/6 flex flex-col items-stretch border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] py-6 px-2 shadow-xl">
+                        <img src="../media/services/extraction.jpg" alt="Tooth Extraction"
+                            class="w-[350px] h-[200px] object-cover mx-auto mb-4">
                         <h3 class="text-2xl text-center text-black font-inter font-bold">Tooth Extraction</h3>
                     </li>
                 </ul>
@@ -72,19 +89,25 @@
     </main>
 
     <main class="max-w-6xl mx-auto">
-        <section id="home-section-1" class="flex flex-col-reverse justify-start sm:flex-row p-6 pt-10 items-start gap-8 mb-12 scroll-mt-40 widescreen:section-min-height tallscreen:section-min-height">
-            <article>
-                <p class="max-w-md text-lg font-bold font-inter text-left text-[#223E57] tracking-widest">
+        <section id="home-section-1"
+            class="flex flex-col-reverse justify-start sm:flex-row p-6 pt-10 items-start gap-8 mb-12 scroll-mt-40 widescreen:section-min-height tallscreen:section-min-height">
+            <article class="w-full flex flex-col items-center justify-center lg:block lg:w-1/2 mt-4">
+                <p
+                    class="max-w-md text-md sm:text-lg font-bold font-inter text-left text-[#223E57] tracking-widest uppercase">
                     Contact Us
-                </p>                
-                <h2 class="text-5xl font-bold font-inter mt-5 text-left text-black leading-tight">
-                   Have any Questions?
-                </h2>
-                <p class="max-w-md text-sm mt-5 text-left font-inter text-slate-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. 
                 </p>
-                <button class="w-30 mt-6 bg-[#2C4A66] font-bold text-white py-2 px-8 rounded-full font-inter hover:bg-[#223E57] transition duration-300"
-                    onclick="window.location.href='../main page/contact.html'">
+                <h2
+                    class="text-3xl sm:text-5xl font-bold font-inter mt-5 text-center lg:text-left text-black leading-tight">
+                    Have any Questions?
+                </h2>
+                <p class="max-w-md text-xs sm:text-sm mt-5 text-justify lg:text-left font-inter text-slate-700">
+                    Reach out to our friendly team for appointments, dental concerns, or service inquiries — we're here
+                    to
+                    help you smile with confidence.
+                </p>
+                <button
+                    class="w-30 mt-6 text-xs sm:text-base bg-[#2C4A66] font-bold text-white py-2 px-8 rounded-full font-inter hover:bg-[#223E57] transition duration-300"
+                    onclick="window.location.href='patient-aboutus.html#contactus-section'">
                     Contact Us
                 </button>
             </article>
@@ -119,4 +142,5 @@
     </script>
     <script src="patientnotifications.js"></script>
 </body>
+
 </html>

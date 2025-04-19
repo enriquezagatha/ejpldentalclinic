@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,31 +10,139 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-patient/navbarfetch-patients.js"></script>
-    <script src="../components/footerfetch.js"></script>    
+    <script src="../components/footerfetch.js"></script>
 </head>
-<body class="min-h-screen bg-slate-50">
+
+<body class="min-h-screen bg-slate-50 font-inter flex flex-col">
     <header>
         <div id="navbar-container"></div>
     </header>
-    
-    <div class="aboutus-container min-h-screen">
-        <section id="aboutus-content">
-            <p>Established in 2018 by Dr. Ely Jesse P. Legaspi, the EJPL Dental Clinic embodies a commitment 
-                to quality dental care and community service. Driven by a passion to serve his hometown of 
-                Bacoor City, Cavite, Dr. Legaspi meticulously built the clinic from the ground up.</p>
-            <p>Our dedicated team, led by Dr. Legaspi and supported by five skilled assistants, ensures the 
-                clinic operates seamlessly. From managing clinic maintenance to instrument sterilization and 
-                patient care, our team works diligently to provide a comfortable and efficient experience for 
-                every visitor.</p>
-            <p>Specializing in a wide range of services, including dental consultations, oral prophylaxis, 
-                extractions, braces installation, impacted wisdom tooth removal, jacket crown fittings, and 
-                prosthetic work, we strive to meet the diverse needs of our patients.</p>
-            <p>At EJPL Dental Clinic, we maintain an open-door policy and prioritize convenience by scheduling 
-                appointments daily to accommodate our clients' availability.</p>
+
+    <main class="bg-[#F2F2F2] w-full flex-1 mt-20">
+        <section class="bg-cover bg-center py-4 md:py-16 shadow-md"
+            style="background-image: url('../media/background/headerbg.webp');">
+            <div class="text-center text-black">
+                <h1 class="text-7xl font-bold md:block hidden">About Us</h1>
+                <h1 class="text-4xl font-bold md:hidden">About Us</h1>
+                <p class="text-xl mt-4 md:block hidden">Discover our story, meet the dedicated dental team, and find our
+                    clinic location and contact details — all in one convenient place. </p>
+            </div>
         </section>
-    </div>    
-    <footer>
+        <div class="aboutus-container">
+            <section id="aboutus-content" class="max-w-6xl mx-auto mt-12 space-y-8 w-[95%]">
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h2 class="text-3xl font-bold font-inter text-left sm:text-3xl text-black mb-4">Our Story</h2>
+                    <p class="text-justify text-gray-700 text-sm leading-6 sm:text-base">Established in 2018 by
+                        Dr.
+                        Ely Jesse P.
+                        Legaspi,
+                        the EJPL
+                        Dental Clinic
+                        embodies a commitment to quality dental care and community service. Driven by a passion to serve
+                        his
+                        hometown of Bacoor City, Cavite, Dr. Legaspi meticulously built the clinic from the ground up.
+                    </p>
+                    <p class="text-justify text-gray-700 mt-6 text-sm leading-6 sm:text-base">Specializing in a wide
+                        range of services, including
+                        dental
+                        consultations,
+                        oral prophylaxis, extractions, braces installation, impacted wisdom tooth removal, jacket crown
+                        fittings,
+                        and prosthetic work, we strive to meet the diverse needs of our patients.</p>
+                    <p class="text-justify text-gray-700 mt-6 text-sm leading-6 sm:text-base">At EJPL Dental Clinic, we
+                        maintain an open-door policy
+                        and
+                        prioritize
+                        convenience by scheduling appointments daily to accommodate our clients' availability.</p>
+                </div>
+                <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <h2 class="text-3xl font-bold font-inter text-left sm:text-3xl text-black mb-4">The Team</h2>
+                    <p class="text-justify text-gray-700 mb-4 text-sm leading-6 sm:text-base">Our dedicated team, led by
+                        Dr. Legaspi and supported by
+                        five
+                        skilled
+                        assistants, ensures the clinic operates seamlessly. From managing clinic maintenance to
+                        instrument
+                        sterilization and patient care, our team works diligently to provide a comfortable and efficient
+                        experience
+                        for every visitor.</p>
+                    <div class="flex justify-center sm:justify-end">
+                        <a href="patient-doctors.html"
+                            class="w-30 bg-[#2C4A66] font-bold text-white text-sm sm:text-base py-2 px-8 rounded-full font-inter hover:bg-[#223E57] transition duration-300">
+                            View Dentists
+                        </a>
+                    </div>
+                </div>
+                <div id="location-section" class="bg-white shadow-md rounded-lg p-6 mb-6 scroll-mt-28">
+                    <h2 class="text-3xl font-bold font-inter text-left sm:text-3xl text-black mb-4">Location</h2>
+                    <div class="flex items-center justify-center">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3864.4184517858707!2d120.98371231016012!3d14.403024886002104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397d37e395e71e3%3A0x605a1a6c6dd1ad4f!2sEJPL%20Dental%20Clinic!5e0!3m2!1sen!2sph!4v1720301889561!5m2!1sen!2sph"
+                            class="w-full" height="380" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <p class="text-center text-gray-900 mt-4 font-semibold text-sm leading-6 sm:text-base">B25 L2 Santan
+                        St. Queens
+                        Row West , Bacoor City, Cavite, Philippines</p>
+                </div>
+                <div id="contactus-section" class="bg-[#223E57] shadow-md rounded-lg p-6 mb-6">
+                    <h2 class="text-xl font-semibold font-inter text-center sm:text-3xl text-white mb-1">Searching for
+                        a
+                        Dentist in Queens Row?</h2>
+                    <h4 class="mt-4 sm:mt-0 text-md sm:text-xl font-light font-inter text-center text-white mb-8">Give
+                        us a call
+                        or
+                        message
+                        us on:</h4>
+                    <section id="contact-content" class="flex flex-col items-center space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-tty text-white"></i>
+                            <p id="contact-landline" class="text-white text-sm sm:text-base font-medium">Landline:
+                                Loading...</p>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-white transform rotate-90"></i>
+                            <p id="contact-phone" class="text-white text-sm sm:text-base font-medium">Phone: Loading...
+                            </p>
+                        </div>
+                        <a href="#" id="contact-facebook-link" target="_blank" class="flex items-center space-x-3">
+                            <i class="fab fa-facebook text-white"></i>
+                            <span id="contact-facebook-text"
+                                class="text-white text-sm sm:text-base font-medium hover:underline  ">Loading...</span>
+                        </a>
+                    </section>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="mt-8">
         <div id="footer-container"></div>
     </footer>
 </body>
+<script src="patientnotifications.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", async function () {
+        try {
+            const response = await fetch("http://localhost:3000/api/contact/first");
+            const contact = await response.json();
+
+            if (!contact) throw new Error("No contact details available.");
+
+            const landlineEl = document.getElementById("contact-landline");
+            const phoneEl = document.getElementById("contact-phone");
+            const facebookLinkEl = document.getElementById("contact-facebook-link");
+            const facebookTextEl = document.getElementById("contact-facebook-text");
+
+            if (landlineEl) landlineEl.textContent = `Landline: ${contact.landline || "Not Available"}`;
+            if (phoneEl) phoneEl.textContent = `Phone: ${contact.phone || "Not Available"}`;
+            if (facebookLinkEl) facebookLinkEl.href = contact.facebook_page || "#";
+            if (facebookTextEl) facebookTextEl.textContent = contact.facebook_text || "Facebook Page";
+
+        } catch (error) {
+            console.error("Error fetching contact details:", error);
+        }
+    });
+</script>
+
 </html>

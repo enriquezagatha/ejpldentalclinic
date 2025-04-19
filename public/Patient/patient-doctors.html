@@ -1,416 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient - Doctors</title>
-    <link rel="stylesheet" href="../Patient/patientstyle.css">
-    <style>
-        /* Notification bell styles */
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .notification-bell img {
-            width: 30px;
-            height: 30px;
-        }
-
-        .notification-count {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background-color: red;
-            color: white;
-            font-size: 12px;
-            border-radius: 50%;
-            padding: 2px 6px;
-            display: none;
-        }
-
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            top: 40px;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ccc;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-            z-index: 1000;
-            color: black;
-        }
-
-        .notification-dropdown ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .notification-dropdown li {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .notification-dropdown li:last-child {
-            border-bottom: none;
-        }
-
-        .notification-dropdown li:hover {
-            background-color: #f0f0f0;
-        }
-
-        .notification-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-        }
-
-        .notification-logo {
-            width: 100px; /* Adjust size as needed */
-            height: 100px;
-            margin-right: 10px; /* Space between logo and text */
-        }
-
-        .notification-text {
-            flex-grow: 1;
-        }
-
-        .notification-text strong {
-            display: block;
-            font-weight: bold;
-        }
-
-        .mark-read-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 5px 10px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-    </style>
+    <!-- <link rel="stylesheet" href="../Patient/patientstyle.css"> -->
+    <link href="../output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="../components/components-patient/navbarfetch-patients.js"></script>
+    <script src="../components/footerfetch.js"></script>
 </head>
-<body>
+
+<body class="min-h-screen bg-slate-50 flex flex-col font-inter">
     <header>
-        <nav class="nav-container">
-            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='patient-home.html';" style="cursor: pointer;">
-            <div class="nav-links">
-                <a href="../Patient/patient-home.html">Home</a>
-                <a href="../Patient/patient-aboutus.html">About Us</a>
-                <a href="../Patient/patient-doctors.html" class="active">Doctors</a>
-                <a href="../Patient/patient-services.html">Services</a>
-                <a href="../Patient/patient-contact.html">Contact Us</a>
-                <a href="../Patient/patient-location.html">Location</a>
-                <a href="../Patient/patient-records.html">Records</a>
-            </div>
-            <div class="notification-bell" style="position: relative;">
-                <img src="../media/logo/notif.png" alt="Notification Bell">
-                <span id="notification-count" class="notification-count">0</span>
-                
-                <div id="notification-dropdown" class="notification-dropdown">
-                    <!-- Controls for marking as read/unread -->
-                    <div id="notification-controls">
-                        <button onclick="markSelectedAsRead()">Mark as Read</button>
-                        <button onclick="markSelectedAsUnread()">Mark as Unread</button>
-                        <button onclick="deleteSelectedNotifications()">Delete</button>
-                    </div>
-                    <ul id="notification-list">
-                        <!-- Notifications will be dynamically added here -->
-                    </ul>
-                </div>
-            </div>                   
-            <a href="../Patient/patient-profile.html">
-                <img src="../media/logo/profile.png" alt="Profile Icon" class="profile-icon">
-            </a>
-        </nav>
+        <div id="navbar-container"></div>
     </header>
-    <div class="doctors-container">
-        <center><h2 class="section-title">Meet Our Doctors</h2></center>
-        <section id="doctors-content">
-            <center>
-                <div class="team">
-                    <div class="team-member">
-                        <img src="https://i.mydramalist.com/Xpzjp_7f.jpg" alt="Dr. John Doe" onclick="toggleCredentials(this);">
-                        <h3 onclick="toggleCredentials(this);">Dr. Jane Smith, DDS</h3>
-                        <div class="credentials">
-                            <span class="close-btn" onclick="toggleCredentials(this);">&times;</span>
-                            <p><strong>Specialization:</strong> Chief Dentist</p>
-                            <p><strong>Experience:</strong> 15 years</p>
-                            <p><strong>Education:</strong> DDS, University of Dental Science</p>
-                        </div>
-                    </div>
-                    <div class="team-member">
-                        <img src="https://i.mydramalist.com/EB82W_7f.jpg" alt="Dr. Jane Smith" onclick="toggleCredentials(this);">
-                        <h3 onclick="toggleCredentials(this);">Dr. John Doe, DMD</h3>
-                        <div class="credentials">
-                            <span class="close-btn" onclick="toggleCredentials(this);">&times;</span>
-                            <p><strong>Specialization:</strong> Pediatric Dentist</p>
-                            <p><strong>Experience:</strong> 10 years</p>
-                            <p><strong>Education:</strong> DMD, Pediatric Dentistry, University of Health</p>
-                        </div>
-                    </div>
-                </div>
-            </center>
+
+    <main class="bg-[#F2F2F2] w-full flex-1 mt-20 h-screen">
+        <section class="bg-cover bg-center py-4 md:py-16 shadow-md"
+            style="background-image: url('../media/background/headerbg.webp');">
+            <div class="text-center text-black">
+                <h1 class="text-7xl font-bold md:block hidden">Meet Our Dentists</h1>
+                <h1 class="text-4xl font-bold md:hidden">Meet Our Dentists</h1>
+                <p class="text-xl mt-4 md:block hidden">Get to know our skilled and compassionate dentists who are
+                    dedicated to providing personalized care for your dental health needs. </p>
+            </div>
         </section>
-    </div>
+        <div class="dentists-container">
+            <section id="dentists-content">
+                <div class="team max-w-2xl mx-auto px-2" id="dentists-list">
+
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer>
+        <div id="footer-container"></div>
+    </footer>
     <script>
         function toggleCredentials(element) {
             let teamMember = element.closest('.team-member');
             let credentials = teamMember.querySelector('.credentials');
             credentials.style.display = credentials.style.display === "none" || credentials.style.display === "" ? "block" : "none";
         }
-    
-        document.addEventListener('DOMContentLoaded', () => {
-            const notificationDropdown = document.getElementById('notification-dropdown');
-            const notificationBell = document.querySelector('.notification-bell');
-    
-            // Prevent dropdown from closing on checkbox or controls click
-            notificationDropdown.addEventListener('click', function(event) {
-                if (
-                    event.target.classList.contains('notification-checkbox') ||
-                    event.target.closest('#notification-controls')
-                ) {
-                    event.stopPropagation();
-                }
-            });
-    
-            // Toggle dropdown visibility on bell click
-            notificationBell.addEventListener('click', (event) => {
-                event.stopPropagation();
-                toggleNotificationDropdown();
-            });
-    
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (event) => {
-                if (
-                    !notificationDropdown.contains(event.target) &&
-                    !notificationBell.contains(event.target)
-                ) {
-                    notificationDropdown.style.display = 'none';
-                }
-            });
-    
-            // Load notifications
-            loadNotifications();
-        });
-    
-        // Toggle the visibility of the notification dropdown
-        function toggleNotificationDropdown() {
-            const dropdown = document.getElementById('notification-dropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-    
-        // Function to load notifications
-        function loadNotifications() {
-            fetch('/api/notifications', {
-                credentials: 'same-origin'  // Ensure cookies (session) are sent
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Loading notifications:", data);  // Log data to see what's loaded
-                if (data.success && data.notifications) {
-                    const notifications = data.notifications;
-                    const count = notifications.filter(n => !n.isRead).length;
-                    const list = document.getElementById('notification-list');
-                    const countEl = document.getElementById('notification-count');
-            
-                    list.innerHTML = '';
-                    countEl.style.display = count > 0 ? 'inline-block' : 'none';
-                    if (count > 0) countEl.textContent = count;
-            
-                    notifications.forEach(notification => {
-                        const li = document.createElement('li');
-                        const date = new Date(notification.createdAt);
-                        const timeAgo = getTimeAgo(date);
-            
-                        const imgSrc = notification.logoUrl || "../media/logo/EJPL.png";
-            
-                        li.innerHTML = `
-                            <div class="notification-item">
-                                <input type="checkbox" class="notification-checkbox" data-id="${notification._id}">
-                                <img src="${imgSrc}" alt="Logo" class="notification-logo"
-                                    onerror="this.onerror=null; this.src='../media/logo/EJPL.png';">
-                                <div class="notification-text">
-                                    ${notification.isRead 
-                                        ? `<span>${notification.message}</span>` 
-                                        : `<strong>${notification.message}</strong>`}
-                                    <br>
-                                    <small>${timeAgo}</small>
-                                </div>
-                            </div>
-                        `;
-                        list.appendChild(li);
-                    });
-                }
-            })
-            .catch(err => {
-                console.error("Failed to load notifications:", err);
-                alert("There was an issue loading your notifications. Please try again later.");
-            });
-        }
-    
-        // Function to calculate time ago
-        function getTimeAgo(date) {
-            const now = new Date();
-            const seconds = Math.floor((now - date) / 1000);
-    
-            if (seconds < 60) return `${seconds} second${seconds === 1 ? '' : 's'} ago`;
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-            const days = Math.floor(hours / 24);
-            return `${days} day${days === 1 ? '' : 's'} ago`;
-        }
-    
-        // Function to mark selected notifications as read
-        function markSelectedAsRead() {
-            const selectedIds = getSelectedNotificationIds();
-            updateNotificationStatus(selectedIds, 'read');
-        }
-    
-        // Function to mark selected notifications as unread
-        function markSelectedAsUnread() {
-            const selectedIds = getSelectedNotificationIds();
-            updateNotificationStatus(selectedIds, 'unread');
-        }
-    
-        // Function to get selected notification IDs
-        function getSelectedNotificationIds() {
-            const checkboxes = document.querySelectorAll('.notification-checkbox:checked');
-            return Array.from(checkboxes).map(checkbox => checkbox.dataset.id);
-        }
-    
-        // Function to update notification status (read/unread)
-        function updateNotificationStatus(notificationIds, status) {
-            if (notificationIds.length === 0) {
-                alert('No notifications selected.');
-                return;
-            }
-    
-            const endpoint = status === 'read' ? 'read' : 'unread';
-    
-            fetch(`/api/notifications/${endpoint}`, {
-                method: 'PATCH',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ notificationIds })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    loadNotifications(); // Reload notifications after update
-                } else {
-                    alert("Failed to update notification status.");
-                }
-            })
-            .catch(err => {
-                console.error("Error updating notification status:", err);
-            });
-        }
-    
-        let recentlyDeletedNotifications = []; // global cache
-    
-        function deleteSelectedNotifications() {
-            const selectedIds = getSelectedNotificationIds();
-    
-            if (selectedIds.length === 0) {
-                alert('No notifications selected.');
-                return;
-            }
-    
-            if (!confirm("Are you sure you want to delete the selected notifications?")) return;
-    
-            // Prepare deleted notifications only by ID for undo
-            const deletedData = selectedIds.map(id => ({ _id: id }));
-    
-            fetch('/api/notifications/delete', {
-                method: 'DELETE',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ notificationIds: selectedIds })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    recentlyDeletedNotifications = deletedData;
-                    showUndoNotification(); // Show undo toast
-                    loadNotifications(); // Refresh list
-                } else {
-                    alert("Failed to delete notifications.");
-                }
-            })
-            .catch(err => {
-                console.error("Error deleting notifications:", err);
-            });
-        }
-    
-        function showUndoNotification() {
-            const undoDiv = document.createElement('div');
-            undoDiv.id = "undo-toast";
-            undoDiv.style.position = "fixed";
-            undoDiv.style.bottom = "20px";
-            undoDiv.style.right = "20px";
-            undoDiv.style.backgroundColor = "#333";
-            undoDiv.style.color = "#fff";
-            undoDiv.style.padding = "12px 20px";
-            undoDiv.style.borderRadius = "8px";
-            undoDiv.style.boxShadow = "0 2px 10px rgba(0,0,0,0.3)";
-            undoDiv.style.zIndex = 9999;
-            undoDiv.innerHTML = `
-                Notification(s) deleted. <a href="#" style="color: #0af; text-decoration: underline;" onclick="undoDelete(event)">Undo</a>
-            `;
-    
-            document.body.appendChild(undoDiv);
-    
-            setTimeout(() => {
-                if (undoDiv.parentNode) {
-                    undoDiv.remove();
-                    recentlyDeletedNotifications = []; // clear if not undone
-                }
-            }, 5000); // 5 sec timeout
-        }
-    
-        function undoDelete(event) {
-            event.preventDefault();
-
-            if (recentlyDeletedNotifications.length === 0) return;
-
-            const payload = recentlyDeletedNotifications.map(n => ({ _id: n._id }));
-
-            fetch('/api/notifications/restore', {
-                method: 'POST',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ notifications: payload })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    recentlyDeletedNotifications = [];
-                    document.getElementById('undo-toast')?.remove();
-
-                    // Reload notifications after restore
-                    loadNotifications();
-                } else {
-                    console.error("Restore failed:", data.message || "Unknown error");
-                    alert("Failed to restore notifications.");
-                }
-            })
-            .catch(err => {
-                console.error("Error restoring notifications:", err);
-            });
-        }
-
-    </script>      
+        // Call the function after dynamically adding items
+        document.addEventListener("DOMContentLoaded", adjustGridColumns);
+    </script>
+    <script src="patientnotifications.js"></script>
+    <script src="../main page/doctors.js"></script>
 </body>
+
 </html>

@@ -1,21 +1,29 @@
-<header class="bg-[#2C4A66] text-white sticky top-0 z-10">
+<header class="bg-[#2C4A66] text-white fixed top-0 w-full z-10">
     <section class="max-w-full mx-auto px-5 flex justify-between items-center h-20">
-        <img src="../media/logo/EJPL.png" alt="Logo" class="logo w-24 h-auto" onclick="window.location.href='../Patient/patient-home.html';" style="cursor: pointer;">
+        <img src="../media/logo/EJPL.png" alt="Logo" class="logo w-24 h-auto"
+            onclick="window.location.href='../Patient/patient-home.html';" style="cursor: pointer;">
         <div class="flex items-center space-x-4">
             <!-- Bell Icon for Mobile -->
             <div class="relative">
                 <!-- Notification Bell -->
                 <button id="mobile-notification-bell" class="mt-1 mr-2 lg:hidden relative focus:outline-none">
                     <i class="fas fa-bell text-white text-xl hover:text-white"></i>
-                    <span id="mobile-notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
+                    <span id="mobile-notification-count"
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
                 </button>
             </div>
-            <div id="mobile-notification-dropdown" class="absolute right-[0.1rem] mt-[20.8rem] w-full bg-white border border-gray-200 rounded-none shadow-lg hidden lg:hidden z-50">
+            <div id="mobile-notification-dropdown"
+                class="absolute right-[0.1rem] top-20 w-full bg-white border border-gray-200 rounded-none shadow-lg hidden lg:hidden z-50">
                 <div class="p-4 border-b border-gray-200">
                     <div class="flex gap-2">
-                        <button onclick="markSelectedAsRead()" class="flex-1 py-1 bg-green-500 text-white text-xs font-semibold rounded hover:bg-green-600 font-inter">Mark as Read</button>
-                        <button onclick="markSelectedAsUnread()" class="flex-1 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600 font-inter">Mark as Unread</button>
-                        <button onclick="deleteSelectedNotifications()" class="flex-1 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600 font-inter">Delete</button>
+                        <button onclick="markSelectedAsRead()"
+                            class="flex-1 py-1 bg-green-500 text-white text-xs font-semibold rounded hover:bg-green-600 font-inter">Mark
+                            as Read</button>
+                        <button onclick="markSelectedAsUnread()"
+                            class="flex-1 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600 font-inter">Mark
+                            as Unread</button>
+                        <button onclick="deleteSelectedNotifications()"
+                            class="flex-1 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600 font-inter">Delete</button>
                     </div>
                 </div>
                 <ul id="mobile-notification-list" class="max-h-48 overflow-y-auto p-2 space-y-2">
@@ -28,29 +36,39 @@
                 &#9776;
             </button>
         </div>
-        <nav id="navbar" class="hidden lg:flex space-x-12 text-l mr-0 lg:mr-8 font-inter items-center justify-center" aria-label="main">
+        <nav id="navbar" class="hidden lg:flex space-x-12 text-l mr-0 lg:mr-8 font-inter items-center justify-center"
+            aria-label="main">
             <a href="../Patient/patient-home.html" class="active">Home</a>
             <div class="relative group h-10">
                 <a href="../Patient/patient-aboutus.html" class="flex items-center mt-2 group-hover:text-gray-300">
                     About Us
-                    <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
                     </svg>
                 </a>
                 <div class="absolute hidden group-hover:block bg-[#223E57] text-white mt-2 rounded shadow-lg w-36">
-                    <a href="../Patient/patient-contact.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Contact Us</a>
-                    <a href="../Patient/patient-location.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Location</a>
+                    <a href="../Patient/patient-aboutus.html#contactus-section"
+                        class="block px-4 py-2 hover:bg-[#2C4A66]">Contact Us</a>
+                    <a href="../Patient/patient-aboutus.html#location-section"
+                        class="block px-4 py-2 hover:bg-[#2C4A66]">Location</a>
                 </div>
             </div>
             <div class="relative group h-10">
                 <a href="../Patient/patient-services.html" class="flex items-center mt-2 group-hover:text-gray-300">
                     Services
-                    <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
                     </svg>
                 </a>
                 <div class="absolute hidden group-hover:block bg-[#223E57] text-white mt-2 rounded shadow-lg w-52">
-                    <a href="../Patient/typeofpatient.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Book an Appointment</a>
+                    <a href="../Patient/typeofpatient.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Book an
+                        Appointment</a>
                 </div>
             </div>
             <a href="../Patient/patient-doctors.html" class="">Dentists</a>
@@ -59,15 +77,22 @@
                 <!-- Notification Bell -->
                 <button id="notification-bell" class="relative focus:outline-none">
                     <i class="fas fa-bell text-white text-xl hover:text-white"></i>
-                    <span id="notification-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
+                    <span id="notification-count"
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full px-1 hidden">0</span>
                 </button>
                 <!-- Notification Dropdown -->
-                <div id="notification-dropdown" class="absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
+                <div id="notification-dropdown"
+                    class="absolute right-0 mt-2 w-96 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
                     <div class="p-4 border-b border-gray-200">
                         <div class="flex gap-2">
-                            <button onclick="markSelectedAsRead()" class="flex-1 py-1 bg-green-500 text-white text-xs font-semibold rounded hover:bg-green-600">Mark as Read</button>
-                            <button onclick="markSelectedAsUnread()" class="flex-1 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600">Mark as Unread</button>
-                            <button onclick="deleteSelectedNotifications()" class="flex-1 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600">Delete</button>
+                            <button onclick="markSelectedAsRead()"
+                                class="flex-1 py-1 bg-green-500 text-white text-xs font-semibold rounded hover:bg-green-600">Mark
+                                as Read</button>
+                            <button onclick="markSelectedAsUnread()"
+                                class="flex-1 py-1 bg-blue-500 text-white text-xs font-semibold rounded hover:bg-blue-600">Mark
+                                as Unread</button>
+                            <button onclick="deleteSelectedNotifications()"
+                                class="flex-1 py-1 bg-red-500 text-white text-xs font-semibold rounded hover:bg-red-600">Delete</button>
                         </div>
                     </div>
                     <ul id="notification-list" class="max-h-48 overflow-y-auto p-2 space-y-2">
@@ -76,63 +101,97 @@
                     </ul>
                 </div>
             </div>
-            <div class="flex items-center bg-[#223E57] text-white pl-6 pr-3 py-2 rounded-lg cursor-pointer relative group">
+            <div
+                class="flex items-center bg-[#223E57] text-white pl-6 pr-3 py-2 rounded-lg cursor-pointer relative group">
                 <img class="w-8 h-8 rounded-full mr-3 desktop-profile object-cover" alt="Profile Picture">
                 <div class="text-left">
                     <span id="profile-name" class="block font-semibold"></span>
                     <span class="block text-xs text-gray-300">Patient</span>
                 </div>
-                <svg class="w-4 h-4 ml-6 lg:ml-14" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                <svg class="w-4 h-4 ml-6 lg:ml-14" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
                 </svg>
-                <div id="desktop-profile-dropdown" class="hidden absolute bg-[#2C4A66] text-white mt-48 ml-4 rounded shadow-lg w-40 group-hover:block">
-                    <a href="../Patient/patient-profile.html" class="block px-4 py-2 hover:bg-[#223E57]">View Profile</a>
-                    <a href="../Patient/patient-appointments.html" class="block px-4 py-2 hover:bg-[#223E57]">Appointments</a>
+                <div id="desktop-profile-dropdown"
+                    class="hidden absolute bg-[#2C4A66] text-white top-12 ml-4 rounded shadow-lg w-40 group-hover:block">
+                    <a href="../Patient/patient-profile.html" class="block px-4 py-2 hover:bg-[#223E57]">View
+                        Profile</a>
+                    <a href="../Patient/patient-appointments.html"
+                        class="block px-4 py-2 hover:bg-[#223E57]">Appointments</a>
                     <a href="../Patient/patient-payments.html" class="block px-4 py-2 hover:bg-[#223E57]">Payments</a>
+                    <a href="../Patient/patient-records.html" class="block px-4 py-2 hover:bg-[#223E57]">Records</a>
                     <a href="../main page/home.html" class="block px-4 py-2 hover:bg-[#223E57]">Logout</a>
                 </div>
             </div>
         </nav>
     </section>
-    <div id="mobile-menu" class="lg:hidden opacity-0 pointer-events-none absolute top-20 left-0 w-full bg-[#223E57] text-white transition-all duration-300 ease-in-out transform -translate-y-4 z-20">
-        <a href="../Patient/patient-home.html" class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Home</a>
-        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer" onclick="toggleDropdown('about-us-dropdown')">
+    <div id="mobile-menu"
+        class="lg:hidden opacity-0 pointer-events-none absolute top-20 left-0 w-full bg-[#223E57] text-white transition-all duration-300 ease-in-out transform -translate-y-4 z-20">
+        <a href="../Patient/patient-home.html"
+            class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Home</a>
+        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer"
+            onclick="toggleDropdown('about-us-dropdown')">
             <span>About Us</span>
-            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
             </svg>
         </div>
         <div id="about-us-dropdown" class="hidden bg-[#2C4A66]">
-            <a href="../Patient/patient-aboutus.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">About Us</a>
-            <a href="../Patient/patient-contact.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Contact Us</a>
-            <a href="../Patient/patient-location.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Location</a>
+            <a href="../Patient/patient-aboutus.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">About Us</a>
+            <a href="../Patient/patient-aboutus.html#contactus-section"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Contact Us</a>
+            <a href="../Patient/patient-aboutus.html#location-section"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Location</a>
         </div>
-        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer" onclick="toggleDropdown('services-dropdown')">
+        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer"
+            onclick="toggleDropdown('services-dropdown')">
             <span>Services</span>
-            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
             </svg>
         </div>
         <div id="services-dropdown" class="hidden bg-[#2C4A66]">
-            <a href="../Patient/patient-services.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Our Services</a>
-            <a href="../Patient/typeofpatient.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Book an Appointment</a>
+            <a href="../Patient/patient-services.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Our Services</a>
+            <a href="../Patient/typeofpatient.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Book an Appointment</a>
         </div>
-        <a href="../Patient/patient-doctors.html" class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Dentists</a>
-        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer" onclick="toggleDropdown('mobile-profile-dropdown')">
+        <a href="../Patient/patient-doctors.html"
+            class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Dentists</a>
+        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer"
+            onclick="toggleDropdown('mobile-profile-dropdown')">
             <img class="w-8 h-8 rounded-full mr-3 mobile-profile object-cover" alt="Profile Picture">
             <div class="text-left">
                 <span id="mobile-profile-name" class="block font-semibold">Loading...</span>
                 <span class="block text-xs text-gray-300">Patient</span>
             </div>
-            <svg class="w-4 h-4 ml-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <svg class="w-4 h-4 ml-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
             </svg>
         </div>
         <div id="mobile-profile-dropdown" class="hidden bg-[#2C4A66]">
-            <a href="../Patient/patient-profile.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">View Profile</a>
-            <a href="../Patient/patient-appointments.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Appointments</a>
-            <a href="../Patient/patient-payments.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Payments</a>
-            <a href="../main page/home.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Logout</a>
+            <a href="../Patient/patient-profile.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">View Profile</a>
+            <a href="../Patient/patient-appointments.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Appointments</a>
+            <a href="../Patient/patient-payments.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Payments</a>
+            <a href="../Patient/patient-records.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Records</a>
+            <a href="../main page/home.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Logout</a>
         </div>
     </div>
 </header>

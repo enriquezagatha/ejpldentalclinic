@@ -1,6 +1,7 @@
-<header class="bg-[#2C4A66] text-white sticky top-0 z-10">
+<header class="bg-[#2C4A66] text-white fixed w-full top-0 z-10">
     <section class="max-w-full mx-auto px-5 flex justify-between items-center h-20">
-        <img src="../media/logo/EJPL.png" alt="Logo" class="logo w-24 h-auto" onclick="window.location.href='home.html';" style="cursor: pointer;">
+        <img src="../media/logo/EJPL.png" alt="Logo" class="logo w-24 h-auto"
+            onclick="window.location.href='home.html';" style="cursor: pointer;">
         <button id="mobile-open-button" class="text-3xl md:hidden focus:outline-none mr-4">
             &#9776;
         </button>
@@ -9,13 +10,18 @@
             <div class="relative group h-10">
                 <a href="../main page/aboutus.html" class="flex items-center mt-2 group-hover:text-gray-300">
                     About Us
-                    <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
                     </svg>
                 </a>
                 <div class="absolute hidden group-hover:block bg-[#223E57] text-white mt-2 rounded shadow-lg w-36">
-                    <a href="../main page/contact.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Contact Us</a>
-                    <a href="../main page/location.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Location</a>
+                    <a href="../main page/aboutus.html#contactus-section"
+                        class="block px-4 py-2 hover:bg-[#2C4A66]">Contact Us</a>
+                    <a href="../main page/aboutus.html#location-section"
+                        class="block px-4 py-2 hover:bg-[#2C4A66]">Location</a>
                 </div>
             </div>
             <a href="../main page/services.html" class="mt-2">Services</a>
@@ -23,43 +29,65 @@
             <div class="relative group">
                 <a class="flex items-center mt-2 group-hover:text-gray-300">
                     Login
-                    <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                        aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
                     </svg>
                 </a>
                 <div class="absolute hidden group-hover:block bg-[#223E57] text-white mt-2 rounded shadow-lg w-36">
                     <a href="../Patient/login-patient.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Patient</a>
-                    <a href="../Medical Personnel/login-medicalpersonnel.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Personnel</a>
+                    <a href="../Medical Personnel/login-medicalpersonnel.html"
+                        class="block px-4 py-2 hover:bg-[#2C4A66]">Personnel</a>
                     <a href="../Patient/create-patient.html" class="block px-4 py-2 hover:bg-[#2C4A66]">Sign Up</a>
                 </div>
             </div>
         </nav>
     </section>
-    <div id="mobile-menu" class="md:hidden opacity-0 pointer-events-none absolute top-20 left-0 w-full bg-[#223E57] text-white transition-all duration-300 ease-in-out transform -translate-y-4 z-20">
-        <a href="../main page/home.html" class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Home</a>
-        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer" onclick="toggleDropdown('about-us-dropdown')">
+    <div id="mobile-menu"
+        class="md:hidden opacity-0 pointer-events-none absolute top-20 left-0 w-full bg-[#223E57] text-white transition-all duration-300 ease-in-out transform -translate-y-4 z-20">
+        <a href="../main page/home.html"
+            class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Home</a>
+        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer"
+            onclick="toggleDropdown('about-us-dropdown')">
             <span>About Us</span>
-            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
             </svg>
         </div>
         <div id="about-us-dropdown" class="hidden bg-[#2C4A66]">
-            <a href="../main page/aboutus.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">About Us</a>
-            <a href="../main page/contact.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Contact Us</a>
-            <a href="../main page/location.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Location</a>
+            <a href="../main page/aboutus.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">About Us</a>
+            <a href="../main page/contact.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Contact Us</a>
+            <a href="../main page/location.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Location</a>
         </div>
-        <a href="../main page/services.html" class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Services</a>
-        <a href="../main page/doctors.html" class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Dentists</a>
-        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer" onclick="toggleDropdown('login-dropdown')">
+        <a href="../main page/services.html"
+            class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Services</a>
+        <a href="../main page/doctors.html"
+            class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Dentists</a>
+        <div class="px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300 flex items-center cursor-pointer"
+            onclick="toggleDropdown('login-dropdown')">
             <span>Login</span>
-            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            <svg class="w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
             </svg>
         </div>
         <div id="login-dropdown" class="hidden bg-[#2C4A66]">
-            <a href="../Patient/login-patient.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Patient</a>
-            <a href="../Medical Personnel/login-medicalpersonnel.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Personnel</a>
-            <a href="../Patient/create-patient.html" class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Sign Up</a>
+            <a href="../Patient/login-patient.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Patient</a>
+            <a href="../Medical Personnel/login-medicalpersonnel.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Personnel</a>
+            <a href="../Patient/create-patient.html"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Sign Up</a>
         </div>
     </div>
 </header>

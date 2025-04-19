@@ -21,7 +21,7 @@
 
     <!-- Mobile Bottom Nav (outside the container) -->
     <aside
-        class="bg-[#2C4A66] fixed bottom-0 left-0 w-full h-16 flex justify-around items-center xl:hidden z-50 shadow-lg border-t border-gray-100">
+        class="bg-[#2C4A66] fixed bottom-0 left-0 w-full h-16 flex justify-around items-center xl:hidden z-50 shadow-lg border-t border-gray-100 overflow-x-auto">
         <button onclick="location.href='patient-profile.html'"
             class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
             <i class="fas fa-user text-lg"></i>
@@ -37,16 +37,25 @@
             <i class="fas fa-credit-card text-lg"></i>
             <span class="text-[10px]">Payments</span>
         </button>
+        <button onclick="location.href='patient-records.html'"
+            class="flex flex-col items-center text-white text-xs px-3 py-2 rounded-md">
+            <i class="fas fa-folder-open text-lg"></i>
+            <span class="text-[10px]">Records</span>
+        </button>
     </aside>
 
-    <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full">
+    <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full mt-20">
         <!-- Sidebar (hidden on small screens) -->
         <aside class="hidden xl:block w-64 bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
             <div class="flex flex-col items-center mt-4">
+                <div id="sidebar-profile-picture-skeleton" class="w-24 h-24 bg-gray-200 rounded-lg animate-pulse mb-4">
+                </div>
                 <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture"
-                    alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
-                <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
-                <p class="text-xs text-white">Patient</p>
+                    alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4 hidden">
+                <div id="sidebar-full-name-skeleton" class="h-4 bg-gray-200 rounded-full animate-pulse w-3/4 mb-2">
+                </div>
+                <p id="sidebar-full-name" class="text-lg text-white font-semibold hidden">N/A</p>
+                <p id="sidebar-fixed-patient-text" class="text-xs text-white hidden">Patient</p>
             </div>
             <nav class="mt-12">
                 <ul class="space-y-3">
@@ -69,9 +78,19 @@
                             <i class="fas fa-credit-card mr-3"></i> Payment
                         </button>
                     </li>
+                    <li>
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                            onclick="window.location.href='patient-records.html'">
+                            <i class="fas fa-folder-open mr-3"></i> Records
+                        </button>
+                    </li>
                 </ul>
             </nav>
         </aside>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 937dda68edd1d2654896bb2c448a2bdb9b48e3b2
         <div class="flex-1 p-4 w-full bg-[#FCFCFC] max-h-screen mt-6 mb-6 shadow-md border">
             <main>
                 <!-- APPOINTMENTS TABLE -->
@@ -104,7 +123,8 @@
                         </div>
                     </div>
                     <div id="pagination"
-                        class="pagination-container mt-8 flex justify-center sticky bottom-0 bg-[#FCFCFC] z-10"></div>
+                        class="pagination-container mt-8 justify-center flex sticky bottom-0 bg-[#FCFCFC] z-10">
+                    </div>
                 </div>
             </main>
         </div>
@@ -116,14 +136,61 @@
 
 </html>
 <script>
-
     document.addEventListener('DOMContentLoaded', async () => {
+        const appointmentsTableBody = document.querySelector('#appointments tbody');
+
+        // Show "Loading appointments..." row
+        appointmentsTableBody.innerHTML = `
+            <tr id="loading-row">
+                <td colspan="8" class="text-center text-gray-500 py-6">
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-spinner fa-spin text-4xl mb-2 text-gray-400"></i>
+                        <p class="text-lg font-semibold">Loading appointments...</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+
         await fetchProfile();
         await fetchAppointments();
+
+        document.getElementById('sidebar-profile-picture-skeleton').classList.add('hidden');
+        document.getElementById('sidebar-profile-picture').classList.remove('hidden');
+        document.getElementById('sidebar-full-name-skeleton').classList.add('hidden');
+        document.getElementById('sidebar-full-name').classList.remove('hidden');
+        document.getElementById('sidebar-fixed-patient-text').classList.remove('hidden');
     });
+
+    async function fetchAppointments() {
+        try {
+            const response = await fetch('/api/patient/appointments'); // Replace with your API endpoint
+            if (response.status === 404) {
+                displayAppointments([]); // No appointments found
+                return;
+            }
+            if (!response.ok) throw new Error('Failed to fetch appointments');
+            const appointments = await response.json();
+            displayAppointments(appointments);
+        } catch (error) {
+            console.error('Error fetching appointments:', error);
+            const appointmentsTableBody = document.querySelector('#appointments tbody');
+            appointmentsTableBody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="text-center text-red-500 py-6">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-exclamation-circle text-4xl mb-2 text-red-400"></i>
+                            <p class="text-lg font-semibold">Failed to load appointments</p>
+                            <p class="text-sm text-gray-400">Please try again later.</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
     function displayAppointments(appointments) {
         const appointmentsTableBody = document.querySelector('#appointments tbody');
-        const paginationContainer = document.getElementById('pagination'); // Ensure this is declared here
+        const paginationContainer = document.getElementById('pagination');
         const appointmentsPerPage = 5;
         let currentPage = 1;
 
@@ -132,54 +199,70 @@
 
         if (appointments.length === 0) {
             appointmentsTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center text-gray-500 py-6">
-                            <div class="flex flex-col items-center">
-                                <i class="fas fa-calendar-times text-4xl mb-2 text-gray-400"></i>
-                                <p class="text-lg font-semibold">No appointments found</p>
-                                <p class="text-sm text-gray-400">Try adjusting your search or check back later.</p>
-                            </div>
-                        </td>
-                    </tr>`;
+                <tr>
+                    <td colspan="8" class="text-center text-gray-500 py-6">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-calendar-times text-4xl mb-2 text-gray-400"></i>
+                            <p class="text-lg font-semibold">No Appointments Found</p>
+                            <p class="text-sm text-gray-400">Try adjusting your search or check back later.</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
             return;
         }
+
         function renderPage(page) {
-            appointmentsTableBody.innerHTML = '';
+            appointmentsTableBody.innerHTML = `
+                <tr id="loading-row">
+                    <td colspan="8" class="text-center text-gray-500 py-6">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-spinner fa-spin text-4xl mb-2 text-gray-400"></i>
+                            <p class="text-lg font-semibold">Loading appointments...</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+
             const startIndex = (page - 1) * appointmentsPerPage;
             const endIndex = Math.min(startIndex + appointmentsPerPage, appointments.length);
 
-            for (let i = startIndex; i < endIndex; i++) {
-                const appointment = appointments[i];
-                const row = document.createElement('tr');
-                let statusClass = '';
+            setTimeout(() => {
+                appointmentsTableBody.innerHTML = ''; // Clear the loading row
+                for (let i = startIndex; i < endIndex; i++) {
+                    const appointment = appointments[i];
+                    const row = document.createElement('tr');
+                    let statusClass = '';
 
-                if (appointment.status === 'Confirmed') {
-                    statusClass = 'text-green-600 font-semibold';
-                } else if (appointment.status === 'Pending') {
-                    statusClass = 'text-yellow-600 font-semibold';
-                } else if (appointment.status === 'Cancelled') {
-                    statusClass = 'text-red-600 font-semibold';
-                } else if (appointment.status === 'Completed') {
-                    statusClass = 'text-blue-600 font-semibold';
+                    if (appointment.status === 'Confirmed') {
+                        statusClass = 'text-green-600 font-semibold';
+                    } else if (appointment.status === 'Pending') {
+                        statusClass = 'text-yellow-600 font-semibold';
+                    } else if (appointment.status === 'Cancelled') {
+                        statusClass = 'text-red-600 font-semibold';
+                    } else if (appointment.status === 'Completed') {
+                        statusClass = 'text-blue-600 font-semibold';
+                    }
+
+                    const formattedDate = formatDate(appointment.preferredDate);
+
+                    row.innerHTML = `
+                        <td class="border-y border-gray-300 px-4 py-6 text-center ${statusClass}">${appointment.status}</td>
+                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.referenceNumber}</td>
+                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.firstName} ${appointment.lastName}</td>
+                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.contactNumber}</td>
+                        <td class="border-y border-gray-300 px-4 py-6 break-words">${formattedDate}</td>
+                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.preferredTime}</td>
+                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentType}</td>
+                        <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.assignedDentist?.fullName || "No Assigned Dentist"}</td>
+                    `;
+
+                    appointmentsTableBody.appendChild(row);
                 }
 
-                const formattedDate = formatDate(appointment.preferredDate);
-
-                row.innerHTML = `
-                    <td class="border-y border-gray-300 px-4 py-6 text-center ${statusClass}">${appointment.status}</td>
-                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.referenceNumber}</td>
-                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.firstName} ${appointment.lastName}</td>
-                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.contactNumber}</td>
-                    <td class="border-y border-gray-300 px-4 py-6 break-words">${formattedDate}</td>
-                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.preferredTime}</td>
-                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentType}</td>
-                    <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.assignedDentist?.fullName || "No Assigned Dentist"}</td>
-                `;
-
-                appointmentsTableBody.appendChild(row);
-            }
-
-            attachPaymentEventListeners();
+                attachPaymentEventListeners();
+            }, 500); // Simulate a delay for loading
         }
 
         function renderPagination() {
