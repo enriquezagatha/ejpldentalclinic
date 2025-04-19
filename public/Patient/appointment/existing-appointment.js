@@ -2,14 +2,15 @@ document.addEventListener("DOMContentLoaded", function () {
   loadFormData(); // Load saved form data when the page loads
 });
 
-// Function to navigate back
 function goBackAppointment() {
-  sessionStorage.removeItem("existingPatientFormData"); // Clear session storage
-  window.location.href = "patient-existingappointmentdetails.html"; // Redirect to patient type selection
+  sessionStorage.setItem("isNavigating", "true"); // Set flag for navigation
+  saveFormData(); // Save only what's still needed
+  window.location.href = "patient-existingappointmentdetails.html";
 }
 
 // Function to navigate to the next step
 function goNextAppointment() {
+  sessionStorage.setItem("isNavigating", "true"); // Set flag for navigation
   saveFormData(); // Save data before moving to the next step
   window.location.href = "patient-existingconfirmdetails.html"; // Change this to the next step URL
   /* if (validateForm()) {
@@ -46,24 +47,28 @@ function saveFormData() {
   const nameParts = fullName.split(" "); // Split full name into first and last names
 
   const formData = {
-    firstName: nameParts[0] || "", // First part is first name
-    lastName: nameParts.slice(1).join(" ") || "", // Remaining part is last name
+    firstName: nameParts[0] || "",
+    lastName: nameParts.slice(1).join(" ") || "",
     contactNumber: document.getElementById("contact-number").value.trim(),
   };
 
-  sessionStorage.setItem("existingPatientFormData", JSON.stringify(formData)); // Store in sessionStorage
+  sessionStorage.setItem("existingPatientFormData", JSON.stringify(formData));
 }
 
-// Load form data from session storage
 function loadFormData() {
-  const savedData = JSON.parse(
-    sessionStorage.getItem("existingPatientFormData")
-  );
+  const savedData = JSON.parse(sessionStorage.getItem("existingPatientFormData"));
 
   if (savedData) {
-    document.getElementById("full-name").value = savedData.fullName || "";
-    document.getElementById("contact-number").value =
-      savedData.contactNumber || "";
+    // Recombine first and last name to set the full name input
+    const fullNameInput = document.getElementById("full-name");
+    if (fullNameInput) {
+      fullNameInput.value = `${savedData.firstName} ${savedData.lastName}`.trim();
+    }
+
+    const contactNumberInput = document.getElementById("contact-number");
+    if (contactNumberInput) {
+      contactNumberInput.value = savedData.contactNumber || "";
+    }
   }
 }
 
