@@ -10,14 +10,14 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install --production
 
-# Install nodemon globally (if needed)
-RUN npm install -g nodemon
+# Rebuild bcrypt from source
+RUN npm rebuild bcrypt --build-from-source
+
+# Install other dependencies like curl or wget if necessary
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends curl wget
 
 # Copy the rest of the application
 COPY . .
-
-# Rebuild bcrypt if necessary
-RUN npm rebuild bcrypt --build-from-source
 
 # Expose the application port (e.g., 3000 for your app)
 EXPOSE 3000
