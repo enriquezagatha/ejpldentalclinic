@@ -22,15 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Show "Loading appointments..." row
   appointmentsTableBody.innerHTML = `
-        <tr id="loading-row">
-            <td colspan="8" class="text-center text-gray-500 py-6">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-spinner fa-spin text-4xl mb-2 text-gray-400"></i>
-                    <p class="text-lg font-semibold">Loading appointments...</p>
-                </div>
-            </td>
-        </tr>
-    `;
+          <tr id="loading-row">
+              <td colspan="8" class="text-center text-gray-500 py-6">
+                  <div class="flex flex-col items-center">
+                      <i class="fas fa-spinner fa-spin text-4xl mb-2 text-gray-400"></i>
+                      <p class="text-lg font-semibold">Loading payments...</p>
+                  </div>
+              </td>
+          </tr>
+      `;
 
   fetchProfile();
   fetchAppointments();
@@ -74,56 +74,52 @@ async function fetchAppointments() {
 
       if (appointmentsData.length === 0) {
         appointmentsTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="text-center text-gray-500 pt-8 py-6">
-                            <div class="flex flex-col items-center">
-                                <i class="fas fa-calendar-times text-4xl mb-4 text-gray-400"></i>
-                                <p class="text-lg font-semibold">No Appointments Found</p>
-                                <p class="text-sm text-gray-400 mb-4">
-                                    <a href="typeofpatient.html" class="text-blue-600 hover:underline">Book an Appointment Now</a>
-                                </p>
-                                <button onclick="location.href='typeofpatient.html'" 
-                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                                    Book an Appointment
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                      <tr>
+                          <td colspan="8" class="text-center text-gray-500 py-6">
+                              <div class="flex flex-col items-center">
+                                  <i class="fas fa-calendar-times text-4xl mb-2 text-gray-400"></i>
+                                  <p class="text-lg font-semibold">No Payments Found</p>
+                                  <p class="text-sm text-gray-400 mb-4">
+                                      <a href="typeofpatient.html" class="text-[#2C4A66] font-bold hover:underline">Book an Appointment Now</a>
+                                  </p>
+                              </div>
+                          </td>
+                      </tr>
+                  `;
         return;
       }
 
       displayAppointments(appointmentsData);
     } else if (appointmentsResponse.status === 404) {
       appointmentsTableBody.innerHTML = `
-                <tr>
-                        <td colspan="8" class="text-center text-gray-500 pt-8 py-6">
-                            <div class="flex flex-col items-center">
-                                <i class="fas fa-calendar-times text-4xl mb-4 text-gray-400"></i>
-                                <p class="text-lg font-semibold">No Appointments Found</p>
-                                <p class="text-sm text-gray-400 mb-4">
-                                    <a href="typeofpatient.html" class="text-[#2C4A66] font-bold hover:underline">Book an Appointment Now</a>
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
-            `;
+                  <tr>
+                          <td colspan="8" class="text-center text-gray-500 pt-8 py-6">
+                              <div class="flex flex-col items-center">
+                                  <i class="fas fa-wallet text-4xl mb-4 text-gray-400"></i> <!-- Updated icon -->
+                                  <p class="text-lg font-semibold">No Payments Found</p>
+                                  <p class="text-sm text-gray-400 mb-4">
+                                      <a href="typeofpatient.html" class="text-[#2C4A66] font-bold hover:underline">Book an Appointment Now</a>
+                                  </p>
+                              </div>
+                          </td>
+                      </tr>
+              `;
     } else {
       throw new Error("Failed to fetch appointments");
     }
   } catch (error) {
     console.error("Error fetching appointments:", error);
     appointmentsTableBody.innerHTML = `
-            <tr>
-                <td colspan="8" class="text-center text-red-500 py-6">
-                    <div class="flex flex-col items-center">
-                        <i class="fas fa-exclamation-circle text-4xl mb-2 text-red-400"></i>
-                        <p class="text-lg font-semibold">Failed to load appointments</p>
-                        <p class="text-sm text-gray-400">Please try again later.</p>
-                    </div>
-                </td>
-            </tr>
-        `;
+              <tr>
+                  <td colspan="8" class="text-center text-red-500 py-6">
+                      <div class="flex flex-col items-center">
+                          <i class="fas fa-exclamation-circle text-4xl mb-2 text-red-400"></i>
+                          <p class="text-lg font-semibold">Failed to load appointments</p>
+                          <p class="text-sm text-gray-400">Please try again later.</p>
+                      </div>
+                  </td>
+              </tr>
+          `;
   }
 }
 

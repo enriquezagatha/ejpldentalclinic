@@ -46,12 +46,16 @@
 
     <div class="flex flex-1 max-w-7xl min-h-[90vh] mx-auto mb-6 w-full mt-20">
         <!-- Sidebar -->
-        <aside class="hidden xl:block w-[13.9rem] bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
+        <aside class="hidden xl:block w-64 bg-[#2C4A66] shadow-md max-h-screen p-4 mt-6 mb-6">
             <div class="flex flex-col items-center mt-4">
+                <div id="sidebar-profile-picture-skeleton" class="w-24 h-24 bg-gray-200 rounded-lg animate-pulse mb-4">
+                </div>
                 <img src="../media/logo/default-profile.png?nocache=1" id="sidebar-profile-picture"
-                    alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4">
-                <p id="sidebar-full-name" class="text-lg text-white font-semibold">N/A</p>
-                <p class="text-xs text-white">Patient</p>
+                    alt="Profile Picture" class="w-24 h-24 rounded-lg object-cover mb-4 hidden">
+                <div id="sidebar-full-name-skeleton" class="h-4 bg-gray-200 rounded-full animate-pulse w-3/4 mb-2">
+                </div>
+                <p id="sidebar-full-name" class="text-lg text-white font-semibold hidden">N/A</p>
+                <p id="sidebar-fixed-patient-text" class="text-xs text-white hidden">Patient</p>
             </div>
             <nav class="mt-12">
                 <ul class="space-y-3">
@@ -62,7 +66,8 @@
                         </button>
                     </li>
                     <li>
-                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                        <button
+                            class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
                             onclick="window.location.href='patient-appointments.html'">
                             <i class="fas fa-calendar-alt mr-3"></i> Appointments
                         </button>
@@ -74,8 +79,7 @@
                         </button>
                     </li>
                     <li>
-                        <button
-                            class="bg-[#1E354A] flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
+                        <button class="flex items-center text-white w-full text-left p-2 rounded hover:bg-[#1E354A]"
                             onclick="window.location.href='patient-records.html'">
                             <i class="fas fa-folder-open mr-3"></i> Records
                         </button>
@@ -104,8 +108,13 @@
                                     </tr>
                                 </thead>
                                 <tbody id="patient-table-body">
-                                    <tr>
-                                        <td class="border-y border-gray-300 px-4 py-6 text-center">Loading records...
+                                    <tr id="loading-row">
+                                        <td colspan="1"
+                                            class="border-y border-gray-300 px-4 py-6 text-center text-gray-500">
+                                            <div class="flex flex-col items-center">
+                                                <i class="fas fa-spinner fa-spin text-4xl mb-2 text-gray-400"></i>
+                                                <p class="text-lg font-semibold">Loading records...</p>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -122,9 +131,32 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
+            const tableBody = document.getElementById("patient-table-body");
+
+            // Show "Loading records..." row
+            tableBody.innerHTML = `
+                <tr id="loading-row">
+                    <td colspan="1" class="border-y border-gray-300 px-4 py-6 text-center text-gray-500">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-spinner fa-spin text-4xl mb-2 text-gray-400"></i>
+                            <p class="text-lg font-semibold">Loading records...</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+            // Show skeleton loading for sidebar
+            document.getElementById('sidebar-profile-picture-skeleton').classList.remove('hidden');
+            document.getElementById('sidebar-full-name-skeleton').classList.remove('hidden');
+
             await fetchProfile();
 
-            const tableBody = document.getElementById("patient-table-body");
+            // Hide skeletons and show actual content
+            document.getElementById('sidebar-profile-picture-skeleton').classList.add('hidden');
+            document.getElementById('sidebar-profile-picture').classList.remove('hidden');
+            document.getElementById('sidebar-full-name-skeleton').classList.add('hidden');
+            document.getElementById('sidebar-full-name').classList.remove('hidden');
+            document.getElementById('sidebar-fixed-patient-text').classList.remove('hidden');
 
             try {
                 const response = await fetch("/api/patient/records", { method: "GET", credentials: "include" });
@@ -139,14 +171,20 @@
                 tableBody.innerHTML = ""; // Clear loading message
 
                 if (!patient || !patient._id) {
-                    tableBody.innerHTML = "<tr><td>No records found.</td></tr>";
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="1" class="border-y border-gray-300 px-4 py-6 text-center text-gray-500">
+                                No records found.
+                            </td>
+                        </tr>
+                    `;
                     return;
                 }
 
                 // Display the single patient record
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td class="border-y border-gray-300 px-4 py-6 text-center>
+                    <td class="border-y border-gray-300 px-4 py-6 text-left">
                         <a href="patient-recorddetails.html?id=${patient._id}" class="patient-link">
                             ${patient.firstName} ${patient.lastName}
                         </a>
@@ -155,7 +193,19 @@
                 tableBody.appendChild(row);
 
             } catch (error) {
-                tableBody.innerHTML = `<tr><td style="color: red;">Error: ${error.message}</td></tr>`;
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="1" class="text-center text-gray-500 pt-8 py-6">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-folder-open text-4xl mb-4 text-gray-400"></i> <!-- Updated icon -->
+                                <p class="text-lg font-semibold">No Records Found</p>
+                                <p class="text-sm text-gray-400 mb-4">
+                                    <a href="typeofpatient.html" class="text-[#2C4A66] font-bold hover:underline">Book an Appointment Now</a>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+            `;
             }
         });
 

@@ -1,11 +1,19 @@
 document.addEventListener("DOMContentLoaded", async function () {
   const servicesList = document.getElementById("services-list");
 
+  // Show "Loading services..." message
+  servicesList.innerHTML = `
+    <div class="flex flex-col items-center my-12 h-screen">
+      <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
+      <p class="text-lg font-semibold text-gray-500">Loading services...</p>
+    </div>
+  `;
+
   try {
     const response = await fetch("http://localhost:3000/api/services"); // Make sure backend is running
     const services = await response.json();
 
-    servicesList.innerHTML = ""; // Clear existing content
+    servicesList.innerHTML = ""; // Clear loading message
 
     // Create a styled <ul> container
     const ul = document.createElement("ul");

@@ -1,10 +1,21 @@
 const dentist_API_URL = "http://localhost:3000/api/dentists"; // Backend URL
 
 async function fetchdentists() {
+  const dentistsList = document.getElementById("dentists-list");
+
+  // Show "Loading dentists..." message
+  dentistsList.innerHTML = `
+    <div class="flex flex-col items-center my-12 h-screen">
+      <i class="fas fa-spinner fa-spin text-4xl mb-4 text-gray-400"></i>
+      <p class="text-lg font-semibold text-gray-500">Loading dentists...</p>
+    </div>
+  `;
+
   try {
     const response = await fetch(dentist_API_URL);
     const dentists = await response.json();
-    const dentistsList = document.getElementById("dentists-list");
+
+    dentistsList.innerHTML = ""; // Clear loading message
 
     dentistsList.innerHTML = `
       <ul id="team-member" class="list-none mx-auto my-12 mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center">
@@ -44,6 +55,8 @@ async function fetchdentists() {
       </ul>`;
   } catch (error) {
     console.error("Error fetching dentists:", error);
+    dentistsList.innerHTML =
+      "<p class='text-center text-red-500'>Failed to load dentists. Please try again later.</p>";
   }
 }
 
