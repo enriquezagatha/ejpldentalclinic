@@ -35,5 +35,8 @@
     "postcss-cli": "^11.0.1",
     "punycode": "^2.3.1",
     "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
