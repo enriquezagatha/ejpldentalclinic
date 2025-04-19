@@ -34,11 +34,14 @@ function validateForm() {
 }
 
 function goBackAppointment() {
-    sessionStorage.removeItem('formData'); // Clear the form data from session storage
+    sessionStorage.setItem("isNavigating", "true"); // Set flag for navigation
+    saveFormData();
+    // sessionStorage.removeItem('formData'); // Clear the form data from session storage
     window.location.href = "patient-newappointmentdetails.html";
 }
 
 function goNextAppointment(event) {
+    sessionStorage.setItem("isNavigating", "true"); // Set flag for navigation
     saveFormData();  // Save form data before navigating
     window.location.href = "patient-newconfirmdetails.html";
 }
@@ -194,13 +197,15 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('emergency-contact-number').addEventListener('input', validateEmergencyContact);*/
 
     // Optional: Clear session storage on cancel appointment or other specific actions
-    document.getElementById('cancel-appointment-btn').addEventListener('click', function () {
-        sessionStorage.removeItem('formData');
-    });
+    // document.getElementById('cancel-appointment-btn').addEventListener('click', function () {
+    //     sessionStorage.removeItem('formData');
+    // });
 });
 
 window.onload = function() {
-    document.getElementById('contact-form').reset();
+    if (sessionStorage.getItem('isNavigating') !== 'true') {
+        document.getElementById('contact-form').reset();
+    }
 };
 
 function updateSelectColor(selectElement) {

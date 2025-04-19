@@ -7,8 +7,12 @@ if (savedBookings) {
 
 // Navigate to the previous step and save data
 function goToAppointmentBack() {
-  localStorage.setItem("isNavigating", "true"); // Set flag for navigation
-  saveFormData();
+  localStorage.removeItem("preferredDate");
+  localStorage.removeItem("preferredTime");
+  localStorage.removeItem("treatmentType");
+  localStorage.removeItem("treatmentPrice");
+  localStorage.removeItem("isNavigating");
+
   window.location.href = "../Patient/typeofpatient.html";
 }
 
@@ -41,8 +45,7 @@ function saveFormData() {
     document.querySelector(".typeoftreatment-select")?.value || "";
   const selectedOption = document.querySelector(".typeoftreatment-select")
     ?.selectedOptions[0];
-  const treatmentPrice = selectedOption ? selectedOption.dataset.price : "0";
-
+    const treatmentPrice = selectedOption?.dataset?.price || "";
   localStorage.setItem("preferredDate", preferredDate);
   localStorage.setItem("preferredTime", preferredTime);
   localStorage.setItem("treatmentType", treatmentType);
@@ -56,7 +59,7 @@ function loadFormData() {
     const preferredDate = localStorage.getItem("preferredDate");
     const preferredTime = localStorage.getItem("preferredTime");
     const treatmentType = localStorage.getItem("treatmentType");
-    const treatmentPrice = localStorage.getItem("treatmentPrice"); // ✅ Retrieve stored price
+    const treatmentPrice = localStorage.getItem("treatmentPrice");
 
     if (preferredDate) {
       const [year, month, day] = preferredDate.split("-");
@@ -74,31 +77,22 @@ function loadFormData() {
       }
     }
 
+    // Load preferred time correctly
     if (preferredTime) {
       const timeSelect = document.querySelector(".time-select");
       if (timeSelect) {
-        if (timeSelect.tagName === "INPUT" && timeSelect.type === "time") {
-          if (/^([01]\d|2[0-3]):([0-5]\d)$/.test(preferredTime)) {
-            timeSelect.value = preferredTime;
-          } else {
-            console.error("Preferred time format is incorrect.");
-          }
-        } else if (timeSelect.tagName === "SELECT") {
+        if (timeSelect.tagName === "SELECT") {
           timeSelect.querySelectorAll("option").forEach((option) => {
             if (option.value === preferredTime) {
-              option.selected = true;
+              option.selected = true; // Ensure that the preferred time is selected
             }
           });
-        } else {
-          console.error("Unsupported element type for time input.");
         }
       }
     }
 
     if (treatmentType) {
-      const treatmentElement = document.querySelector(
-        ".typeoftreatment-select"
-      );
+      const treatmentElement = document.querySelector(".typeoftreatment-select");
       if (treatmentElement) {
         if (treatmentElement.tagName.toLowerCase() === "select") {
           treatmentElement.querySelectorAll("option").forEach((option) => {
@@ -112,13 +106,19 @@ function loadFormData() {
       }
     }
 
-    // ✅ Fix: Properly update treatment price input
     const treatmentPriceInput = document.getElementById("treatment-price");
     if (treatmentPriceInput) {
-      treatmentPriceInput.value = treatmentPrice ? `₱${treatmentPrice}` : "";
+      treatmentPriceInput.value = treatmentPrice && treatmentPrice !== "0"
+      ? (treatmentPrice.includes("-")
+          ? `₱${treatmentPrice.split("-")[0].trim()} - ₱${treatmentPrice.split("-")[1].trim()}`
+          : `₱${treatmentPrice}`)
+      : "";
     }
 
-    localStorage.removeItem("isNavigating");
+    if (preferredDate) {
+      populateTimeOptions(preferredDate, preferredTime); // Populate time options based on the saved preferred date and time
+    }
+
   } else {
     document.querySelector(".date-input").value = "";
     document.querySelector(".time-select").value = "";
@@ -133,8 +133,9 @@ function loadFormData() {
 function populateTimeOptions(selectedDate = null, selectedTime = null) {
   const timeSelect = document.querySelector(".time-select");
   if (timeSelect) {
-    timeSelect.innerHTML =
-      '<option value="" disabled selected>Preferred Time</option>';
+    // Clear the existing options and add the default placeholder
+    timeSelect.innerHTML = '<option value="" disabled selected>Preferred Time</option>';
+    
     let timeSlots = [];
 
     if (selectedDate) {
@@ -160,6 +161,7 @@ function populateTimeOptions(selectedDate = null, selectedTime = null) {
       }
     }
 
+    // Add time slots to the dropdown
     timeSlots.forEach((slot) => {
       const bookedCount = bookingRecords[slot] || 0;
       if (bookedCount < 1) {
@@ -170,6 +172,16 @@ function populateTimeOptions(selectedDate = null, selectedTime = null) {
         timeSelect.appendChild(option);
       }
     });
+
+    // If there's a preferred time, ensure it is selected
+    if (selectedTime) {
+      const timeOptions = timeSelect.querySelectorAll("option");
+      timeOptions.forEach((option) => {
+        if (option.value === selectedTime) {
+          option.selected = true;
+        }
+      });
+    }
   }
 }
 
@@ -263,6 +275,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       treatmentSelect.appendChild(option);
     });
 
+    loadFormData();
+
     // Update price when selection changes
     treatmentSelect.addEventListener("change", function () {
       const selectedOption =
@@ -284,14 +298,14 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("schedule-form");
-  if (form) {
-    form.reset();
-  } else {
-    console.error("Form with ID 'schedule-form' not found.");
-  }
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//   const form = document.getElementById("schedule-form");
+//   if (form) {
+//     form.reset();
+//   } else {
+//     console.error("Form with ID 'schedule-form' not found.");
+//   }
+// });
 
 function updateSlotsAvailable() {
   const slotsAvailableElement = document.getElementById("slotsavailable");
