@@ -87,28 +87,48 @@ const mobileNotificationDropdown = document.getElementById(
   "mobile-notification-dropdown"
 );
 
-notificationBell.addEventListener("click", () => {
+notificationBell.addEventListener("click", (event) => {
+  event.stopPropagation(); // Prevent closing when clicking the bell
   if (window.innerWidth >= 1024) {
+    // Show desktop notification dropdown
     notificationDropdown.classList.toggle("hidden");
+    if (!notificationDropdown.classList.contains("hidden")) {
+      notificationDropdown.classList.add("block");
+    } else {
+      notificationDropdown.classList.remove("block");
+    }
+    mobileNotificationDropdown.classList.add("hidden");
+    mobileNotificationDropdown.classList.remove("block");
   } else {
+    // Show mobile notification dropdown
     mobileNotificationDropdown.classList.toggle("hidden");
+    if (!mobileNotificationDropdown.classList.contains("hidden")) {
+      mobileNotificationDropdown.classList.add("block");
+    } else {
+      mobileNotificationDropdown.classList.remove("block");
+    }
+    notificationDropdown.classList.add("hidden");
+    notificationDropdown.classList.remove("block");
   }
 });
 
 document.addEventListener("click", (event) => {
   if (!notificationBell.contains(event.target)) {
-    if (window.innerWidth >= 1024) {
-      notificationDropdown.classList.add("hidden");
-    } else {
-      mobileNotificationDropdown.classList.add("hidden");
-    }
+    // Close both dropdowns when clicking outside
+    notificationDropdown.classList.add("hidden");
+    notificationDropdown.classList.remove("block");
+    mobileNotificationDropdown.classList.add("hidden");
+    mobileNotificationDropdown.classList.remove("block");
   }
 });
 
 window.addEventListener("resize", () => {
+  // Ensure only the appropriate dropdown is visible on resize
   if (window.innerWidth >= 1024) {
     mobileNotificationDropdown.classList.add("hidden");
+    mobileNotificationDropdown.classList.remove("block");
   } else {
     notificationDropdown.classList.add("hidden");
+    notificationDropdown.classList.remove("block");
   }
 });

@@ -230,7 +230,8 @@ async function editContact(contactId, field) {
     document.getElementById("save-contact-btn").style.display = "block"; // Show Save Changes Button
 
     // Show the modal
-    modal.classList.remove("hidden"); // Show modal
+    modal.classList.remove("hidden");
+    modal.classList.add("flex"); // Show modal
 
     // Handle save action for the edited contact (specific field)
     document

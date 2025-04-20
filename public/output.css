@@ -759,6 +759,15 @@ video {
 .mt-\[19rem\] {
   margin-top: 19rem;
 }
+.mt-28 {
+  margin-top: 7rem;
+}
+.mt-36 {
+  margin-top: 9rem;
+}
+.mb-10 {
+  margin-bottom: 2.5rem;
+}
 .block {
   display: block;
 }
@@ -920,6 +929,9 @@ video {
 }
 .min-w-\[1024px\] {
   min-width: 1024px;
+}
+.min-w-\[1200px\] {
+  min-width: 1200px;
 }
 .min-w-\[1400px\] {
   min-width: 1400px;
@@ -2013,6 +2025,10 @@ video {
     margin-top: 1.5rem;
   }
 
+  .sm\:mt-20 {
+    margin-top: 5rem;
+  }
+
   .sm\:flex {
     display: flex;
   }
@@ -2159,6 +2175,10 @@ video {
 
   .md\:mt-0 {
     margin-top: 0px;
+  }
+
+  .md\:mt-10 {
+    margin-top: 2.5rem;
   }
 
   .md\:block {
