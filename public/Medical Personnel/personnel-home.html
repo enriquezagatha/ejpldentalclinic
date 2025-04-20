@@ -115,6 +115,25 @@
                 src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
             <script src="../components/components-personnel/navbarpersonnel-functionalities.js"></script>
             <script src="personnelnotification.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', async () => {
+                    const profileResponse = await fetch('/api/medicalPersonnel/profile');
+                    if (profileResponse.ok) {
+                        const personnelData = await profileResponse.json();
+                        displayProfileInfo(personnelData);
+
+                        // Set the profile picture if available
+                        const profilePictureElement = document.querySelector('.desktop-profile');
+                        profilePictureElement.src = personnelData.profilePicture
+                            ? `/uploads/${personnelData.profilePicture}`
+                            : '../media/logo/default-profile.png';
+                    }
+                });
+
+                function displayProfileInfo(data) {
+                    document.getElementById('profile-name').innerText = `${data.firstName}`;
+                }
+            </script>
         </main>
     </div>
 </body>

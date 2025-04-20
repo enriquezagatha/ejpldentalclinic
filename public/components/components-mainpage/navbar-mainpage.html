@@ -1,7 +1,7 @@
-<header class="bg-[#2C4A66] text-white fixed w-full top-0 z-10">
+<header class="bg-gradient-to-b from-[#2C4A66] to-[#1B2E3F] text-white fixed w-full top-0 z-10">
     <section class="max-w-full mx-auto px-5 flex justify-between items-center h-20">
         <img src="../media/logo/EJPL.png" alt="Logo" class="logo w-24 h-auto"
-            onclick="window.location.href='home.html';" style="cursor: pointer;">
+            onclick="window.location.href='../main page/home.html';" style="cursor: pointer;">
         <button id="mobile-open-button" class="text-3xl md:hidden focus:outline-none mr-4">
             &#9776;
         </button>
@@ -62,10 +62,16 @@
         <div id="about-us-dropdown" class="hidden bg-[#2C4A66]">
             <a href="../main page/aboutus.html"
                 class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">About Us</a>
-            <a href="../main page/contact.html"
-                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Contact Us</a>
-            <a href="../main page/location.html"
-                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300">Location</a>
+            <a href="../main page/aboutus.html#contactus-section"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300"
+                onclick="document.getElementById('mobile-menu').classList.add('opacity-0', 'pointer-events-none');">
+                Contact Us
+            </a>
+            <a href="../main page/aboutus.html#location-section"
+                class="block px-10 py-3 font-inter hover:bg-[#223E57] transition duration-300"
+                onclick="document.getElementById('mobile-menu').classList.add('opacity-0', 'pointer-events-none');">
+                Location
+            </a>
         </div>
         <a href="../main page/services.html"
             class="block px-6 py-4 font-inter hover:bg-[#2C4A66] transition duration-300">Services</a>

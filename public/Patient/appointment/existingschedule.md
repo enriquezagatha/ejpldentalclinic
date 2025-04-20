@@ -1,63 +1,63 @@
 const bookingRecords = {};
-    
+
         const savedBookings = JSON.parse(localStorage.getItem('bookingRecords'));
         if (savedBookings) {
             Object.assign(bookingRecords, savedBookings);
         }
-    
+
         // Navigate to the previous step and save data
         function goToAppointmentBack() {
             localStorage.setItem('isNavigating', 'true'); // Set flag for navigation
             saveFormData();
             window.location.href = "existingpatient.html";
         }
-    
+
         // Navigate to the next step and save data
         function goToAppointmentNext() {
             localStorage.setItem('isNavigating', 'true'); // Set flag for navigation
             saveFormData();
             window.location.href = "existing-step3appointment.html";
         }
-    
+
         const monthNames = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
-    
+
         function saveFormData() {
             const preferredDate = document.querySelector('.date-input')?.value || '';
             const preferredTime = document.querySelector('.time-select')?.value || '';
             const treatmentType = document.querySelector('.typeoftreatment-select')?.value || '';
-    
+
             localStorage.setItem('preferredDate', preferredDate);
             localStorage.setItem('preferredTime', preferredTime);
             localStorage.setItem('treatmentType', treatmentType);
         }
-    
+
         function loadFormData() {
             const isNavigating = localStorage.getItem('isNavigating');
-    
+
             if (isNavigating) {
                 const preferredDate = localStorage.getItem('preferredDate');
                 const preferredTime = localStorage.getItem('preferredTime');
                 const treatmentType = localStorage.getItem('treatmentType');
-    
+
                 if (preferredDate) {
                     const [year, month, day] = preferredDate.split('-');
                     const monthName = monthNames[parseInt(month, 10) - 1];
                     const formattedDate = `${monthName} ${day}, ${year}`;
-    
+
                     const dateInput = document.querySelector('.date-input');
                     if (dateInput) {
                         dateInput.value = preferredDate;
                     }
-    
+
                     const datePlaceholder = document.querySelector('.date-placeholder');
                     if (datePlaceholder) {
                         datePlaceholder.textContent = formattedDate;
                     }
                 }
-    
+
                 if (preferredTime) {
                     const timeSelect = document.querySelector('.time-select');
                     if (timeSelect) {
@@ -78,7 +78,7 @@ const bookingRecords = {};
                         }
                     }
                 }
-    
+
                 if (treatmentType) {
                     const treatmentElement = document.querySelector('.typeoftreatment-select');
                     if (treatmentElement) {
@@ -93,7 +93,7 @@ const bookingRecords = {};
                         }
                     }
                 }
-    
+
                 localStorage.removeItem('isNavigating');
             } else {
                 document.querySelector('.date-input').value = '';
@@ -101,19 +101,19 @@ const bookingRecords = {};
                 document.querySelector('.typeoftreatment-select').value = '';
             }
         }
-    
+
         function populateTimeOptions(selectedDate = null, selectedTime = null) {
             const timeSelect = document.querySelector('.time-select');
             if (timeSelect) {
                 timeSelect.innerHTML = '<option value="" disabled selected>Preferred Time</option>';
                 let timeSlots;
-    
+
                 if (selectedDate) {
                     const today = new Date();
                     const selectedDateObj = new Date(selectedDate);
                     const isToday = selectedDateObj.toDateString() === today.toDateString();
                     const isMonday = selectedDateObj.getDay() === 1;
-    
+
                     if (isMonday) {
                         timeSlots = ['06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM', '12:00 AM'];
                     } else {
@@ -121,12 +121,12 @@ const bookingRecords = {};
                             ['02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM', '12:00 AM'] :
                             ['02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM', '12:00 AM'];
                     }
-    
+
                     if (isToday) {
                         const currentHour = today.getHours();
                         const currentMinutes = today.getMinutes();
                         const currentTotalMinutes = currentHour * 60 + currentMinutes;
-    
+
                         timeSlots = timeSlots.filter(time => {
                             const [hour, minute] = time.split(':');
                             const period = minute.split(' ')[1];
@@ -135,13 +135,13 @@ const bookingRecords = {};
                             return timeMinutes >= currentTotalMinutes;
                         });
                     }
-    
+
                     if (selectedTime) {
                         const selectedTimeParts = selectedTime.split(' ');
                         const selectedHour = parseInt(selectedTimeParts[0].split(':')[0]) + (selectedTimeParts[1] === 'PM' ? 12 : 0);
                         const selectedMinutes = parseInt(selectedTimeParts[0].split(':')[1]);
                         const selectedTotalMinutes = selectedHour * 60 + selectedMinutes;
-    
+
                         timeSlots = timeSlots.filter(time => {
                             const [hour, minute] = time.split(':');
                             const period = minute.split(' ')[1];
@@ -152,7 +152,7 @@ const bookingRecords = {};
                 } else {
                     timeSlots = ['02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM', '12:00 AM'];
                 }
-    
+
                 timeSlots.forEach(time => {
                     const bookedCount = bookingRecords[time] || 0;
                     if (bookedCount < 2) {
@@ -164,11 +164,11 @@ const bookingRecords = {};
                 });
             }
         }
-    
+
         document.addEventListener('DOMContentLoaded', function () {
             loadFormData();
             populateTimeOptions();
-    
+
             const calendarIcon = document.querySelector('.calendar-icon');
             if (calendarIcon) {
                 calendarIcon.addEventListener('click', function () {
@@ -178,7 +178,7 @@ const bookingRecords = {};
                     }
                 });
             }
-    
+
             const dateInputField = document.getElementById('dateInput');
             if (dateInputField) {
                 const today = new Date();
@@ -186,7 +186,7 @@ const bookingRecords = {};
                 maxDate.setDate(today.getDate() + 7);
 
                 const formatDate = (date) => date.toISOString().split('T')[0];
-    
+
                 dateInputField.min = formatDate(today);
                 dateInputField.max = formatDate(maxDate);
 
@@ -200,17 +200,17 @@ const bookingRecords = {};
                 dateInputField.value = '';
                 }
             }
-        } 
-    
+        }
+
             document.querySelector('.date-input').addEventListener('change', function () {
                 const dateInputValue = this.value;
                 const selectedTime = document.querySelector('.time-select')?.value; // Get the currently selected time
                 populateTimeOptions(dateInputValue, selectedTime); // Pass the selected time
-    
+
                 const [year, month, day] = dateInputValue.split('-');
                 const monthName = monthNames[parseInt(month, 10) - 1];
                 const formattedDate = `${monthName} ${day}, ${year}`;
-    
+
                 const datePlaceholder = document.querySelector('.date-placeholder');
                 if (datePlaceholder && datePlaceholder.tagName === 'INPUT') {
                     datePlaceholder.placeholder = formattedDate;
@@ -225,7 +225,7 @@ const bookingRecords = {};
             const treatmentPrice = document.getElementById("treatment-price");
 
             try {
-                const response = await fetch("http://localhost:3000/api/treatments");
+                const response = await fetch(`${window.location.origin}/api/treatments`);
                 const treatments = await response.json();
 
                 treatments.forEach(treatment => {

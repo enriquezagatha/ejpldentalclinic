@@ -163,7 +163,7 @@ async function loadStaffData() {
       console.error("Failed to fetch staff list");
       staffTableBody.innerHTML = `
         <tr>
-            <td colspan="6" class="px-4 py-6 text-center text-red-500">Failed to load staff. Please try again later.</td>
+            <td colspan="6" class="px-4 py-6 text-center text-red-500">Access denied. You do not have permission to access this section.</td>
         </tr>
       `;
     }
@@ -408,7 +408,7 @@ async function checkAuthorizationStatus() {
         if (staffTab) staffTab.style.display = "none";
 
         // Hide Staff Management section
-        const staffSection = document.getElementById("staff-section");
+        const staffSection = document.getElementById("staff-table-body");
         if (staffSection) {
           staffSection.innerHTML = `
                         <div style="text-align: center; padding: 20px;">

@@ -351,7 +351,7 @@
         // Fetch discount from API
         async function fetchDiscount() {
             try {
-                const response = await fetch("http://localhost:3000/api/discounts");
+                const response = await fetch(`${window.location.origin}/api/discounts`);
                 if (!response.ok) throw new Error("Failed to fetch discounts");
 
                 const discounts = await response.json();
@@ -417,7 +417,7 @@
                 const amountInCents = amountInPHP * 100;
                 const paymentData = { patientName, patientEmail, treatmentType, amount: amountInCents };
 
-                const response = await fetch("http://localhost:3000/api/payment/create-payment-link", {
+                const response = await fetch(`${window.location.origin}/api/payment/create-payment-link`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(paymentData)

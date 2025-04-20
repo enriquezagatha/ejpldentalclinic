@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   `;
 
   try {
-    const response = await fetch("http://localhost:3000/api/services"); // Make sure backend is running
+    const response = await fetch(`${window.location.origin}/api/services`); // Make sure backend is running
     const services = await response.json();
 
     servicesList.innerHTML = ""; // Clear loading message
@@ -24,16 +24,17 @@ document.addEventListener("DOMContentLoaded", async function () {
       "mt-16",
       "grid",
       "grid-cols-1",
-      "sm:grid-cols-2",
+      "md:grid-cols-2",
       "xl:grid-cols-3", // Ensure 3 items per row on medium screens and above
       "gap-8",
-      "place-items-center"
+      "place-items-center",
+      "md:w-auto",
+      "w-[90%]"
     );
 
     services.forEach((service) => {
       const li = document.createElement("li");
       li.classList.add(
-        "md:w-2/5",
         "flex",
         "flex-col",
         "border",
@@ -43,7 +44,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         "bg-[#F5F5F5]",
         "pt-4",
         "px-2",
-        "shadow-xl"
+        "shadow-xl",
+        "h-[350px]", // Fixed height
+        "md:w-[100%]",
+        "w-[315px]" // Fixed width
       );
 
       // Use the uploaded image, or fallback to a default image
@@ -51,10 +55,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         ? `http://localhost:3000${service.image}`
         : "https://via.placeholder.com/150";
 
+      // Truncate description if it exceeds 100 characters
+      const truncatedDescription =
+        service.description.length > 100
+          ? service.description.substring(0, 100) + "..."
+          : service.description;
+
       li.innerHTML = `
                 <img src="${imageUrl}" alt="${service.name}" class="px-1 w-[350px] h-[200px] object-cover mx-auto mb-4">
                 <h3 class="text-xl px-1 text-center text-black font-inter font-bold">${service.name}</h3>
-                <p class="text-center px-1 text-black mt-4 mb-8">${service.description}</p>
+                <p class="text-center px-1 text-black mt-4 mb-8">${truncatedDescription}</p>
             `;
 
       ul.appendChild(li);

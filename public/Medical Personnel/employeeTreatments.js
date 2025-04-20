@@ -1,4 +1,4 @@
-const TREATMENTS_API_URL = "http://localhost:3000/api/treatments";
+const TREATMENTS_API_URL = `${window.location.origin}/api/treatments`;
 
 let currentPage = 1;
 const rowsPerPage = 5;
@@ -127,7 +127,9 @@ async function fetchTreatments() {
                 <td class="px-4 py-2 flex space-x-2 gap-2">
                     <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editTreatment('${
                       treatment._id
-                    }', '${treatment.name}', ${treatment.price})">Edit</button>
+                    }', '${treatment.name}', '${
+        treatment.price
+      }')">Edit</button>
                     <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteTreatment('${
                       treatment._id
                     }')">Delete</button>
@@ -281,13 +283,17 @@ async function saveTreatment() {
 }
 
 //Edit Treatment
-function editTreatment(id, name, price) {
+function editTreatment(id, name, rawPrice) {
   document.getElementById("treatment-name").value = name;
-  document.getElementById("treatment-price").value = price;
+  document.getElementById("treatment-price").value = rawPrice; // Use raw price value directly
 
   const saveBtn = document.getElementById("save-treatment-btn");
   saveBtn.dataset.id = id;
   saveBtn.textContent = "Update Treatment";
+
+  // Change modal title to "Edit Treatment"
+  document.getElementById("treatment-modal-title").textContent =
+    "Edit Treatment";
 
   openModal();
 }

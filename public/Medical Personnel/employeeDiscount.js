@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </tr>
     `;
 
-      const response = await fetch("http://localhost:3000/api/discounts");
+      const response = await fetch(`${window.location.origin}/api/discounts`);
       if (!response.ok) throw new Error("Failed to fetch discounts");
 
       const discounts = await response.json();
@@ -187,8 +187,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const method = id ? "PUT" : "POST"; // PUT for edit, POST for add
     const url = id
-      ? `http://localhost:3000/api/discounts/${id}`
-      : "http://localhost:3000/api/discounts";
+      ? `${window.location.origin}/api/discounts/${id}`
+      : `${window.location.origin}/api/discounts`;
 
     try {
       const response = await fetch(url, {
@@ -217,9 +217,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!confirm("Are you sure you want to delete this discount?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/discount/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${window.location.origin}/api/discount/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) throw new Error("Failed to delete discount");
 
       showToast("Discount deleted!");

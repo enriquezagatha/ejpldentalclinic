@@ -1,4 +1,4 @@
-const CONTACT_API_URL = "http://localhost:3000/api/contact";
+const CONTACT_API_URL = `${window.location.origin}/api/contact`;
 
 // 🔹 Modal Elements
 const modal = document.getElementById("add-contact-modal");
@@ -246,7 +246,8 @@ async function editContact(contactId, field) {
     document.getElementById("save-contact-btn").style.display = "block"; // Show Save Changes Button
 
     // Show the modal
-    modal.classList.remove("hidden"); // Show modal
+    modal.classList.remove("hidden");
+    modal.classList.add("flex"); // Show modal
 
     // Handle save action for the edited contact (specific field)
     document

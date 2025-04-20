@@ -1,4 +1,4 @@
-const dentist_API_URL = "http://localhost:3000/api/dentists"; // Backend URL
+const dentist_API_URL = `${window.location.origin}/api/dentists`; // Backend URL
 
 async function fetchdentists() {
   const dentistsList = document.getElementById("dentists-list");

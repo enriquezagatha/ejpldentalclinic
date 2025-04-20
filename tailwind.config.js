@@ -12,7 +12,11 @@ module.exports = {
     "w-auto",
     "place-items-center",
     "xl:grid-cols-3",
-    "sm:grid-cols-2",
+    "md:grid-cols-2",
+    "h-[350px]",
+    "w-[380px]",
+    "md:w-[100%]",
+    "w-[315px]",
   ], // Update this based on where your HTML files are located
   theme: {
     extend: {

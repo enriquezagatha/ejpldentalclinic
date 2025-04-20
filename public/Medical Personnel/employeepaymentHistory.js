@@ -16,7 +16,7 @@ function fetchPayments(page = 1) {
   `; // Show loading spinner
 
   fetch(
-    `http://localhost:3000/api/payment/getpayments?page=${page}&limit=${pageSize}`
+    `${window.location.origin}/api/payment/getpayments?page=${page}&limit=${pageSize}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -143,7 +143,7 @@ function nextPage() {
 function autoSyncPayments() {
   console.log("🔄 Auto-sync started...");
 
-  fetch("http://localhost:3000/api/payment/sync")
+  fetch(`${window.location.origin}/api/payment/sync`)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
