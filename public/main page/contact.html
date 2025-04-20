@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EJPL Dental Clinic - Contact Us</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
         <nav class="nav-container">
-            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='home.html';" style="cursor: pointer;">
+            <img src="../media/logo/EJPL.png" alt="Logo" class="logo" onclick="window.location.href='home.html';"
+                style="cursor: pointer;">
             <div class="nav-links">
                 <a href="../main page/home.html">Home</a>
                 <a href="../main page/aboutus.html"> About Us</a>
@@ -42,7 +45,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             try {
-                const response = await fetch("http://localhost:3000/api/contact/first");
+                const response = await fetch(`${window.location.origin}/api/contact/first`);
                 const contact = await response.json();
 
                 if (!contact) throw new Error("No contact details available.");
@@ -63,4 +66,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -1,65 +1,66 @@
 as of Mar 16, 3:22 AM
 
 const bookingRecords = {};
-    
+
 const savedBookings = JSON.parse(localStorage.getItem('bookingRecords'));
 if (savedBookings) {
-    Object.assign(bookingRecords, savedBookings);
+Object.assign(bookingRecords, savedBookings);
 }
-    
+
 // Navigate to the previous step and save data
 function goToAppointmentBack() {
-    localStorage.setItem('isNavigating', 'true'); // Set flag for navigation
-    saveFormData();
-    window.location.href = "step1appointment.html";
+localStorage.setItem('isNavigating', 'true'); // Set flag for navigation
+saveFormData();
+window.location.href = "step1appointment.html";
 }
-    
+
 // Navigate to the next step and save data
 function goToAppointmentNext() {
-    localStorage.setItem('isNavigating', 'true'); // Set flag for navigation
-    saveFormData();
-    window.location.href = "step3appointment.html";
+localStorage.setItem('isNavigating', 'true'); // Set flag for navigation
+saveFormData();
+window.location.href = "step3appointment.html";
 }
-    
+
 const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+"January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December"
 ];
-    
+
 function saveFormData() {
-    const preferredDate = document.querySelector('.date-input')?.value || '';
-    const preferredTime = document.querySelector('.time-select')?.value || '';
-    const treatmentType = document.querySelector('.typeoftreatment-select')?.value || '';
-    
+const preferredDate = document.querySelector('.date-input')?.value || '';
+const preferredTime = document.querySelector('.time-select')?.value || '';
+const treatmentType = document.querySelector('.typeoftreatment-select')?.value || '';
+
     localStorage.setItem('preferredDate', preferredDate);
     localStorage.setItem('preferredTime', preferredTime);
     localStorage.setItem('treatmentType', treatmentType);
+
 }
-    
+
 function loadFormData() {
-    const isNavigating = localStorage.getItem('isNavigating');
-    
+const isNavigating = localStorage.getItem('isNavigating');
+
     if (isNavigating) {
         const preferredDate = localStorage.getItem('preferredDate');
         const preferredTime = localStorage.getItem('preferredTime');
         const treatmentType = localStorage.getItem('treatmentType');
-    
+
         if (preferredDate) {
             const [year, month, day] = preferredDate.split('-');
             const monthName = monthNames[parseInt(month, 10) - 1];
             const formattedDate = `${monthName} ${day}, ${year}`;
-    
+
             const dateInput = document.querySelector('.date-input');
                 if (dateInput) {
                     dateInput.value = preferredDate;
                 }
-    
+
             const datePlaceholder = document.querySelector('.date-placeholder');
             if (datePlaceholder) {
                 datePlaceholder.textContent = formattedDate;
             }
         }
-    
+
         if (preferredTime) {
             const timeSelect = document.querySelector('.time-select');
             if (timeSelect) {
@@ -80,7 +81,7 @@ function loadFormData() {
                 }
             }
         }
-    
+
         if (treatmentType) {
             const treatmentElement = document.querySelector('.typeoftreatment-select');
             if (treatmentElement) {
@@ -95,25 +96,26 @@ function loadFormData() {
                         }
                     }
                 }
-    
+
                 localStorage.removeItem('isNavigating');
             } else {
                 document.querySelector('.date-input').value = '';
                 document.querySelector('.time-select').value = '';
                 document.querySelector('.typeoftreatment-select').value = '';
             }
+
 }
-    
+
 function populateTimeOptions(selectedDate = null, selectedTime = null) {
-    const timeSelect = document.querySelector('.time-select');
-    if (timeSelect) {
-        timeSelect.innerHTML = '<option value="" disabled selected>Preferred Time</option>';
-        let timeSlots = [];
-        
+const timeSelect = document.querySelector('.time-select');
+if (timeSelect) {
+timeSelect.innerHTML = '<option value="" disabled selected>Preferred Time</option>';
+let timeSlots = [];
+
         if (selectedDate) {
             const selectedDateObj = new Date(selectedDate);
             const dayOfWeek = selectedDateObj.getDay();
-        
+
             if (dayOfWeek === 1) { // Monday
                 timeSlots = generateTimeSlots(18, 24); // 6 PM - 12 AM
             } else if (dayOfWeek === 6) { // Saturday
@@ -129,7 +131,7 @@ function populateTimeOptions(selectedDate = null, selectedTime = null) {
                 ];
             }
         }
-        
+
         timeSlots.forEach(slot => {
         const bookedCount = bookingRecords[slot] || 0;
             if (bookedCount < 1) { // Limit to only 1 patient per slot
@@ -140,30 +142,31 @@ function populateTimeOptions(selectedDate = null, selectedTime = null) {
             }
         });
     }
+
 }
-        
+
 function generateTimeSlots(startHour, endHour) {
-    const slots = [];
-    for (let hour = startHour; hour < endHour; hour++) {
-        const startTime = formatTime(hour);
-        const endTime = formatTime(hour + 1);
-        slots.push(`${startTime} - ${endTime}`);
-    }
-    return slots;
+const slots = [];
+for (let hour = startHour; hour < endHour; hour++) {
+const startTime = formatTime(hour);
+const endTime = formatTime(hour + 1);
+slots.push(`${startTime} - ${endTime}`);
 }
-        
+return slots;
+}
+
 function formatTime(hour) {
-    if (hour === 24) return "12:00 AM"; // Midnight case
-    if (hour === 12) return "12:00 PM"; // Noon case
-    const period = hour >= 12 ? 'PM' : 'AM';
-    const formattedHour = hour % 12 || 12; // Convert 24-hour format to 12-hour format
-    return `${formattedHour}:00 ${period}`;
-}                  
-    
+if (hour === 24) return "12:00 AM"; // Midnight case
+if (hour === 12) return "12:00 PM"; // Noon case
+const period = hour >= 12 ? 'PM' : 'AM';
+const formattedHour = hour % 12 || 12; // Convert 24-hour format to 12-hour format
+return `${formattedHour}:00 ${period}`;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    loadFormData();
-    populateTimeOptions();
-    
+loadFormData();
+populateTimeOptions();
+
     const calendarIcon = document.querySelector('.calendar-icon');
     if (calendarIcon) {
         calendarIcon.addEventListener('click', function () {
@@ -173,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-    
+
     const dateInputField = document.getElementById('dateInput');
     if (dateInputField) {
         const today = new Date();
@@ -181,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
         maxDate.setDate(today.getDate() + 7);
 
         const formatDate = (date) => date.toISOString().split('T')[0];
-    
+
         dateInputField.min = formatDate(today);
         dateInputField.max = formatDate(maxDate);
 
@@ -195,17 +198,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 dateInputField.value = '';
             }
         }
-    } 
-    
+    }
+
     document.querySelector('.date-input').addEventListener('change', function () {
         const dateInputValue = this.value;
         const selectedTime = document.querySelector('.time-select')?.value; // Get the currently selected time
         populateTimeOptions(dateInputValue, selectedTime); // Pass the selected time
-            
+
         const [year, month, day] = dateInputValue.split('-');
         const monthName = monthNames[parseInt(month, 10) - 1];
         const formattedDate = `${monthName} ${day}, ${year}`;
-            
+
         const datePlaceholder = document.querySelector('.date-placeholder');
         if (datePlaceholder && datePlaceholder.tagName === 'INPUT') {
             datePlaceholder.placeholder = formattedDate;
@@ -213,14 +216,15 @@ document.addEventListener('DOMContentLoaded', function () {
             datePlaceholder.textContent = formattedDate;
         }
     });
+
 });
 
 document.addEventListener("DOMContentLoaded", async function () {
-    const treatmentSelect = document.getElementById("treatment-select");
-    const treatmentPrice = document.getElementById("treatment-price");
+const treatmentSelect = document.getElementById("treatment-select");
+const treatmentPrice = document.getElementById("treatment-price");
 
     try {
-        const response = await fetch("http://localhost:3000/api/treatments");
+        const response = await fetch(`${window.location.origin}/api/treatments`);
         const treatments = await response.json();
 
         treatments.forEach(treatment => {
@@ -241,20 +245,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (error) {
         console.error("Error fetching treatments:", error);
     }
+
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById('schedule-form');
-    if (form) {
-        form.reset();
-    } else {
-        console.error("Form with ID 'schedule-form' not found.");
-    }
+const form = document.getElementById('schedule-form');
+if (form) {
+form.reset();
+} else {
+console.error("Form with ID 'schedule-form' not found.");
+}
 });
 
 function updateCalendarIcon() {
-    const calendarIcon = document.querySelector('.calendar-icon');
-    if (!calendarIcon) return;
+const calendarIcon = document.querySelector('.calendar-icon');
+if (!calendarIcon) return;
 
     const dateInput = document.querySelector('.date-input');
     if (!dateInput) return;
@@ -277,17 +282,19 @@ function updateCalendarIcon() {
     bookedSlots = Object.values(bookingRecords).filter(record => record.date === selectedDate).length;
 
     const availableSlots = totalSlots - bookedSlots;
-    
+
     // Update calendar icon text
     calendarIcon.textContent = `📅 ${availableSlots} slots available`;
+
 }
 
 // Call this function when the document loads and when a date is selected
 document.addEventListener("DOMContentLoaded", function () {
-    updateCalendarIcon();
+updateCalendarIcon();
 
     const dateInput = document.querySelector('.date-input');
     if (dateInput) {
         dateInput.addEventListener('change', updateCalendarIcon);
     }
+
 });

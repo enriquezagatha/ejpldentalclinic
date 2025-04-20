@@ -1,4 +1,4 @@
-const TREATMENTS_API_URL = "http://localhost:3000/api/treatments";
+const TREATMENTS_API_URL = `${window.location.origin}/api/treatments`;
 
 let currentPage = 1;
 const rowsPerPage = 5;

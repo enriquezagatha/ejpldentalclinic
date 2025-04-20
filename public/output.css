@@ -1020,6 +1020,9 @@ video {
 .scroll-mt-10 {
   scroll-margin-top: 2.5rem;
 }
+.scroll-mt-2 {
+  scroll-margin-top: 0.5rem;
+}
 .list-none {
   list-style-type: none;
 }

@@ -124,7 +124,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", async function () {
         try {
-            const response = await fetch("http://localhost:3000/api/contact/first");
+            const response = await fetch(`${window.location.origin}/api/contact/first`);
             const contact = await response.json();
 
             if (!contact) throw new Error("No contact details available.");

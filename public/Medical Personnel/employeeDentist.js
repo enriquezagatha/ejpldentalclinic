@@ -1,4 +1,4 @@
-const DENTIST_API_URL = "http://localhost:3000/api/dentists";
+const DENTIST_API_URL = `${window.location.origin}/api/dentists`;
 let currentPage = 1;
 const rowsPerPage = 5;
 

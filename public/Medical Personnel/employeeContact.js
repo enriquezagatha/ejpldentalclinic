@@ -1,4 +1,4 @@
-const CONTACT_API_URL = "http://localhost:3000/api/contact";
+const CONTACT_API_URL = `${window.location.origin}/api/contact`;
 
 // 🔹 Modal Elements
 const modal = document.getElementById("add-contact-modal");

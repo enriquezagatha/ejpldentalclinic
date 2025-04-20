@@ -45,7 +45,7 @@ function saveFormData() {
     document.querySelector(".typeoftreatment-select")?.value || "";
   const selectedOption = document.querySelector(".typeoftreatment-select")
     ?.selectedOptions[0];
-    const treatmentPrice = selectedOption?.dataset?.price || "";
+  const treatmentPrice = selectedOption?.dataset?.price || "";
   localStorage.setItem("preferredDate", preferredDate);
   localStorage.setItem("preferredTime", preferredTime);
   localStorage.setItem("treatmentType", treatmentType);
@@ -92,7 +92,9 @@ function loadFormData() {
     }
 
     if (treatmentType) {
-      const treatmentElement = document.querySelector(".typeoftreatment-select");
+      const treatmentElement = document.querySelector(
+        ".typeoftreatment-select"
+      );
       if (treatmentElement) {
         if (treatmentElement.tagName.toLowerCase() === "select") {
           treatmentElement.querySelectorAll("option").forEach((option) => {
@@ -108,17 +110,19 @@ function loadFormData() {
 
     const treatmentPriceInput = document.getElementById("treatment-price");
     if (treatmentPriceInput) {
-      treatmentPriceInput.value = treatmentPrice && treatmentPrice !== "0"
-      ? (treatmentPrice.includes("-")
-          ? `₱${treatmentPrice.split("-")[0].trim()} - ₱${treatmentPrice.split("-")[1].trim()}`
-          : `₱${treatmentPrice}`)
-      : "";
+      treatmentPriceInput.value =
+        treatmentPrice && treatmentPrice !== "0"
+          ? treatmentPrice.includes("-")
+            ? `₱${treatmentPrice.split("-")[0].trim()} - ₱${treatmentPrice
+                .split("-")[1]
+                .trim()}`
+            : `₱${treatmentPrice}`
+          : "";
     }
 
     if (preferredDate) {
       populateTimeOptions(preferredDate, preferredTime); // Populate time options based on the saved preferred date and time
     }
-
   } else {
     document.querySelector(".date-input").value = "";
     document.querySelector(".time-select").value = "";
@@ -134,8 +138,9 @@ function populateTimeOptions(selectedDate = null, selectedTime = null) {
   const timeSelect = document.querySelector(".time-select");
   if (timeSelect) {
     // Clear the existing options and add the default placeholder
-    timeSelect.innerHTML = '<option value="" disabled selected>Preferred Time</option>';
-    
+    timeSelect.innerHTML =
+      '<option value="" disabled selected>Preferred Time</option>';
+
     let timeSlots = [];
 
     if (selectedDate) {
@@ -264,7 +269,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const treatmentPrice = document.getElementById("treatment-price"); // This is an input field
 
   try {
-    const response = await fetch("http://localhost:3000/api/treatments");
+    const response = await fetch(`${window.location.origin}/api/treatments`);
     const treatments = await response.json();
 
     treatments.forEach((treatment) => {

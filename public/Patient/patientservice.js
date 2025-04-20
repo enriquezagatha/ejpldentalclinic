@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   `;
 
   try {
-    const response = await fetch("http://localhost:3000/api/services"); // Make sure backend is running
+    const response = await fetch(`${window.location.origin}/api/services`); // Make sure backend is running
     const services = await response.json();
 
     servicesList.innerHTML = ""; // Clear loading message
