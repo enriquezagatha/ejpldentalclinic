@@ -1,3 +1,6 @@
+[phases.build]
+cmd = "npm rebuild bcrypt --build-from-source"
+
 [phases.setup]
 nixPkgs = ["nodejs"]
 
