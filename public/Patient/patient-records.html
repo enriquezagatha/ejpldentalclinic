@@ -132,6 +132,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             const tableBody = document.getElementById("patient-table-body");
+            const searchInput = document.getElementById("searchRecords");
 
             // Show "Loading records..." row
             tableBody.innerHTML = `
@@ -145,19 +146,8 @@
                 </tr>
             `;
 
-            // Show skeleton loading for sidebar
-            document.getElementById('sidebar-profile-picture-skeleton').classList.remove('hidden');
-            document.getElementById('sidebar-full-name-skeleton').classList.remove('hidden');
-
-            await fetchProfile();
-
-            // Hide skeletons and show actual content
-            document.getElementById('sidebar-profile-picture-skeleton').classList.add('hidden');
-            document.getElementById('sidebar-profile-picture').classList.remove('hidden');
-            document.getElementById('sidebar-full-name-skeleton').classList.add('hidden');
-            document.getElementById('sidebar-full-name').classList.remove('hidden');
-            document.getElementById('sidebar-fixed-patient-text').classList.remove('hidden');
-
+            // Fetch and display patient records
+            let patientRecords = [];
             try {
                 const response = await fetch("/api/patient/records", { method: "GET", credentials: "include" });
 
@@ -181,23 +171,18 @@
                     return;
                 }
 
+                // Store the patient record for filtering
+                patientRecords = [patient];
+
                 // Display the single patient record
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td class="border-y border-gray-300 px-4 py-6 text-left">
-                        <a href="patient-recorddetails.html?id=${patient._id}" class="patient-link">
-                            ${patient.firstName} ${patient.lastName}
-                        </a>
-                    </td>
-                `;
-                tableBody.appendChild(row);
+                displayRecords(patientRecords);
 
             } catch (error) {
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="1" class="text-center text-gray-500 pt-8 py-6">
                             <div class="flex flex-col items-center">
-                                <i class="fas fa-folder-open text-4xl mb-4 text-gray-400"></i> <!-- Updated icon -->
+                                <i class="fas fa-folder-open text-4xl mb-4 text-gray-400"></i>
                                 <p class="text-lg font-semibold">No Records Found</p>
                                 <p class="text-sm text-gray-400 mb-4">
                                     <a href="typeofpatient.html" class="text-[#2C4A66] font-bold hover:underline">Book an Appointment Now</a>
@@ -205,8 +190,57 @@
                             </div>
                         </td>
                     </tr>
-            `;
+                `;
             }
+
+            // Filter records based on search input
+            searchInput.addEventListener("input", function () {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredRecords = patientRecords.filter(record =>
+                    `${record.firstName} ${record.lastName}`.toLowerCase().includes(searchTerm)
+                );
+                displayRecords(filteredRecords);
+            });
+
+            function displayRecords(records) {
+                tableBody.innerHTML = ""; // Clear existing rows
+
+                if (records.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="1" class="border-y border-gray-300 px-4 py-6 text-center text-gray-500">
+                                No matching records found.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                records.forEach(record => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td class="border-y border-gray-300 px-4 py-6 text-left">
+                            <a href="patient-recorddetails.html?id=${record._id}" class="patient-link">
+                                ${record.firstName} ${record.lastName}
+                            </a>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // Show skeleton loading for sidebar
+            document.getElementById('sidebar-profile-picture-skeleton').classList.remove('hidden');
+            document.getElementById('sidebar-full-name-skeleton').classList.remove('hidden');
+
+            await fetchProfile();
+
+            // Hide skeletons and show actual content
+            document.getElementById('sidebar-profile-picture-skeleton').classList.add('hidden');
+            document.getElementById('sidebar-profile-picture').classList.remove('hidden');
+            document.getElementById('sidebar-full-name-skeleton').classList.add('hidden');
+            document.getElementById('sidebar-full-name').classList.remove('hidden');
+            document.getElementById('sidebar-fixed-patient-text').classList.remove('hidden');
         });
 
         function displayProfileInfo(data) {
@@ -234,10 +268,6 @@
                 console.error('Error fetching profile data');
             }
         }
-
-
-
-
     </script>
     <script src="patientnotifications.js"></script>
 </body>

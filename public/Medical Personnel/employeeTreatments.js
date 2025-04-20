@@ -56,24 +56,45 @@ function renderPagination(totalRows) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await fetchTreatments(); //Fetch treatments for the table
+  await fetchTreatments(); // Fetch treatments for the table
 
-  //Only call updateTreatmentDropdown() if #treatment-select exists (prevents error)
+  // Only call updateTreatmentDropdown() if #treatment-select exists (prevents error)
   if (document.getElementById("treatment-select")) {
     updateTreatmentDropdown();
   }
 
-  // Fix: Match the correct HTML IDs
-  document
-    .getElementById("open-treatment-modal-btn")
-    .addEventListener("click", openModal);
-  document
-    .getElementById("close-treatment-modal-btn")
-    .addEventListener("click", closeModal);
-  document
-    .getElementById("save-treatment-btn")
-    .addEventListener("click", saveTreatment);
+  // Fix: Add null checks before attaching event listeners
+  const openModalBtn = document.getElementById("open-treatment-modal-btn");
+  if (openModalBtn) {
+    openModalBtn.addEventListener("click", openModal);
+  }
+
+  const closeModalBtn = document.getElementById("close-treatment-modal-btn");
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", closeModal);
+  }
+
+  const saveTreatmentBtn = document.getElementById("save-treatment-btn");
+  if (saveTreatmentBtn) {
+    saveTreatmentBtn.addEventListener("click", saveTreatment);
+  }
 });
+
+function showToast(message, bgColor = "bg-green-500") {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+
+  // Set message and background color
+  toastMessage.textContent = message;
+  toastMessage.className = `text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto ${bgColor}`;
+
+  toast.classList.remove("hidden");
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
+}
 
 //Fetch all treatments
 async function fetchTreatments() {
@@ -205,7 +226,7 @@ async function saveTreatment() {
   const treatmentId = document.getElementById("save-treatment-btn").dataset.id;
 
   if (!name || !price) {
-    return alert("Please enter a valid treatment name and price.");
+    return showToast("Please enter a valid treatment name and price.", "bg-red-500");
   }
 
   try {
@@ -221,8 +242,9 @@ async function saveTreatment() {
     );
 
     if (isDuplicate) {
-      return alert(
-        "A treatment with this name already exists. Please choose a different name."
+      return showToast(
+        "A treatment with this name already exists. Please choose a different name.",
+        "bg-red-500"
       );
     }
 
@@ -245,7 +267,7 @@ async function saveTreatment() {
 
     if (!response.ok) throw new Error("Failed to save treatment");
 
-    alert("Treatment saved successfully!");
+    showToast("Treatment saved successfully!");
     closeModal();
     fetchTreatments();
 
@@ -280,7 +302,7 @@ async function deleteTreatment(id) {
     });
     if (!response.ok) throw new Error("Failed to delete treatment");
 
-    alert("Treatment deleted successfully!");
+    showToast("Treatment deleted successfully!");
     fetchTreatments();
   } catch (error) {
     console.error("Error deleting treatment:", error);

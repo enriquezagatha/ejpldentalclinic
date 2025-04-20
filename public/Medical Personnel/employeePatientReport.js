@@ -10,13 +10,29 @@ document.addEventListener("DOMContentLoaded", function () {
   startDateInput.value = today;
   endDateInput.value = today;
 
+  function showToast(message, bgColor = "bg-green-500") {
+    const toast = document.getElementById("toast");
+    const toastMessage = document.getElementById("toast-message");
+  
+    // Set message and background color
+    toastMessage.textContent = message;
+    toastMessage.className = `text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto ${bgColor}`;
+  
+    toast.classList.remove("hidden");
+  
+    // Hide after 3 seconds
+    setTimeout(() => {
+      toast.classList.add("hidden");
+    }, 3000);
+  }
+
   async function fetchReport() {
     try {
       const startDate = startDateInput.value;
       const endDate = endDateInput.value;
 
       if (!startDate || !endDate) {
-        alert("Please select both start and end dates.");
+        showToast("Please select both start and end dates.", "bg-red-500");
         return;
       }
 
@@ -76,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     } catch (error) {
       console.error("Error fetching report:", error);
+      showToast("Error loading data. Please try again later.", "bg-red-500");
       patientList.innerHTML = `
         <tr>
           <td colspan="4" class="px-6 py-4 text-center text-red-500">

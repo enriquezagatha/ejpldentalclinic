@@ -3,6 +3,22 @@ document.addEventListener("DOMContentLoaded", function () {
   checkAuthorizationStatus();
 });
 
+function showToast(message, bgColor = "bg-green-500") {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+
+  // Set message and background color
+  toastMessage.textContent = message;
+  toastMessage.className = `text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto ${bgColor}`;
+
+  toast.classList.remove("hidden");
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
+}
+
 // Reset Forms Safely
 function resetForms() {
   const addStaffForm = document.getElementById("add-staff-form");
@@ -333,14 +349,14 @@ async function removeStaff(email) {
     const result = await response.json();
 
     if (response.ok) {
-      alert("Staff removed successfully!");
+      showToast("Staff removed successfully!", "bg-green-500");
       loadStaffData(); // Refresh staff list
     } else {
-      alert(result.message || "Failed to remove staff.");
+      showToast(result.message || "Failed to remove staff.", "bg-red-500");
     }
   } catch (error) {
     console.error("Error removing staff:", error);
-    alert("An error occurred. Please try again.");
+    showToast("An error occurred. Please try again.", "bg-red-500");
   }
 }
 
@@ -355,13 +371,13 @@ async function toggleAuthorization(email, isAuthorized) {
 
     const result = await response.json();
     if (response.ok) {
-      console.log(result.message);
+      showToast(result.message || "Authorization status updated.", "bg-green-500");
     } else {
-      alert(result.message || "Failed to update authorization status.");
+      showToast(result.message || "Failed to update authorization status.", "bg-red-500");
     }
   } catch (error) {
     console.error("Error toggling authorization:", error);
-    alert("An error occurred while updating authorization.");
+    showToast("An error occurred while updating authorization.", "bg-red-500");
   }
 }
 
@@ -453,15 +469,12 @@ async function editStaff(email) {
       // Open the modal to show the staff details
       openEditStaffModal();
     } else {
-      console.error(
-        "Failed to fetch staff details:",
-        staff.message || "Unknown error"
-      );
-      alert(staff.message || "Failed to fetch staff details.");
+      console.error("Failed to fetch staff details:", staff.message || "Unknown error");
+      showToast(staff.message || "Failed to fetch staff details.", "bg-red-500");
     }
   } catch (error) {
     console.error("Error editing staff:", error);
-    alert("An error occurred while fetching staff details.");
+    showToast("An error occurred while fetching staff details.", "bg-red-500");
   }
 }
 

@@ -99,6 +99,10 @@
                             id="closeModal">&times;</span>
                         <h2 class="text-2xl font-semibold text-gray-800 mb-4">PayMongo Payment Link</h2>
 
+                        <label for="patientReference" class="block text-sm font-medium text-gray-700">Enter Reference Number:</label>
+                        <input type="text" id="patientReference" class="w-full p-2 border border-gray-300 rounded mb-4"
+                            placeholder="Enter reference number" required>
+
                         <label for="patientName" class="block text-sm font-medium text-gray-700">Enter Patient
                             Name:</label>
                         <input type="text" id="patientName" class="w-full p-2 border border-gray-300 rounded mb-4"
@@ -192,6 +196,18 @@
         document.getElementById('sidebar-full-name-skeleton').classList.add('hidden');
         document.getElementById('sidebar-full-name').classList.remove('hidden');
         document.getElementById('sidebar-fixed-patient-text').classList.remove('hidden');
+
+        // Attach search functionality
+        const searchInput = document.getElementById('searchAppointments');
+        searchInput.addEventListener('input', function () {
+            const searchTerm = searchInput.value.toLowerCase();
+            const rows = document.querySelectorAll('#appointments tbody tr');
+
+            rows.forEach(row => {
+                const rowText = row.innerText.toLowerCase();
+                row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+            });
+        });
     });
 
     function displayAppointments(appointments) {
@@ -245,7 +261,8 @@
                         <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentType}</td>
                         <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentPrice}</td>
                         <td class="border-y border-gray-300 px-4 py-6 break-words">
-                            <button class="payButton bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-[#1E354A]" 
+                            <button class="payButton bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-[#1E354A]"
+                                data-reference="${appointment.referenceNumber}" 
                                 data-name="${appointment.firstName} ${appointment.lastName}"
                                 data-email="${appointment.emailAddress}"
                                 data-treatment="${appointment.treatmentType}"
@@ -286,17 +303,20 @@
     function attachPaymentEventListeners() {
         document.querySelectorAll('.payButton').forEach(button => {
             button.addEventListener('click', function () {
+                const patientReference = this.getAttribute('data-reference');
                 const patientName = this.getAttribute('data-name');
                 const patientEmail = this.getAttribute('data-email');
                 const treatmentType = this.getAttribute('data-treatment');
                 const treatmentPrice = this.getAttribute('data-amount').replace(/,/g, '');
 
                 console.log("Debugging - Button Clicked:");
+                console.log("Reference Number:", patientReference)
                 console.log("Patient Name:", patientName);
                 console.log("Patient Email:", patientEmail);
                 console.log("Treatment Type:", treatmentType);
                 console.log("Treatment Price (string):", treatmentPrice);
 
+                document.getElementById('patientReference').value = patientReference;
                 document.getElementById('patientName').value = patientName;
                 document.getElementById('patientEmail').value = patientEmail;
                 document.getElementById('treatmentType').value = treatmentType;
@@ -387,13 +407,14 @@
 
         // Payment submission logic (unchanged)
         submitPayment.addEventListener("click", async function () {
+            const patientReference = document.getElementById("patientReference").value;
             const patientName = document.getElementById("patientName").value;
             const patientEmail = document.getElementById("patientEmail").value;
             const treatmentType = document.getElementById("treatmentType").value;
             const amountInPHP = document.getElementById("treatmentPrice").value;
             const validationMessage = document.getElementById("validationMessage");
 
-            if (!patientName || !patientEmail || !treatmentType || !amountInPHP || isNaN(amountInPHP) || amountInPHP <= 0) {
+            if (!patientReference || !patientName || !patientEmail || !treatmentType || !amountInPHP || isNaN(amountInPHP) || amountInPHP <= 0) {
                 validationMessage.innerText = "Please fill out all fields with valid information.";
                 validationMessage.style.display = "block";
             } else if (amountInPHP < 100) {
@@ -403,7 +424,7 @@
                 validationMessage.style.display = "none";
 
                 const amountInCents = amountInPHP * 100;
-                const paymentData = { patientName, patientEmail, treatmentType, amount: amountInCents };
+                const paymentData = { patientReference, patientName, patientEmail, treatmentType, amount: amountInCents };
 
                 const response = await fetch("http://localhost:3000/api/payment/create-payment-link", {
                     method: "POST",

@@ -66,6 +66,22 @@ function renderPagination(totalRows) {
 // Load services when page loads
 document.addEventListener("DOMContentLoaded", fetchServices);
 
+function showToast(message, bgColor = "bg-green-500") {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+
+  // Set message and background color
+  toastMessage.textContent = message;
+  toastMessage.className = `text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto ${bgColor}`;
+
+  toast.classList.remove("hidden");
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
+}
+
 function fetchServices() {
   const tableBody = document.getElementById("service-table-body");
   tableBody.innerHTML = `
@@ -144,9 +160,9 @@ document
     const imageInput = document.getElementById("service-image").files[0];
 
     if (!name || !description) {
-      alert("Please enter service name and description.");
+      showToast("Please enter service name and description.", "error");
       return;
-    }
+    }    
 
     try {
       // Fetch existing services to check for duplicate names
@@ -163,11 +179,9 @@ document
       );
 
       if (isDuplicate) {
-        alert(
-          "A service with this name already exists. Please choose a different name."
-        );
+        showToast("A service with this name already exists. Please choose a different name.", "error");
         return;
-      }
+      }      
 
       // Prepare form data
       const formData = new FormData();
@@ -194,10 +208,10 @@ document
       resetServiceForm();
       document.getElementById("service-modal").style.display = "none";
       fetchServices();
-      alert(id ? "Service updated successfully" : "Service added successfully");
+      showToast(id ? "Service updated successfully" : "Service added successfully");
     } catch (error) {
       console.error("Error saving service:", error);
-      alert("Error saving service. Please try again.");
+      showToast("Error saving service. Please try again.");
     }
   });
 
@@ -220,11 +234,11 @@ function deleteService(id) {
           throw new Error("Failed to delete service.");
         }
         fetchServices();
-        alert("Service deleted successfully!");
+        showToast("Service deleted successfully!");
       })
       .catch((error) => {
         console.error("Error deleting service:", error);
-        alert("Error deleting service. Please try again.");
+        showToast("Error deleting service. Please try again.");
       });
   }
 }

@@ -42,6 +42,22 @@ document.addEventListener("DOMContentLoaded", function () {
   loadContacts();
 });
 
+function showToast(message, bgColor = "bg-green-500") {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+
+  // Set message and background color
+  toastMessage.textContent = message;
+  toastMessage.className = `text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto ${bgColor}`;
+
+  toast.classList.remove("hidden");
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
+}
+
 async function loadContacts() {
   const contactTable = document.getElementById("contact-list");
   contactTable.innerHTML = `
@@ -160,7 +176,7 @@ document
 
       if (!response.ok) throw new Error("Failed to add contact");
 
-      alert("Contact added successfully!");
+      showToast("Contact added successfully!");
       resetContactForm(); // ✅ Reset form after adding
       modal.classList.add("hidden"); // ✅ Close modal
       loadContacts(); // ✅ Reload the contact list
@@ -182,7 +198,7 @@ async function deleteContact(contactField) {
 
     if (!response.ok) throw new Error("Failed to delete contact");
 
-    alert(`${contactField} deleted successfully!`);
+    showToast(`${contactField} deleted successfully!`);
     loadContacts(); // Reload the contacts after deletion
   } catch (error) {
     console.error("Error deleting contact:", error);
@@ -263,7 +279,7 @@ async function editContact(contactId, field) {
 
           if (!updateResponse.ok) throw new Error("Failed to update contact");
 
-          alert(`${field} updated successfully!`);
+          showToast(`${field} updated successfully!`);
           modal.classList.add("hidden"); // Close the modal after saving
           loadContacts(); // Reload the contact list
         } catch (error) {
@@ -286,7 +302,7 @@ async function updateContact(field, value) {
 
     if (!response.ok) throw new Error("Failed to update contact");
 
-    alert("Contact updated successfully!");
+    showToast("Contact updated successfully!");
   } catch (error) {
     console.error("Error updating contact:", error);
   }

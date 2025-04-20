@@ -130,6 +130,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function showToast(message, bgColor = "bg-green-500") {
+    const toast = document.getElementById("toast");
+    const toastMessage = document.getElementById("toast-message");
+  
+    // Set message and background color
+    toastMessage.textContent = message;
+    toastMessage.className = `text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto ${bgColor}`;
+  
+    toast.classList.remove("hidden");
+  
+    // Hide after 3 seconds
+    setTimeout(() => {
+      toast.classList.add("hidden");
+    }, 3000);
+  }
+
   // Fetch and display discounts with pagination
   async function loadDiscounts() {
     try {
@@ -184,15 +200,15 @@ document.addEventListener("DOMContentLoaded", function () {
       const result = await response.json();
 
       if (response.ok) {
-        alert(id ? "Discount updated!" : "Discount added!");
+        showToast(id ? "Discount updated!" : "Discount added!");
         closeDiscountModal();
         loadDiscounts();
       } else {
-        alert("Error: " + (result.error || "Unknown error"));
+        showToast("Error: " + (result.error || "Unknown error"), "bg-red-500");
       }
     } catch (error) {
       console.error("Error saving discount:", error);
-      alert("An error occurred while saving the discount.");
+      showToast("An error occurred while saving the discount.", "bg-red-500");
     }
   }
 
@@ -206,11 +222,11 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       if (!response.ok) throw new Error("Failed to delete discount");
 
-      alert("Discount deleted!");
+      showToast("Discount deleted!");
       loadDiscounts();
     } catch (error) {
       console.error("Error deleting discount:", error);
-      alert("An error occurred while deleting the discount.");
+      showToast("An error occurred while deleting the discount.", "bg-red-500");
     }
   }
 

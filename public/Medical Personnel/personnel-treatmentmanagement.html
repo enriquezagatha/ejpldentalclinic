@@ -13,6 +13,11 @@
 </head>
 <body class="min-h-screen bg-slate-50 flex font-inter">
 
+    <!-- Centered Toast Container -->
+    <div id="toast" class="fixed inset-0 flex items-center justify-center z-50 hidden pointer-events-none">
+        <div id="toast-message" class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto"></div>
+    </div>
+
 <!-- Overlay for mobile -->
 <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-10 hidden lg:hidden z-40"></div>
 
@@ -32,7 +37,7 @@
                 <span class="block text-xs text-[#232931]">Medical Personnel</span>
             </div>
             <svg class="w-4 h-4 ml-6 lg:ml-14 text-[#232931]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 111.414 1.414l-4 4a1 1 01-1.414 0l-4-4a1 1 010-1.414z" clip-rule="evenodd" />
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 010-1.414z" clip-rule="evenodd" />
             </svg>
             <div id="desktop-profile-dropdown" class="absolute bg-white border text-[#232931] mt-32 ml-12 rounded shadow-lg w-40 hidden group-hover:block">
                 <a href="../Medical Personnel/personnel-profile.html" class="block px-4 py-2 hover:bg-gray-100">View Profile</a>
@@ -120,13 +125,19 @@
             const treatmentModal = document.getElementById("treatment-modal");
             const treatmentOverlay = document.getElementById("treatment-overlay");
 
-            document.getElementById("open-treatment-modal-btn").addEventListener("click", () => {
-                treatmentModal.style.display = "flex";
-            });
+            const openTreatmentModalBtn = document.getElementById("open-treatment-modal-btn");
+            if (openTreatmentModalBtn) {
+                openTreatmentModalBtn.addEventListener("click", () => {
+                    treatmentModal.style.display = "flex";
+                });
+            }
 
-            document.getElementById("close-treatment-modal-btn").addEventListener("click", () => {
-                treatmentModal.style.display = "none";
-            });
+            const closeTreatmentModalBtn = document.getElementById("close-treatment-modal-btn");
+            if (closeTreatmentModalBtn) {
+                closeTreatmentModalBtn.addEventListener("click", () => {
+                    treatmentModal.style.display = "none";
+                });
+            }
 
             treatmentOverlay.addEventListener("click", () => {
                 treatmentModal.style.display = "none";
@@ -160,14 +171,6 @@
             function displayProfileInfo(data) {
             document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
-
-        document.getElementById("open-treatment-modal-btn").addEventListener("click", () => {
-        document.getElementById("treatment-modal").classList.remove("hidden");
-            });
-
-        document.getElementById("close-treatment-modal-btn").addEventListener("click", () => {
-        document.getElementById("treatment-modal").classList.add("hidden");
-            });
 
     </script>
 

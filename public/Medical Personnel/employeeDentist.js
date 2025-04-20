@@ -128,6 +128,22 @@ async function displayDentists() {
   }
 }
 
+function showToast(message, bgColor = "bg-green-500") {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+
+  // Set message and background color
+  toastMessage.textContent = message;
+  toastMessage.className = `text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto ${bgColor}`;
+
+  toast.classList.remove("hidden");
+
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 3000);
+}
+
 // Add or update dentist (with image upload support)
 async function addOrUpdateDentist() {
   const firstName = document.getElementById("dentist-first-name").value.trim();
@@ -144,9 +160,7 @@ async function addOrUpdateDentist() {
   const editId = document.getElementById("editdentistId").value;
 
   if (!firstName || !lastName || !contact || !gender) {
-    alert(
-      "Please enter first name, last name, contact number, and select gender."
-    );
+    showToast("Please enter first name, last name, contact number, and select gender.", "bg-red-500");
     return;
   }
 
@@ -172,9 +186,7 @@ async function addOrUpdateDentist() {
     });
 
     if (isDuplicate) {
-      alert(
-        "A dentist with this name already exists. Please choose a different name."
-      );
+      showToast("A dentist with this name already exists. Please choose a different name.", "bg-red-500");
       return;
     }
 
@@ -198,11 +210,11 @@ async function addOrUpdateDentist() {
     });
 
     if (response.ok) {
-      alert(`Dentist ${editId ? "updated" : "added"} successfully!`);
+      showToast(`Dentist ${editId ? "updated" : "added"} successfully!`);
       document.getElementById("dentist-modal").style.display = "none";
       displayDentists();
     } else {
-      alert("Failed to save dentist.");
+      showToast("Failed to save dentist.", "bg-red-500");
     }
   } catch (error) {
     console.error("Error saving dentist:", error);
@@ -235,6 +247,7 @@ function editDentist(id, fullName, contact, image) {
 async function deleteDentist(id) {
   if (confirm("Are you sure you want to delete this dentist?")) {
     await fetch(`${DENTIST_API_URL}/${id}`, { method: "DELETE" });
+    showToast("Dentist deleted successfully!");
     displayDentists();
   }
 }

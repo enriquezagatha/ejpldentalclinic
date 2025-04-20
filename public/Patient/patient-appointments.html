@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Payment</title>
+    <title>Patient Appointment</title>
     <!-- <link rel="stylesheet" href="patientstyle.css"> -->
     <link href="../output.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -87,10 +87,7 @@
                 </ul>
             </nav>
         </aside>
-<<<<<<< HEAD
-=======
 
->>>>>>> 937dda68edd1d2654896bb2c448a2bdb9b48e3b2
         <div class="flex-1 p-4 w-full bg-[#FCFCFC] max-h-screen mt-6 mb-6 shadow-md border">
             <main>
                 <!-- APPOINTMENTS TABLE -->
@@ -137,6 +134,7 @@
 </html>
 <script>
     document.addEventListener('DOMContentLoaded', async () => {
+        const searchInput = document.getElementById('searchAppointments');
         const appointmentsTableBody = document.querySelector('#appointments tbody');
 
         // Show "Loading appointments..." row
@@ -159,6 +157,17 @@
         document.getElementById('sidebar-full-name-skeleton').classList.add('hidden');
         document.getElementById('sidebar-full-name').classList.remove('hidden');
         document.getElementById('sidebar-fixed-patient-text').classList.remove('hidden');
+
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const rows = appointmentsTableBody.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('td'));
+                const matches = cells.some(cell => cell.textContent.toLowerCase().includes(searchTerm));
+                row.style.display = matches ? '' : 'none';
+            });
+        });
     });
 
     async function fetchAppointments() {
@@ -436,3 +445,4 @@
 </script>
 <script src="patientappointments.js"></script>
 <script src="patientnotifications.js"></script>
+```
