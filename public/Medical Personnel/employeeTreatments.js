@@ -182,7 +182,7 @@ async function updateTreatmentDropdown() {
   if (!treatmentSelect) return; //Exit if dropdown is not present
 
   try {
-    const response = await fetch("http://localhost:3000/treatments");
+    const response = await fetch(`${window.location.origin}/treatments`);
     const treatments = await response.json();
 
     // Clear and populate dropdown
@@ -228,7 +228,10 @@ async function saveTreatment() {
   const treatmentId = document.getElementById("save-treatment-btn").dataset.id;
 
   if (!name || !price) {
-    return showToast("Please enter a valid treatment name and price.", "bg-red-500");
+    return showToast(
+      "Please enter a valid treatment name and price.",
+      "bg-red-500"
+    );
   }
 
   try {

@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       // Use the uploaded image, or fallback to a default image
       const imageUrl = service.image
-        ? `http://localhost:3000${service.image}`
+        ? `${window.location.origin}${service.image}`
         : "https://via.placeholder.com/150";
 
       // Truncate description if it exceeds 100 characters
