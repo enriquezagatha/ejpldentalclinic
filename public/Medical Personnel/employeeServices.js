@@ -1,4 +1,4 @@
-const SERVICE_API_URL = "http://localhost:3000/api/services"; // Adjust if necessary
+const SERVICE_API_URL = `${window.location.origin}/api/services`; // Dynamically set base URL
 
 let currentPage = 1;
 const rowsPerPage = 5;
