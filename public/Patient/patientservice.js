@@ -24,10 +24,12 @@ document.addEventListener("DOMContentLoaded", async function () {
       "mt-16",
       "grid",
       "grid-cols-1",
-      "sm:grid-cols-2",
+      "md:grid-cols-2",
       "xl:grid-cols-3", // Ensure 3 items per row on medium screens and above
       "gap-8",
-      "place-items-center"
+      "place-items-center",
+      "md:w-auto",
+      "w-[90%]"
     );
 
     services.forEach((service) => {
@@ -44,7 +46,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         "px-2",
         "shadow-xl",
         "h-[350px]", // Fixed height
-        "w-[380px]" // Fixed width
+        "md:w-[100%]",
+        "w-[315px]" // Fixed width
       );
 
       // Use the uploaded image, or fallback to a default image
