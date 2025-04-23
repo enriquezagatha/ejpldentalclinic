@@ -31,4 +31,10 @@ router.get('/records', patientController.getPatientRecords);
 //Route to get patient's own record by ID
 router.get("/records/:id", patientController.getPatientById);
 
+// Route to handle forgot password (send reset link)
+router.post('/forgot-password', patientController.forgotPassword);
+
+// Route to handle password reset (update password)
+router.post('/reset-password', patientController.resetPassword);
+
 module.exports = router;

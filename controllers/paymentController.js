@@ -22,7 +22,7 @@ exports.createPaymentLink = async (req, res) => {
             {
                 data: {
                     attributes: {
-                        amount: amount * 100, // Convert to cents
+                        amount: amount, // Convert to cents
                         description: `Payment for ${treatmentType}`,
                         currency: "PHP"
                     }
@@ -42,7 +42,7 @@ exports.createPaymentLink = async (req, res) => {
             patientName,
             email: patientEmail,
             treatment: treatmentType,
-            amount: amount * 100, // Store in cents
+            amount: amount, // Store in cents
             status: "unpaid", // Default status
             paymentLink: result.data.attributes.checkout_url,
             referenceId: result.data.id

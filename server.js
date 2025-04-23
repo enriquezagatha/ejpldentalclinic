@@ -100,6 +100,11 @@ app.get("/medical-personnel/edit-patient", (req, res) => {
   );
 });
 
+//Reset Password page for Medical Personnel
+app.get("/reset-password/:token", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "Medical Personnel", "personnel-resetpassword.html"));
+});
+
 // Routes for Patient pages
 app.get("/patient/create", (req, res) => {
   res.sendFile(
@@ -113,6 +118,11 @@ app.get("/patient/login", (req, res) => {
 
 app.get("/patient/home", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "Patient", "patient-home.html"));
+});
+
+// Serve reset password page
+app.get("/reset-password/:token", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "Patient", "patient-resetpassword.html"));
 });
 
 // Routes setup for API with proper prefixes

@@ -42,7 +42,7 @@ async function createPaymentIntent(userName, userEmail, treatment, amount) {
             {
                 data: {
                     attributes: {
-                        amount: amount * 100, // Convert PHP to centavos
+                        amount: amount, // Convert PHP to centavos
                         payment_method_allowed: ["gcash", "card", "grab_pay"],
                         currency: "PHP",
                         capture_type: "automatic"
@@ -64,7 +64,7 @@ async function createPaymentIntent(userName, userEmail, treatment, amount) {
             patientName: userName,
             email: userEmail,
             treatment: treatment,
-            amount: amount * 100, // Stored in centavos
+            amount: amount, // Stored in centavos
             status: "unpaid",
             referenceId: paymentIntentId, // Save PayMongo ID
             createdAt: new Date()

@@ -206,5 +206,11 @@ router.post("/update", async (req, res) => {
   }
 });
 
+// Route to handle forgot password (send reset link)
+router.post('/forgot-password', medicalPersonnelController.forgotPassword);
+
+// Route to handle password reset (update password)
+router.post('/reset-password', medicalPersonnelController.resetPassword);
+
 // Export the routes
 module.exports = router;

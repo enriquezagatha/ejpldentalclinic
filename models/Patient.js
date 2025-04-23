@@ -8,7 +8,9 @@ const patientSchema = new mongoose.Schema({
     email: { type: String,},
     password: String,
     profilePicture: String,
-    isFirstLogin: {type: Boolean, default: true}
+    isFirstLogin: {type: Boolean, default: true},
+    resetToken: String,
+    resetTokenExpiration: Date,
 });
 
 const Patient = mongoose.model('Patient', patientSchema);

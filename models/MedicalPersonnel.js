@@ -9,7 +9,9 @@ const medicalPersonnelSchema = new mongoose.Schema({
     password: { type: String, required: true },
     isGeneratedPassword: { type: Boolean, default: false },
     profilePicture: { type: String },
-    isAuthorizedPersonnel: { type: Boolean, default: false }, // 👈 Add this
+    isAuthorizedPersonnel: { type: Boolean, default: false },
+    resetToken: String,
+    resetTokenExpiration: Date,
 });
 
 const MedicalPersonnel = mongoose.model('MedicalPersonnel', medicalPersonnelSchema);

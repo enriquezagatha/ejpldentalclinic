@@ -8,6 +8,8 @@ const PatientRecord = require("../models/PatientRecord");
 const fs = require("fs");
 const path = require("path");
 const Notification = require("../models/Notification");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 // Create a new patient account
 exports.createPatient = async (req, res) => {
@@ -315,6 +317,102 @@ exports.getPatientById = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
+};
+
+// Send password reset link
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Please provide your email address." });
+    }
+
+    const patient = await Patient.findOne({ email });
+    if (!patient) {
+      return res.status(400).json({ message: "Email address not found." });
+    }
+
+    // Generate a reset token (no expiration for token itself)
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    
+    // Set an expiration time for the link (1 hour)
+    const resetTokenExpiration = Date.now() + 3600000; // 1 hour from now
+
+    // Store reset token and expiration in the patient's record
+    patient.resetToken = resetToken;
+    patient.resetTokenExpiration = resetTokenExpiration;
+    await patient.save();
+
+    // Create the reset link that includes the token
+    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+
+    // Send email with the reset link
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS, // Use app password here
+      },
+    });
+
+    const mailOptions = {
+      from: `EJPL Dental Clinic <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Reset your password securely",
+      text: `Click this link to reset your password: ${resetLink}`,
+      html: `
+        <div style="font-family: sans-serif; color: #333;">
+          <h2>Password Reset Request</h2>
+          <p>Hello,</p>
+          <p>We received a request to reset your password. Click the button below to reset it:</p>
+          <a href="${resetLink}" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+          <p>If you didn’t request this, you can ignore this email.</p>
+          <br>
+          <p>– EJPL Dental Clinic</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Password reset link sent to your email." });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    if (error.code === 'EAUTH') {
+      res.status(500).json({ message: "Authentication error. Please check email credentials." });
+    } else {
+      res.status(500).json({ message: "An error occurred." });
+    }
+  }
+};
+
+// Reset patient password
+exports.resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  if (!token || !newPassword) {
+    return res.status(400).json({ message: "Please provide token and new password." });
+  }
+
+  // Find the patient with the reset token and check expiration of the link
+  const patient = await Patient.findOne({
+    resetToken: token,
+    resetTokenExpiration: { $gt: Date.now() }, // Check if the link has expired
+  });
+
+  if (!patient) {
+    return res.status(400).json({ message: "Invalid or expired reset token." });
+  }
+
+  // Hash the new password and update the patient's password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  patient.password = hashedPassword;
+  patient.resetToken = undefined; // Clear the reset token after use
+  patient.resetTokenExpiration = undefined; // Clear the expiration after use
+
+  await patient.save();
+
+  res.status(200).json({ message: "Password reset successfully." });
 };
 
 // Export the controller functions
