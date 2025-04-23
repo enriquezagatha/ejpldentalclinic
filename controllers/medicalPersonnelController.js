@@ -275,7 +275,7 @@ exports.forgotPassword = async (req, res) => {
     await personnel.save();
 
     // Create the reset link that includes the token
-    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+    const resetLink = `http://localhost:3000/personnel/reset-password/${resetToken}`;
 
     // Send email with the reset link
     const transporter = nodemailer.createTransport({
@@ -325,7 +325,7 @@ exports.resetPassword = async (req, res) => {
   }
 
   // Find the personnel with the reset token and check expiration of the link
-  const personnel = await personnel.findOne({
+  const personnel = await MedicalPersonnel.findOne({
     resetToken: token,
     resetTokenExpiration: { $gt: Date.now() }, // Check if the link has expired
   });

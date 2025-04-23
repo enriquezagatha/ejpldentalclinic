@@ -101,7 +101,7 @@ app.get("/medical-personnel/edit-patient", (req, res) => {
 });
 
 //Reset Password page for Medical Personnel
-app.get("/reset-password/:token", (req, res) => {
+app.get("/personnel/reset-password/:token", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "Medical Personnel", "personnel-resetpassword.html"));
 });
 
@@ -121,7 +121,7 @@ app.get("/patient/home", (req, res) => {
 });
 
 // Serve reset password page
-app.get("/reset-password/:token", (req, res) => {
+app.get("/patient/reset-password/:token", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "Patient", "patient-resetpassword.html"));
 });
 
