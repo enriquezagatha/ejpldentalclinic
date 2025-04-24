@@ -151,9 +151,12 @@
                             <div class="flex flex-col w-full">
                                 <label class="text-sm font-inter font-semibold text-black" for="contact_number">Contact
                                     Number</label>
-                                <input type="number" placeholder="Contact Number"
-                                    class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
+                                <div class="flex items-center">
+                                    <span class="text-black px-2 bg-gray-200 border border-gray-300 rounded-l">09</span>
+                                    <input type="number" placeholder="Contact Number"
+                                    class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded-r pl-2"
                                     id="contact-number" required>
+                                </div>
                             </div>
                             <div class="flex flex-col w-full">
                                 <label class="text-sm font-inter font-semibold text-black" for="email">Email
@@ -175,9 +178,12 @@
                             <div class="flex flex-col w-full">
                                 <label class="text-sm font-inter font-semibold text-black"
                                     for="emergency-contact-number">Emergency Contact Number</label>
-                                <input type="number" placeholder="Emergency Contact Person Number"
-                                    class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
-                                    id="emergency-contact-number" required>
+                                    <div class="flex items-center">
+                                        <span class="text-black px-2 bg-gray-200 border border-gray-300 rounded-l">09</span>
+                                        <input type="number" placeholder="Emergency Contact Number"
+                                            class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded-r pl-2"
+                                            id="emergency-contact-number" required>
+                                    </div>
                             </div>
                         </div>
                         <div class="details-form sm:flex sm:gap-2">
@@ -191,17 +197,17 @@
                         </div>
                         <input type="hidden" id="selected-history" name="medical_history">
                         <!-- Warning messages -->
-                        <div id="contact-warning" class="warning-message" style="display: none;">Contact number must be
-                            exactly 11 digits.</div>
+                        <div id="contact-warning" class="warning-message" style="display: none;">Contact number must be exactly 11 digits.</div>
                         <div id="emergency-contact-warning" class="warning-message" style="display: none;">Emergency
-                            contact number must be exactly 11 digits.</div>
-                        <div id="form-warning" class="warning-message" style="display: none;">All required fields should
-                            be completed.</div>
+                            Contact number must be exactly 11 digits.</div>
+                        <div id="form-warning" class="warning-message text-red-500 text-sm mt-2" style="display: none;">
+                            Please fill out all required fields.
+                        </div>
                 </div>
                 <div class="sm:flex-row flex flex-col justify-between">
                     <button
                         class="appointment-back-button bg-[#2C4A66] hover:bg-[#1E3A56] text-white font-bold py-2 px-4 rounded w-full sm:w-1/6 mt-4"
-                        onclick="goBackAppointment()">Back</button>
+                        onclick="goBackAppointment(event)">Back</button>
                     <button type="button"
                         class="appointment-next-button bg-[#2C4A66] hover:bg-[#1E3A56] text-white font-bold py-2 px-4 rounded w-full sm:w-1/6 mt-4"
                         onclick="goNextAppointment()">Next</button>

@@ -16,8 +16,50 @@ function goToAppointmentBack() {
   window.location.href = "../Patient/typeofpatient.html";
 }
 
+function showToast(message) {
+  let warningDiv = document.getElementById("form-warning");
+  if (!warningDiv) {
+    warningDiv = document.createElement("div");
+    warningDiv.id = "form-warning";
+    warningDiv.className = "warning-message text-red-500 text-sm mt-2";
+    warningDiv.style.display = "none";
+    document.body.appendChild(warningDiv);
+  }
+
+  warningDiv.textContent = message;
+  warningDiv.style.display = "block";
+
+  setTimeout(() => {
+    warningDiv.style.display = "none";
+  }, 3000);
+}
+
 // Navigate to the next step and save data
 function goToAppointmentNext() {
+  const preferredDate = document.querySelector(".date-input")?.value || "";
+  const preferredTime = document.querySelector(".time-select")?.value || "";
+  const treatmentType = document.querySelector(".typeoftreatment-select")?.value || "";
+
+  if (!preferredDate && !preferredTime && !treatmentType) {
+    showToast("Please fill up all the required fields.");
+    return;
+  }
+
+  if (!preferredDate) {
+    showToast("Please select a preferred date.");
+    return;
+  }
+
+  if (!preferredTime) {
+    showToast("Please select a preferred time.");
+    return;
+  }
+
+  if (!treatmentType) {
+    showToast("Please select a treatment type.");
+    return;
+  }
+
   localStorage.setItem("isNavigating", "true"); // Set flag for navigation
   saveFormData();
   window.location.href = "patient-existingpatientdetails.html";
@@ -46,7 +88,6 @@ function saveFormData() {
   const selectedOption = document.querySelector(".typeoftreatment-select")
     ?.selectedOptions[0];
   const treatmentPrice = selectedOption?.dataset?.price || "";
-
   localStorage.setItem("preferredDate", preferredDate);
   localStorage.setItem("preferredTime", preferredTime);
   localStorage.setItem("treatmentType", treatmentType);

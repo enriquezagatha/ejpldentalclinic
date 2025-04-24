@@ -275,7 +275,7 @@ exports.forgotPassword = async (req, res) => {
     await personnel.save();
 
     // Create the reset link that includes the token
-    const resetLink = `http://localhost:3000/personnel/reset-password/${resetToken}`;
+    const resetLink = `http://0.0.0.0:3000/personnel/reset-password/${resetToken}`;
 
     // Send email with the reset link
     const transporter = nodemailer.createTransport({

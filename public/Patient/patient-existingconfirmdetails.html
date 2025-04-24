@@ -107,27 +107,27 @@
 
             if (savedFormData) {
                 const confirmationHTML = `
-    <div class="space-y-2">
-        <div class="flex items-center mt-4">
-            <hr class="w-8 border-black mr-4">
-            <span class="text-sm sm:text-xl text-black font-semibold">Personal Information</span>
-            <hr class="flex-grow border-black ml-4">
-        </div>
-        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Name:</strong> <span class="font-normal">${savedFormData.firstName || 'N/A'} ${savedFormData.lastName || ''}</span></p>
-        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Contact Number:</strong> <span class="font-normal">${savedFormData.contactNumber || 'N/A'}</span></p>
-        <div class="flex items-center mt-4">
-            <hr class="w-8 border-black mr-4">
-            <span class="text-sm sm:text-xl text-black font-semibold pt-4">Appointment Details</span>
-            <hr class="flex-grow border-black ml-4">
-        </div>
-        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Preferred Date:</strong> <span class="font-normal">${localStorage.getItem('preferredDate') || 'N/A'}</span></p>
-        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Preferred Time:</strong> <span class="font-normal">${localStorage.getItem('preferredTime') || 'N/A'}</span></p>
-        <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 pb-4 text-black"><strong>Type of Consultation:</strong> <span class="font-normal">${localStorage.getItem('treatmentType') || 'N/A'}</span></p>
+<div class="space-y-2">
+    <div class="flex items-center mt-4">
+        <hr class="w-8 border-black mr-4">
+        <span class="text-sm sm:text-xl text-black font-semibold">Personal Information</span>
+        <hr class="flex-grow border-black ml-4">
     </div>
+    <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Name:</strong> <span class="font-normal">${savedFormData.firstName || 'N/A'} ${savedFormData.lastName || ''}</span></p>
+    <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Contact Number:</strong> <span class="font-normal">09${savedFormData.contactNumber || 'N/A'}</span></p>
+    <div class="flex items-center mt-4">
+        <hr class="w-8 border-black mr-4">
+        <span class="text-sm sm:text-xl text-black font-semibold pt-4">Appointment Details</span>
+        <hr class="flex-grow border-black ml-4">
+    </div>
+    <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Preferred Date:</strong> <span class="font-normal">${localStorage.getItem('preferredDate') || 'N/A'}</span></p>
+    <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Preferred Time:</strong> <span class="font-normal">${localStorage.getItem('preferredTime') || 'N/A'}</span></p>
+    <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 pb-4 text-black"><strong>Type of Consultation:</strong> <span class="font-normal">${localStorage.getItem('treatmentType') || 'N/A'}</span></p>
+</div>
 `;
                 document.querySelector('.confirmation-info').innerHTML = confirmationHTML;
                 document.querySelector('.receipt-info').innerHTML = confirmationHTML;
-                document.getElementById('confirmation-date').innerText = new Date().tolocaleDateString();
+                document.getElementById('confirmation-date').innerText = new Date().toLocaleDateString();
             }
         }
 

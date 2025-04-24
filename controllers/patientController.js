@@ -345,7 +345,7 @@ exports.forgotPassword = async (req, res) => {
     await patient.save();
 
     // Create the reset link that includes the token
-    const resetLink = `http://localhost:3000/patient/reset-password/${resetToken}`;
+    const resetLink = `http://0.0.0.0:3000/patient/reset-password/${resetToken}`;
 
     // Send email with the reset link
     const transporter = nodemailer.createTransport({

@@ -108,7 +108,6 @@ exports.createAppointment = async (req, res) => {
     type: "Appointment",
     isRead: false,
     createdAt: new Date(),
-    logoUrl: `${window.location.origin}/media/logo/EJPL.png`,
   });
 
   await firstPatientNotification.save();
@@ -124,7 +123,6 @@ exports.createAppointment = async (req, res) => {
       type: "Appointment",
       isRead: false,
       createdAt: new Date(),
-      logoUrl: `${window.location.origin}/media/logo/EJPL.png`,
     });
 
     await secondPatientNotification.save();
@@ -141,7 +139,6 @@ exports.createAppointment = async (req, res) => {
     type: "Appointment",
     isRead: false,
     createdAt: new Date(),
-    logoUrl: `${window.location.origin}/media/logo/EJPL.png`,
   }));
 
   await Notification.insertMany(personnelNotificationsFirst);
@@ -162,7 +159,6 @@ exports.createAppointment = async (req, res) => {
         type: "Appointment",
         isRead: false,
         createdAt: new Date(),
-        logoUrl: `${window.location.origin}/media/logo/EJPL.png`,
       }));
 
       // Save notifications for medical personnel

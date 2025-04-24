@@ -14,6 +14,8 @@
 </head>
 
 <body class="min-h-screen bg-slate-50 font-inter">
+    <!-- Toast container -->
+    <div id="toast-container"></div>
     <header>
         <div id="navbar-container"></div>
     </header>
@@ -69,6 +71,9 @@
                                     class="input-field  w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
                                     placeholder="Treatment Price" readonly>
                             </div>
+                        </div>
+                        <div id="form-warning" class="warning-message text-red-500 text-sm mt-2" style="display: none;">
+                            Please fill out all required fields.
                         </div>
                     </form>
                     <div class="sm:flex-row flex flex-col justify-between">

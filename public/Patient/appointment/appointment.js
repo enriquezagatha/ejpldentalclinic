@@ -15,29 +15,30 @@ function validateForm() {
     ];
 
     // Check if all required fields are filled
-    /*for (let i = 0; i < requiredFields.length; i++) {
+    for (let i = 0; i < requiredFields.length; i++) {
       const field = document.getElementById(requiredFields[i]);
       if (!field.value.trim()) {
       field.focus(); // Focus the first empty field
        return false;
        }
-   }*/
+   }
 
     // Check if contact numbers are valid
-    /*const contactNumber = document.getElementById('contact-number').value.trim();
-    const emergencyContactNumber = document.getElementById('emergency-contact-number').value.trim();
-    if (contactNumber.length < 11 || emergencyContactNumber.length < 11) {
+    const contactNumber = `09${document.getElementById("contact-number").value.trim()}`;
+    const emergencyContactNumber = `09${document.getElementById("emergency-contact-number").value.trim()}`;
+    if (contactNumber.length !== 11 || !/^09\d{9}$/.test(contactNumber) || emergencyContactNumber.length !== 11 || !/^09\d{9}$/.test(emergencyContactNumber)) {
         return false;
     }
 
-    return true;*/
+    return true;
 }
 
-function goBackAppointment() {
+function goBackAppointment(event) {
+    event.preventDefault(); // Prevent default form submission
     sessionStorage.setItem("isNavigating", "true"); // Set flag for navigation
     saveFormData();
-    // sessionStorage.removeItem('formData'); // Clear the form data from session storage
-    window.location.href = "patient-newappointmentdetails.html";
+    // Navigate to the correct HTML page
+    window.location.href = "../../Patient/patient-newappointmentdetails.html"; // Corrected file path
 }
 
 function goNextAppointment(event) {
@@ -174,27 +175,41 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Contact number validation
-    /*function validateContactNumber(event) {
-       const contactNumber = event.target;
-       const contactWarning = document.getElementById('contact-warning');
-       if (contactNumber.value.length > 11) {
-       contactNumber.value = contactNumber.value.slice(0, 11); // Truncate to 11 characters
-       }
-       contactWarning.style.display = contactNumber.value.length < 11 ? 'block' : 'none';
-    }*/
+    function validateContactNumber(event) {
+        const contactNumber = event.target;
+        const contactWarning = document.getElementById('contact-warning');
+        
+        // Adjust validation to exclude the static "09" prefix
+        const inputValue = contactNumber.value;
+        if (inputValue.length > 9) { // Limit to 9 digits after "09"
+        contactNumber.value = inputValue.slice(0, 9);
+        }
+
+        contactWarning.style.display = inputValue.length < 9 ? 'block' : 'none';
+        if (inputValue.length === 9) {
+        contactWarning.style.display = 'none'; // Hide warning if valid
+        }
+    }
 
     // Emergency contact validation
-    /*function validateEmergencyContact(event) {
-       const emergencyContactNumber = event.target;
+    function validateEmergencyContact(event) {
+        const emergencyContactNumber = event.target;
         const emergencyContactWarning = document.getElementById('emergency-contact-warning');
-        if (emergencyContactNumber.value.length > 11) {
-       emergencyContactNumber.value = emergencyContactNumber.value.slice(0, 11); // Truncate to 11 characters
-       }
-       emergencyContactWarning.style.display = emergencyContactNumber.value.length < 11 ? 'block' : 'none';
-    }*/
+        
+        // Adjust validation to exclude the static "09" prefix
+        const inputValue = emergencyContactNumber.value;
+        if (inputValue.length > 9) { // Limit to 9 digits after "09"
+          emergencyContactNumber.value = inputValue.slice(0, 9);
+        }
+    
+        emergencyContactWarning.style.display = inputValue.length < 9 ? 'block' : 'none';
+        if (inputValue.length === 9) {
+          emergencyContactWarning.style.display = 'none'; // Hide warning if valid
+        }
+    }
 
-    /*document.getElementById('contact-number').addEventListener('input', validateContactNumber);
-    document.getElementById('emergency-contact-number').addEventListener('input', validateEmergencyContact);*/
+    document.getElementById('contact-number').addEventListener('input', validateContactNumber);
+    document.getElementById('emergency-contact-number').addEventListener('input', validateEmergencyContact);
 
     // Optional: Clear session storage on cancel appointment or other specific actions
     // document.getElementById('cancel-appointment-btn').addEventListener('click', function () {
