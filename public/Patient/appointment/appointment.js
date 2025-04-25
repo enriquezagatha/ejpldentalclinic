@@ -14,19 +14,29 @@ function validateForm() {
         'emergency-contact-relationship'
     ];
 
+    let formWarning = document.getElementById("form-warning");
+    formWarning.style.display = "none"; // Hide warning initially
+
     // Check if all required fields are filled
     for (let i = 0; i < requiredFields.length; i++) {
       const field = document.getElementById(requiredFields[i]);
       if (!field.value.trim()) {
-      field.focus(); // Focus the first empty field
-       return false;
-       }
-   }
+            formWarning.style.display = "block"; // Show warning message
+            field.focus(); // Focus the first empty field
+            return false;
+        }
+    }
 
     // Check if contact numbers are valid
     const contactNumber = `09${document.getElementById("contact-number").value.trim()}`;
     const emergencyContactNumber = `09${document.getElementById("emergency-contact-number").value.trim()}`;
-    if (contactNumber.length !== 11 || !/^09\d{9}$/.test(contactNumber) || emergencyContactNumber.length !== 11 || !/^09\d{9}$/.test(emergencyContactNumber)) {
+    if (
+        contactNumber.length !== 11 || 
+        !/^09\d{9}$/.test(contactNumber) || 
+        emergencyContactNumber.length !== 11 || 
+        !/^09\d{9}$/.test(emergencyContactNumber)
+    ) {
+        document.getElementById('form-warning').style.display = 'block'; // Show warning message
         return false;
     }
 
@@ -34,17 +44,19 @@ function validateForm() {
 }
 
 function goBackAppointment(event) {
-    event.preventDefault(); // Prevent default form submission
+    // event.preventDefault(); // Prevent default form submission
     sessionStorage.setItem("isNavigating", "true"); // Set flag for navigation
     saveFormData();
     // Navigate to the correct HTML page
-    window.location.href = "../../Patient/patient-newappointmentdetails.html"; // Corrected file path
+    window.location.href = "patient-newappointmentdetails.html"; // Corrected file path
 }
 
 function goNextAppointment(event) {
     sessionStorage.setItem("isNavigating", "true"); // Set flag for navigation
-    saveFormData();  // Save form data before navigating
-    window.location.href = "patient-newconfirmdetails.html";
+    if (validateForm()) {
+        saveFormData(); // Save data before moving to the next step
+        window.location.href = "patient-newconfirmdetails.html"; // Change this to the next step URL
+    }
 }
 
 // Save form data to session storage
