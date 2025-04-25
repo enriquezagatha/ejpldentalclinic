@@ -44,7 +44,7 @@ function validateForm() {
 }
 
 function goBackAppointment(event) {
-    // event.preventDefault(); // Prevent default form submission
+    event.preventDefault(); // Prevent default form submission
     sessionStorage.setItem("isNavigating", "true"); // Set flag for navigation
     saveFormData();
     // Navigate to the correct HTML page
