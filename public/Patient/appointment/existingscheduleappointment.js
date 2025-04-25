@@ -28,17 +28,14 @@ function showToast(message) {
 
   warningDiv.textContent = message;
   warningDiv.style.display = "block";
-
-  setTimeout(() => {
-    warningDiv.style.display = "none";
-  }, 3000);
 }
 
 // Navigate to the next step and save data
 function goToAppointmentNext() {
   const preferredDate = document.querySelector(".date-input")?.value || "";
   const preferredTime = document.querySelector(".time-select")?.value || "";
-  const treatmentType = document.querySelector(".typeoftreatment-select")?.value || "";
+  const treatmentType =
+    document.querySelector(".typeoftreatment-select")?.value || "";
 
   if (!preferredDate && !preferredTime && !treatmentType) {
     showToast("Please fill up all the required fields.");

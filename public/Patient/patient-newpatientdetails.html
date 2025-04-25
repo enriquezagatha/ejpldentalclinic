@@ -25,7 +25,10 @@
                     <label class="text-xs sm:text-lg font-inter text-gray-700 text-center" for="email">New
                         Patient</label>
                 </div>
-
+                <div id="form-warning" class="warning-message text-red-500 text-sm mt-2 font-bold text-center"
+                    style="display: none;">
+                    Please fill out all required fields.
+                </div>
                 <div class="flex flex-col mt-4 w-full">
                     <h1 class="font-inter text-xl mb-2 font-semibold">Step 2: Patient Details</h1>
                     <h1 class="font-inter text-lg mb-2 mt-2 font-semibold">Personal Information</h1>
@@ -152,11 +155,16 @@
                                 <label class="text-sm font-inter font-semibold text-black" for="contact_number">Contact
                                     Number</label>
                                 <div class="flex items-center">
-                                    <span class="text-black px-2 bg-gray-200 border border-gray-300 rounded-l">09</span>
+                                    <span
+                                        class="text-black bg-gray-200 border p-2 mb-4 h-10 border-gray-300 rounded-l">+63</span>
                                     <input type="number" placeholder="Contact Number"
-                                    class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded-r pl-2"
-                                    id="contact-number" required>
+                                        class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded-r pl-2"
+                                        id="contact-number" required>
                                 </div>
+                                <div id="contact-warning"
+                                    class="warning-message text-red-500 text-xs font-bold text-left"
+                                    style="display: none;">Contact number must be
+                                    exactly 11 digits.</div>
                             </div>
                             <div class="flex flex-col w-full">
                                 <label class="text-sm font-inter font-semibold text-black" for="email">Email
@@ -178,12 +186,18 @@
                             <div class="flex flex-col w-full">
                                 <label class="text-sm font-inter font-semibold text-black"
                                     for="emergency-contact-number">Emergency Contact Number</label>
-                                    <div class="flex items-center">
-                                        <span class="text-black px-2 bg-gray-200 border border-gray-300 rounded-l">09</span>
-                                        <input type="number" placeholder="Emergency Contact Number"
-                                            class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded-r pl-2"
-                                            id="emergency-contact-number" required>
-                                    </div>
+                                <div class="flex items-center">
+                                    <span
+                                        class="text-black bg-gray-200 border p-2 mb-4 h-10 border-gray-300 rounded-l">+63</span>
+                                    <input type="number" placeholder="Emergency Contact Number"
+                                        class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded-r pl-2"
+                                        id="emergency-contact-number" required>
+                                </div>
+                                <div id="emergency-contact-warning"
+                                    class="warning-message text-red-500 text-xs font-bold text-left"
+                                    style="display: none;">Emergency
+                                    Contact number must be exactly 11 digits.</div>
+
                             </div>
                         </div>
                         <div class="details-form sm:flex sm:gap-2">
@@ -196,13 +210,6 @@
                             </div>
                         </div>
                         <input type="hidden" id="selected-history" name="medical_history">
-                        <!-- Warning messages -->
-                        <div id="contact-warning" class="warning-message" style="display: none;">Contact number must be exactly 11 digits.</div>
-                        <div id="emergency-contact-warning" class="warning-message" style="display: none;">Emergency
-                            Contact number must be exactly 11 digits.</div>
-                        <div id="form-warning" class="warning-message text-red-500 text-sm mt-2" style="display: none;">
-                            Please fill out all required fields.
-                        </div>
                 </div>
                 <div class="sm:flex-row flex flex-col justify-between">
                     <button

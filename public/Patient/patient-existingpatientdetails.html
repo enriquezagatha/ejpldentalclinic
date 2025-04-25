@@ -25,6 +25,10 @@
                 <div class="flex flex-col items-center justify-center gap-1 mt-1 mb-2">
                     <label class="text-xs sm:text-lg font-inter text-gray-700 text-center" for="email">Existing
                         Patient</label>
+                    <div id="form-warning" class="warning-message text-red-500 text-sm font-bold mt-2 text-center"
+                        style="display: none;">
+                        Please fill out all required fields.
+                    </div>
                     <div class="flex flex-col mt-4 w-full">
                         <h1 class="font-inter text-xl mb-2 font-semibold">Step 2: Verify your Details</h1>
                         <h1 class="font-inter text-lg mb-2 mt-2 font-semibold">Personal Details</h1>
@@ -33,29 +37,33 @@
                                 <div class="flex flex-col w-full">
                                     <label class="text-sm font-inter font-semibold text-black" for="fullName">Full
                                         Name</label>
-                                    <input type="text" placeholder="Full Name"
-                                        class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
-                                        id="full-name" required>
+                                    <div class="flex items-center">
+                                        <input type="text" placeholder="Full Name"
+                                            class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
+                                            id="full-name" required>
+                                    </div>
+                                    <div id="name-warning"
+                                        class="warning-message text-xs text-red-500 font-bold text-left"
+                                        style="display: none;">
+                                        Full name must be first name and last name.
+                                    </div>
                                 </div>
                                 <div class="flex flex-col w-full">
                                     <label class="text-sm font-inter font-semibold text-black"
                                         for="contact_number">Contact
                                         Number</label>
                                     <div class="flex items-center">
-                                        <span class="text-black px-2 bg-gray-200 border border-gray-300 rounded-l">09</span>
+                                        <span
+                                            class="text-black px-2 bg-gray-200 border p-2 mb-4 h-10 border-gray-300 rounded-l">+63</span>
                                         <input type="number" placeholder="Contact Number"
                                             class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded-r pl-2"
                                             id="contact-number" required>
                                     </div>
-                                </div>
-
-                                <!-- Warning messages -->
-                                <div id="name-warning" class="warning-message" style="display: none;">
-                                    Full name must be first name and last name.
-                                </div>
-                                <div id="contact-warning" class="warning-message" style="display: none;">Contact number must be exactly 11 digits.</div>
-                                <div id="form-warning" class="warning-message text-red-500 text-sm mt-2" style="display: none;">
-                                    Please fill out all required fields.
+                                    <div id="contact-warning"
+                                        class="warning-message text-xs text-red-500 font-bold text-left"
+                                        style="display: none;">Contact
+                                        number
+                                        must be exactly 11 digits.</div>
                                 </div>
                             </div>
                         </form>
