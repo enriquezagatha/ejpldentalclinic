@@ -325,7 +325,9 @@ exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
 
     if (!email) {
-      return res.status(400).json({ message: "Please provide your email address." });
+      return res
+        .status(400)
+        .json({ message: "Please provide your email address." });
     }
 
     const patient = await Patient.findOne({ email });
@@ -335,7 +337,7 @@ exports.forgotPassword = async (req, res) => {
 
     // Generate a reset token (no expiration for token itself)
     const resetToken = crypto.randomBytes(32).toString("hex");
-    
+
     // Set an expiration time for the link (1 hour)
     const resetTokenExpiration = Date.now() + 3600000; // 1 hour from now
 
@@ -345,7 +347,9 @@ exports.forgotPassword = async (req, res) => {
     await patient.save();
 
     // Create the reset link that includes the token
-    const resetLink = `http://0.0.0.0:3000/patient/reset-password/${resetToken}`;
+    const resetLink = `${req.protocol}://${req.get(
+      "host"
+    )}/patient/reset-password/${resetToken}`;
 
     // Send email with the reset link
     const transporter = nodemailer.createTransport({
@@ -375,13 +379,19 @@ exports.forgotPassword = async (req, res) => {
     };
 
     await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: "Password reset link sent to your email." });
+    res
+      .status(200)
+      .json({ message: "Password reset link sent to your email." });
   } catch (error) {
     console.error("Forgot password error:", error);
-    if (error.code === 'EAUTH') {
-      res.status(500).json({ message: "Authentication error. Please check email credentials." });
+    if (error.code === "EAUTH") {
+      res.status(500).json({
+        message: "Authentication error. Please check email credentials.",
+      });
     } else {
-      res.status(500).json({ message: "An error occurred." });
+      res.status(500).json({
+        message: "An error occurred.",
+      });
     }
   }
 };
@@ -391,7 +401,9 @@ exports.resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
   if (!token || !newPassword) {
-    return res.status(400).json({ message: "Please provide token and new password." });
+    return res
+      .status(400)
+      .json({ message: "Please provide token and new password." });
   }
 
   // Find the patient with the reset token and check expiration of the link
@@ -412,7 +424,10 @@ exports.resetPassword = async (req, res) => {
 
   await patient.save();
 
-  res.status(200).json({ message: "Password reset successfully." });
+  res.status(200).json({
+    message: "Password reset successfully.",
+    toastClass: "text-green-500",
+  }); // Add this for success
 };
 
 // Export the controller functions

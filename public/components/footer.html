@@ -1,14 +1,18 @@
 <footer id="footer" class="bg-[#2C4A66] text-white text-xl">
     <section class="mx-auto p-4 flex flex-col max-w-[90%] md:flex-row md:justify-between md:max-w-6xl">
-        <img src="../media/logo/EJPL.png" alt="Logo" class="mt-6 logo w-40 h-auto" onclick="window.location.href='home.html';" style="cursor: pointer;">
+        <img src="../media/logo/EJPL.png" alt="Logo" id="footerHomeLogo" class="mt-6 logo w-40 h-auto"
+            onclick="window.location.href='../main page/home.html';" style="cursor: pointer;">
         <nav>
             <h2 class="font-bold font-inter mt-6">Quick Links</h2>
             <div class="mt-4 flex flex-col gap-4 md:gap-2">
-                <a href="../main page/home.html" class="hover:underline text-sm font-inter">Home</a>
-                <a href="../main page/aboutus.html" class="hover:underline text-sm font-inter">About Us</a>
-                <a href="../main page/services.html" class="hover:underline text-sm font-inter">Services</a>
-                <a href="../main page/doctors.html" class="hover:underline text-sm font-inter">Dentists</a>
-            </div> 
+                <a href="../main page/home.html" id="footerHomeLink" class="hover:underline text-sm font-inter">Home</a>
+                <a href="../main page/aboutus.html" id="footerAboutUsLink"
+                    class="hover:underline text-sm font-inter">About Us</a>
+                <a href="../main page/services.html" id="footerServicesLink"
+                    class="hover:underline text-sm font-inter">Services</a>
+                <a href="../main page/doctors.html" id="footerDoctorsLink"
+                    class="hover:underline text-sm font-inter">Dentists</a>
+            </div>
         </nav>
         <nav>
             <h2 class="font-bold font-inter mt-6">Contact</h2>
@@ -25,7 +29,7 @@
                     <i class="fab fa-facebook text-white"></i>
                     <span class="hover:underline">EJPL Dental Clinic</span>
                 </a>
-            </div> 
+            </div>
         </nav>
         <nav>
             <h2 class="font-bold font-inter mt-6">Clinic Hours</h2>
@@ -36,11 +40,12 @@
                 <p class="text-sm font-inter">
                     <span class=font-bold>Sat-Sun:</span> Closed
                 </p>
-            </div> 
+            </div>
         </nav>
     </section>
     <hr class="border-t border-white my-4 mx-auto px-4 max-w-[90%] xl:max-w-6xl">
-    <section class="mx-auto pb-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-between max-w-[90%] xl:max-w-6xl">
+    <section
+        class="mx-auto pb-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-between max-w-[90%] xl:max-w-6xl">
         <p class="text-sm font-inter">© Copyright <span id="copyright-year"></span>, EJPL Dental Clinic</p>
         <p class="text-sm font-inter flex items-center gap-2">
             <i class="fas fa-tty text-white"></i>
