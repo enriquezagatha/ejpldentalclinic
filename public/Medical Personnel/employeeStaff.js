@@ -243,11 +243,35 @@ async function addStaff() {
     document.getElementById("staff-authorized").checked;
   const messageDiv = document.getElementById("add-staff-message");
 
+  // Validation for required fields
   if (!firstName || !lastName || !birthday || !email) {
     messageDiv.style.color = "red";
+    messageDiv.innerText = "Please fill up all required fields.";
+    return;
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    messageDiv.style.color = "red";
+    messageDiv.innerText = "Please enter a valid email address.";
+    return;
+  }
+
+  // Disallow fake email domains
+  const fakeDomains = [
+    "example.com",
+    "test.com",
+    "fake.com",
+    "mailinator.com",
+    "tempmail.com",
+    "trashmail.com",
+  ];
+  const emailDomain = email.split("@")[1]?.toLowerCase();
+  if (fakeDomains.includes(emailDomain)) {
+    messageDiv.style.color = "red";
     messageDiv.innerText =
-      "First Name, Last Name, Birthday, and Email are required.";
-    setTimeout(() => (messageDiv.innerText = ""), 3000);
+      "Please use a valid organizational or personal email address.";
     return;
   }
 
@@ -261,7 +285,7 @@ async function addStaff() {
         lastName,
         birthday,
         email,
-        isAuthorizedPersonnel, // Pass the checkbox value
+        isAuthorizedPersonnel,
       }),
     });
 
@@ -269,12 +293,21 @@ async function addStaff() {
 
     if (response.ok) {
       messageDiv.style.color = "green";
-      messageDiv.innerText = "Staff added successfully!";
-      setTimeout(() => {
-        closeAddStaffModal();
-        showGeneratedCredentialsModal(result.password);
-        loadStaffData();
-      }, 5000);
+      messageDiv.innerText =
+        "Staff added successfully! Password has been sent to the email.";
+
+      // Send the generated password to the staff's email
+      await fetch("/api/medicalPersonnel/sendPassword", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password: result.password,
+        }),
+      });
+
+      closeAddStaffModal();
+      loadStaffData();
     } else {
       messageDiv.style.color = "red";
       messageDiv.innerText = result.message || "Failed to add staff.";
@@ -298,23 +331,23 @@ function closeGeneratedCredentialsModal() {
 }
 
 // Show Generated Credentials Modal
-function showGeneratedCredentialsModal(password) {
-  const credentialsModal = document.getElementById(
-    "generated-credentials-modal"
-  );
-  const passwordElement = document.getElementById("generated-password");
+// function showGeneratedCredentialsModal(password) {
+//   const credentialsModal = document.getElementById(
+//     "generated-credentials-modal"
+//   );
+//   const passwordElement = document.getElementById("generated-password");
 
-  passwordElement.innerHTML = `Password: <strong>${password}</strong>`;
-  credentialsModal.classList.remove("hidden");
-  credentialsModal.classList.add("flex");
+//   passwordElement.innerHTML = `Password: <strong>${password}</strong>`;
+//   credentialsModal.classList.remove("hidden");
+//   credentialsModal.classList.add("flex");
 
-  // Hide the credentials modal after 20 seconds
-  setTimeout(() => {
-    credentialsModal.classList.add("hidden");
-    credentialsModal.classList.remove("flex");
-    passwordElement.innerHTML = "";
-  }, 20000);
-}
+//   // Hide the credentials modal after 20 seconds
+//   setTimeout(() => {
+//     credentialsModal.classList.add("hidden");
+//     credentialsModal.classList.remove("flex");
+//     passwordElement.innerHTML = "";
+//   }, 20000);
+// }
 
 // Generate a random password (8-12 characters)
 function generatePassword() {
@@ -328,36 +361,50 @@ function generatePassword() {
   return password;
 }
 
-// Remove Staff Function
+let emailToRemove = null; // Store the email to be removed
+
 async function removeStaff(email) {
-  if (!email) {
-    console.error("Email is required to remove staff.");
-    return;
-  }
+  emailToRemove = email; // Store the email for confirmation
+  const modal = document.getElementById("confirm-remove-modal");
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
 
-  if (!confirm(`Are you sure you want to delete ${email}?`)) {
-    return;
-  }
+function confirmRemoveStaff() {
+  if (!emailToRemove) return;
 
-  try {
-    const response = await fetch("/api/medicalPersonnel/remove", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+  // Proceed with the removal
+  fetch("/api/medicalPersonnel/remove", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: emailToRemove }),
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Failed to remove staff.");
+      return response.json();
+    })
+    .then((result) => {
+      if (result.ok) {
+        showToast("Staff removed successfully!", "bg-green-500");
+        loadStaffData(); // Refresh staff list dynamically
+      } else {
+        showToast(result.message || "Failed to remove staff.", "bg-red-500");
+      }
+    })
+    .catch((error) => {
+      console.error("Error removing staff:", error);
+      showToast("An error occurred. Please try again.", "bg-red-500");
+    })
+    .finally(() => {
+      closeConfirmRemoveModal(); // Close the modal after the operation
     });
+}
 
-    const result = await response.json();
-
-    if (response.ok) {
-      showToast("Staff removed successfully!", "bg-green-500");
-      loadStaffData(); // Refresh staff list
-    } else {
-      showToast(result.message || "Failed to remove staff.", "bg-red-500");
-    }
-  } catch (error) {
-    console.error("Error removing staff:", error);
-    showToast("An error occurred. Please try again.", "bg-red-500");
-  }
+function closeConfirmRemoveModal() {
+  const modal = document.getElementById("confirm-remove-modal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+  emailToRemove = null; // Reset the email
 }
 
 // Toggle isAuthorizedPersonnel flag
@@ -494,6 +541,31 @@ async function updateStaff() {
   ).checked;
   const messageDiv = document.getElementById("edit-staff-message");
 
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    messageDiv.style.color = "red";
+    messageDiv.innerText = "Please enter a valid email address.";
+    return;
+  }
+
+  // Disallow fake email domains
+  const fakeDomains = [
+    "example.com",
+    "test.com",
+    "fake.com",
+    "mailinator.com",
+    "tempmail.com",
+    "trashmail.com",
+  ];
+  const emailDomain = email.split("@")[1]?.toLowerCase();
+  if (fakeDomains.includes(emailDomain)) {
+    messageDiv.style.color = "red";
+    messageDiv.innerText =
+      "Please use a valid organizational or personal email address.";
+    return;
+  }
+
   const payload = {};
   if (firstName) payload.firstName = firstName;
   if (middleName) payload.middleName = middleName;
@@ -532,4 +604,12 @@ async function updateStaff() {
   setTimeout(() => {
     messageDiv.innerText = "";
   }, 10000);
+}
+
+// Restrict special characters in input fields
+function restrictSpecialCharacters(event) {
+  const regex = /^[a-zA-Z\s]*$/; // Allow only letters and spaces
+  if (!regex.test(event.target.value)) {
+    event.target.value = event.target.value.replace(/[^a-zA-Z\s]/g, ""); // Remove invalid characters
+  }
 }

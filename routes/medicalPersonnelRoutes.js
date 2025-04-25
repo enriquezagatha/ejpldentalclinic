@@ -212,5 +212,8 @@ router.post('/forgot-password', medicalPersonnelController.forgotPassword);
 // Route to handle password reset (update password)
 router.post('/reset-password', medicalPersonnelController.resetPassword);
 
+// Route to send password to email
+router.post("/sendPassword", medicalPersonnelController.sendPassword);
+
 // Export the routes
 module.exports = router;

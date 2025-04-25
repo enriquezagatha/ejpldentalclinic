@@ -202,12 +202,6 @@
             // Check if passwords match
             if (newPassword !== confirmPassword) {
                 passwordError.style.display = 'block'; // Show error if passwords do not match
-
-                // Hide the error after 2 seconds
-                setTimeout(() => {
-                    passwordError.style.display = 'none'; // Hide password error after 3 seconds
-                }, 2000);
-
                 return;
             } else {
                 passwordError.style.display = 'none'; // Hide error if passwords match

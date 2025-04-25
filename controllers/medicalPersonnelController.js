@@ -355,5 +355,46 @@ exports.resetPassword = async (req, res) => {
   res.status(200).json({ message: "Password reset successfully." });
 };
 
+exports.sendPassword = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required." });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: `EJPL Dental Clinic <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your Account Credentials",
+      text: `Your account has been created. Here is your password: ${password}`,
+      html: `
+        <div style="font-family: sans-serif; color: #333;">
+          <h2>Welcome to EJPL Dental Clinic</h2>
+          <p>Your account has been successfully created. Here are your login details:</p>
+          <p><strong>Password:</strong> ${password}</p>
+          <p>We recommend changing your password after logging in for security purposes.</p>
+          <br>
+          <p>– EJPL Dental Clinic Team</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Password sent to email successfully." });
+  } catch (error) {
+    console.error("Error sending password email:", error);
+    res.status(500).json({ message: "Failed to send password email." });
+  }
+};
+
 // Export the controller functions
 module.exports = exports;
