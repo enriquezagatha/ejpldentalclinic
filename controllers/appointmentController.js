@@ -859,5 +859,112 @@ exports.getPatientDetails = async (req, res) => {
   }
 };
 
+exports.getTotalStatusCounts = async (req, res) => {
+  try {
+    const { filter, month, year } = req.query;
+
+    let matchCondition = {};
+
+    // Apply filter conditions based on preferredDate
+    const today = new Date();
+    switch (filter) {
+      case "daily":
+        matchCondition.preferredDate = {
+          $gte: startOfDay(today),
+          $lte: endOfDay(today),
+        };
+        break;
+      case "weekly":
+        matchCondition.preferredDate = {
+          $gte: startOfWeek(today),
+          $lte: endOfWeek(today),
+        };
+        break;
+      case "monthly":
+        if (month && year) {
+          const start = startOfMonth(new Date(year, month - 1));
+          const end = endOfMonth(new Date(year, month - 1));
+          matchCondition.preferredDate = { $gte: start, $lte: end };
+        }
+        break;
+      case "yearly":
+        if (year) {
+          const start = new Date(`${year}-01-01`);
+          const end = new Date(`${year}-12-31`);
+          matchCondition.preferredDate = { $gte: start, $lte: end };
+        }
+        break;
+      default:
+        // No filter, fetch all
+        break;
+    }
+
+    const statusCounts = await Appointment.aggregate([
+      { $match: matchCondition }, // Apply the match condition
+      { $group: { _id: "$status", count: { $sum: 1 } } },
+    ]);
+
+    const totals = statusCounts.reduce((acc, item) => {
+      const statusKey = item._id.toLowerCase(); // Normalize to lowercase
+      acc[statusKey] = item.count;
+      return acc;
+    }, {});
+
+    // Extract the current month in "MM" format
+    const currentMonth = String(today.getMonth() + 1).padStart(2, "0");
+
+    res.json({
+      pending: totals.pending || 0,
+      confirmed: totals.confirmed || 0,
+      cancelled: totals.cancelled || 0,
+      completed: totals.completed || 0,
+      currentMonth, // Include the current month in "MM" format
+    });
+  } catch (error) {
+    console.error("Error fetching total status counts:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getUpcomingAppointments = async (req, res) => {
+  try {
+    const today = new Date();
+    const appointments = await Appointment.find({
+      preferredDate: { $gte: today }, // Fetch appointments with future dates
+    }).sort({ preferredDate: 1, preferredTime: 1 }); // Sort by date and then by time in ascending order
+
+    const sanitizedAppointments = appointments.map((appointment) => ({
+      patientName: `${appointment.firstName} ${appointment.lastName}`,
+      preferredDate: new Date(appointment.preferredDate).toLocaleDateString(
+        "en-US",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }
+      ),
+      preferredTime: appointment.preferredTime,
+    }));
+
+    res.json(sanitizedAppointments);
+  } catch (error) {
+    console.error("Error fetching upcoming appointments:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.getAllAppointmentsForPopularTreatments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({}, "treatmentType"); // Fetch only treatmentType field
+    res.json(appointments);
+  } catch (error) {
+    console.error(
+      "Error fetching all appointments for popular treatments:",
+      error
+    );
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 //Export the controller functions
 module.exports = exports;

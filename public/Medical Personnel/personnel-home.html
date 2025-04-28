@@ -106,35 +106,157 @@
         </header>
         <!-- Page Content -->
         <main class="p-6">
-            <!-- Existing content -->
-            <!-- <script src="employeePatientReport.js"></script>
-            <script src="employeeTreatmentReport.js"></script>
-            <script src="employeePaymentReport.js"></script> -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-            <script
-                src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-            <script src="../components/components-personnel/navbarpersonnel-functionalities.js"></script>
-            <script src="personnelnotification.js"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', async () => {
-                    const profileResponse = await fetch('/api/medicalPersonnel/profile');
-                    if (profileResponse.ok) {
-                        const personnelData = await profileResponse.json();
-                        displayProfileInfo(personnelData);
+            <section id="personnel-dashboard">
+                <div class="container mx-auto px-0 lg:px-6 xl:px-8">
 
-                        // Set the profile picture if available
-                        const profilePictureElement = document.querySelector('.desktop-profile');
-                        profilePictureElement.src = personnelData.profilePicture
-                            ? `/uploads/${personnelData.profilePicture}`
-                            : '../media/logo/default-profile.png';
-                    }
-                });
+                    <!-- Date Filter Buttons -->
+                    <section class="flex gap-4">
+                        <div
+                            class="flex flex-col md:flex-row gap-4 w-full items-center justify-center xl:justify-start xl:w-auto">
+                            <div>
+                                <button
+                                    class="filter-button px-6 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider"
+                                    id="statusAllFilter">
+                                    All
+                                </button>
+                                <button
+                                    class="filter-button px-6 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider"
+                                    id="statusDailyFilter">
+                                    Daily
+                                </button>
+                                <button
+                                    class="filter-button px-6 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider"
+                                    id="statusWeeklyFilter">
+                                    Weekly
+                                </button>
+                            </div>
+                            <div>
+                                <select
+                                    class="px-6 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider"
+                                    id="statusMonthlyFilter">
+                                    <option>April</option>
+                                </select>
+                                <select
+                                    class="px-6 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider"
+                                    id="statusYearlyFilter">
+                                    <option>2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
 
-                function displayProfileInfo(data) {
-                    document.getElementById('profile-name').innerText = `${data.firstName}`;
-                }
-            </script>
+
+
+                    <!-- Appointments Information Panel -->
+                    <section class="mt-8 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <div class="relative p-2 pl-4 bg-[#2C4A66] text-white h-32 rounded-xl w-full">
+                            <p class="absolute">Pending Appointments</p>
+                            <p id="totalPendingAppointments"
+                                class="absolute bottom-2 right-2 text-4xl pr-2 pb-1 font-semibold tracking-wider"></p>
+                        </div>
+
+                        <div class="relative p-2 pl-4 bg-[#2C4A66] text-white h-32 rounded-xl w-full">
+                            <p class="absolute">Confirmed Appointments</p>
+                            <p id="totalConfirmedAppointments"
+                                class="absolute bottom-2 right-2 text-4xl pr-2 pb-1 font-semibold tracking-wider"></p>
+                        </div>
+
+                        <div class="relative p-2 pl-4 bg-[#2C4A66] text-white h-32 rounded-xl w-full">
+                            <p class="absolute">Cancelled Appointments</p>
+                            <p id="totalCancelledAppointments"
+                                class="absolute bottom-2 right-2 text-4xl pr-2 pb-1 font-semibold tracking-wider"></p>
+                        </div>
+
+                        <div class="relative p-2 pl-4 bg-[#2C4A66] text-white h-32 rounded-xl w-full">
+                            <p class="absolute">Completed Appointments</p>
+                            <p id="totalCompletedAppointments"
+                                class="absolute bottom-2 right-2 text-4xl pr-2 pb-1 font-semibold tracking-wider"></p>
+                        </div>
+                        <!-- Revenue and Patient Data Panel -->
+                        <div
+                            class="col-span-1 sm:col-span-2 p-4 bg-[#F5F5F5] text-black h-72 rounded-xl overflow-x-hidden">
+                            <div class="flex justify-between items-center mb-4">
+                                <p class="font-bold">Revenue</p>
+                                <select
+                                    class="px-4 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider"
+                                    id="monthRevenueFilter">
+                                </select>
+                            </div>
+                            <section class="flex justify-start">
+                                <h1 class="text-5xl font-bold pl-4 pt-4 overflow-hidden text-ellipsis whitespace-nowrap"
+                                    id="monthlyRevenue"></h1>
+                                <h2 class="text-xl font-bold text-green-700 overflow-hidden text-ellipsis whitespace-nowrap"
+                                    id="monthlyRevenueIncrease">
+                                </h2>
+                            </section>
+                            <section class="mt-10 pl-4">
+                                <p class="text-sm font-medium">Average Daily Revenue:</p>
+                                <p class="text-lg font-bold" id="averageDailyRevenue">₱10,000</p>
+                                <p class="text-sm font-medium mt-2">Average Weekly Revenue:</p>
+                                <p class="text-lg font-bold" id="averageWeeklyRevenue">₱10,000</p>
+                            </section>
+                        </div>
+                        <div class="col-span-1 sm:col-span-2 p-4 bg-[#F5F5F5] text-black h-72 rounded-xl flex flex-col">
+                            <div class="flex justify-between items-center mb-4">
+                                <p class="font-bold overflow-hidden text-ellipsis whitespace-nowrap">Patient Records
+                                    Data</p>
+                                <select
+                                    class="px-4 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider">
+                                    <option>Daily</option>
+                                </select>
+                            </div>
+                            <!-- Additional content can go here if needed -->
+                        </div>
+
+                        <!-- Upcoming Appointments and Popular Treatments Panel -->
+                        <div
+                            class="col-span-1 sm:col-span-2 p-4 bg-[#F5F5F5] text-black h-80 rounded-xl overflow-x-auto overflow-y-hidden">
+                            <p class="absolute font-bold">Upcoming Appointments</p>
+
+                            <div class="w-full min-w-[600px]">
+                                <table id="upcoming-appointments" class="mt-8 w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="text-black">
+                                            <th class="px-4 py-2 text-sm">Patient Name</th>
+                                            <th class="px-4 py-2 text-sm">Date</th>
+                                            <th class="px-4 py-2 text-sm">Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Rows will be dynamically populated -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div id="pagination" class="flex justify-center mt-4 gap-2">
+                                <!-- Pagination buttons will be dynamically populated -->
+                            </div>
+                        </div>
+                        <div class="col-span-1 sm:col-span-2 p-4 bg-[#F5F5F5] text-black rounded-xl">
+
+                            <div class="flex justify-between items-center mb-4">
+                                <p class="font-bold text-lg">Popular Treatments</p>
+                                <select
+                                    class="px-6 py-1 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider">
+                                    <option>All Time</option>
+                                </select>
+                            </div>
+
+                            <section class="mt-10" id="popular-treatments">
+                                <!-- Treatments will go here -->
+                            </section>
+                        </div>
+                    </section>
+                </div>
+            </section>
         </main>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+        <script src="../components/components-personnel/navbarpersonnel-functionalities.js"></script>
+        <script src="personnelnotification.js"></script>
+        <script src="personneldashboard.js"></script>
+
     </div>
 </body>
 

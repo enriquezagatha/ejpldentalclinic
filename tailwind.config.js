@@ -17,6 +17,7 @@ module.exports = {
     "w-[380px]",
     "md:w-[100%]",
     "w-[315px]",
+    "text-red-700",
   ], // Update this based on where your HTML files are located
   theme: {
     extend: {
