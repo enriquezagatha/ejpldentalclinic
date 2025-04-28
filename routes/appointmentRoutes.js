@@ -54,6 +54,19 @@ router.post("/update-treatment", appointmentController.updateTreatment);
 router.get("/appointment-report", appointmentController.getAppointmentReport);
 
 //Assign a dentist to an appointment
-router.patch('/:id/assign-dentist', appointmentController.assignDentist);
+router.patch("/:id/assign-dentist", appointmentController.assignDentist);
+
+//patient details for appointment
+router.get('/patientdetails', appointmentController.getPatientDetails);
+
+module.exports = router;
+// Route to get total status counts
+router.get("/total-status-counts", appointmentController.getTotalStatusCounts);
+
+// Route to fetch upcoming appointments
+router.get("/upcoming", appointmentController.getUpcomingAppointments);
+
+// Route to fetch all appointments for popular treatments
+router.get("/all",appointmentController.getAllAppointmentsForPopularTreatments);
 
 module.exports = router;
