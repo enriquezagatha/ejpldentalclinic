@@ -27,7 +27,7 @@
                         Patient</label>
                     <div id="form-warning" class="warning-message text-red-500 text-sm font-bold mt-2 text-center"
                         style="display: none;">
-                        Please fill out all required fields.
+                        <!-- This element will be updated by the script -->
                     </div>
                     <div class="flex flex-col mt-4 w-full">
                         <h1 class="font-inter text-xl mb-2 font-semibold">Step 2: Verify your Details</h1>
@@ -40,7 +40,7 @@
                                     <div class="flex items-center">
                                         <input type="text" placeholder="Full Name"
                                             class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
-                                            id="full-name" required>
+                                            id="full-name" readonly>
                                     </div>
                                     <div id="name-warning"
                                         class="warning-message text-xs text-red-500 font-bold text-left"
@@ -57,7 +57,7 @@
                                             class="text-black px-2 bg-gray-200 border p-2 mb-4 h-10 border-gray-300 rounded-l">+63</span>
                                         <input type="number" placeholder="Contact Number"
                                             class="input-field text-black w-full px-3 mb-4 h-10 border border-gray-300 rounded-r pl-2"
-                                            id="contact-number" required>
+                                            id="contact-number" readonly>
                                     </div>
                                     <div id="contact-warning"
                                         class="warning-message text-xs text-red-500 font-bold text-left"
@@ -77,9 +77,12 @@
                         </div>
                     </div>
                 </div>
-
+            </div>
         </section>
     </main>
+    <script>
+        console.log("HTML loaded, executing scripts."); // Debugging log
+    </script>
     <script src="appointment/existing-appointment.js"></script>
     <script src="patientnotifications.js"></script>
     <footer>

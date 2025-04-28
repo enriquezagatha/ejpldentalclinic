@@ -125,15 +125,12 @@
                             New Dentist</button>
 
                         <!-- Doctor Modal -->
-                        <div id="dentist-modal"
-                            class="fixed inset-0 bg-black bg-opacity-10 items-center justify-center hidden z-50">
+                        <div id="dentist-modal" class="fixed inset-0 bg-black bg-opacity-10 items-center justify-center hidden z-50">
                             <div class="bg-white rounded-lg shadow-lg w-11/12 sm:w-96 p-6 relative">
-                                <button id="close-dentist-modal-btn"
-                                    class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                                <button id="close-dentist-modal-btn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
                                     <i class="fas fa-times"></i>
                                 </button>
-                                <h2 id="dentist-modal-title" class="text-xl font-semibold text-gray-800 mb-4">Add New
-                                    Dentist</h2>
+                                <h2 id="dentist-modal-title" class="text-xl font-semibold text-gray-800 mb-4">Add New Dentist</h2>
 
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">First Name:</label>
@@ -142,26 +139,8 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Second Name:</label>
-                                    <input type="text" id="dentist-second-name" placeholder="Second Name"
-                                        class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Middle Name:</label>
-                                    <input type="text" id="dentist-middle-name" placeholder="Middle Name"
-                                        class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-
-                                <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">Last Name:</label>
                                     <input type="text" id="dentist-last-name" placeholder="Last Name" required
-                                        class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700">Contact Number:</label>
-                                    <input type="text" id="dentist-contact" placeholder="Contact Number" required
                                         class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 </div>
 
@@ -177,6 +156,8 @@
 
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-gray-700">Image:</label>
+                                    <!-- Image preview -->
+                                    <img id="dentist-image-preview" class="mb-2 w-24 h-24 object-cover rounded-md" style="display: none;" alt="Dentist Image Preview">
                                     <input type="file" id="dentist-image" accept="image/*"
                                         class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 </div>
@@ -197,7 +178,6 @@
                                     <thead>
                                         <tr class="bg-[#2C4A66] text-white">
                                             <th class="px-6 py-3 text-left text-sm font-medium">Dentist Name</th>
-                                            <th class="px-6 py-3 text-left text-sm font-medium">Contact Number</th>
                                             <th class="px-6 py-3 text-left text-sm font-medium">Image</th>
                                             <th class="px-6 py-3 text-left text-sm font-medium">Actions</th>
                                         </tr>

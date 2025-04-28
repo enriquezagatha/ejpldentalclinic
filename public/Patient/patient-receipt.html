@@ -142,7 +142,9 @@
                 document.getElementById('preferred-date').innerText = formatPreferredDate(receiptDetails.preferredDate);
                 document.getElementById('preferred-time').innerText = receiptDetails.preferredTime;
                 document.getElementById('treatment-type').innerText = receiptDetails.treatmentType;
-                document.getElementById('treatment-price').innerText = receiptDetails.treatmentPrice;
+                document.getElementById('treatment-price').innerText = receiptDetails.treatmentPrice.includes('-') 
+                    ? `₱${receiptDetails.treatmentPrice.replace('-', ' - ₱')}` 
+                    : `₱${receiptDetails.treatmentPrice}`;
 
             } else {
                 console.error('Receipt details not found');
@@ -170,7 +172,25 @@
         }
 
         function printReceipt() {
+            const originalContent = document.body.innerHTML;
+            const receiptContent = document.querySelector('main').innerHTML;
+
+            const logoSection = `
+            <div class="flex justify-between items-center mb-6">
+            <div class="text-right">
+                <img src="../media/logo/EJPL.png" alt="Clinic Logo" class="w-24 h-24 inline-block">
+            </div>
+            <div class="text-center flex-grow">
+                <h1 class="text-2xl font-bold text-gray-800">EJPL Dental Clinic</h1>
+                <p class="text-sm text-gray-600">B25 L2 Santan St., Queens Row West, Bacoor City, Cavite</p>
+            </div>
+            </div>
+            `;
+
+            document.body.innerHTML = logoSection + receiptContent;
             window.print();
+            document.body.innerHTML = originalContent;
+            window.location.reload(); // Reload to restore event listeners
         }
 
         window.onload = function () {

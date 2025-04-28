@@ -77,7 +77,7 @@ async function displayDentists() {
   `;
 
   try {
-    const response = await fetch(DENTIST_API_URL);
+    const response = await fetch(DENTIST_API_URL); // Ensure no duplicate variable declarations
     const dentists = await response.json();
 
     const start = (currentPage - 1) * rowsPerPage;
@@ -90,24 +90,25 @@ async function displayDentists() {
       const middleInitial = dentist.middleName
         ? dentist.middleName.charAt(0) + "."
         : ""; // Get the middle initial
-      const fullName =
-        `${dentist.firstName} ${dentist.secondName} ${middleInitial} ${dentist.lastName}`
-          .replace(/\s+/g, " ")
-          .trim();
+      const fullName = `${dentist.firstName} ${dentist.lastName}`.trim();
 
       dentistTableBody.innerHTML += `
                 <tr class="border-b hover:bg-gray-100">
                     <td class="px-4 py-2 text-gray-700">${fullName}</td>
-                    <td class="px-4 py-2 text-gray-700">${dentist.contact}</td>
                     <td class="px-4 py-2 text-gray-700"><img src="${
                       dentist.image ? dentist.image : "default-image.jpg"
                     }" alt="dentist Image" class="dentist-img" width="50"></td>
                     <td class="px-4 py-2 text-gray-700">
-                        <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editDentist('${
-                          dentist._id
-                        }', '${fullName.replace(/'/g, "\\'")}', '${
-        dentist.contact
-      }', '${dentist.image || ""}')">Edit</button>
+                        <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" 
+                            onclick="editDentist(
+                              '${dentist._id}', 
+                              '${fullName.replace(/'/g, "\\'")}', 
+                              '${dentist.image || ""}',
+                              '${dentist.gender || ""}'
+                            )">
+                          Edit
+                        </button>
+
                         <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteDentist('${
                           dentist._id
                         }')">Delete</button>
@@ -147,26 +148,26 @@ function showToast(message, bgColor = "bg-green-500") {
 // Add or update dentist (with image upload support)
 async function addOrUpdateDentist() {
   const firstName = document.getElementById("dentist-first-name").value.trim();
-  const secondName = document
-    .getElementById("dentist-second-name")
-    .value.trim();
-  const middleName = document
-    .getElementById("dentist-middle-name")
-    .value.trim();
   const lastName = document.getElementById("dentist-last-name").value.trim();
-  const contact = document.getElementById("dentist-contact").value.trim();
-  const gender = document.getElementById("dentist-gender").value; // Get gender from the dropdown
+  const gender = document.getElementById("dentist-gender").value;
   const imageFile = document.getElementById("dentist-image").files[0];
   const editId = document.getElementById("editdentistId").value;
 
-  if (!firstName || !lastName || !contact || !gender) {
-    showToast("Please enter first name, last name, contact number, and select gender.", "bg-red-500");
+  // Validate required fields
+  if (!firstName) {
+    showToast("First name is required.", "bg-red-500");
+    return;
+  }
+  if (!lastName) {
+    showToast("Last name is required.", "bg-red-500");
+    return;
+  }
+  if (!gender) {
+    showToast("Please select a gender.", "bg-red-500");
     return;
   }
 
-  const fullName = `${firstName} ${secondName} ${middleName} ${lastName}`
-    .replace(/\s+/g, " ")
-    .trim();
+  const fullName = `${firstName} ${lastName}`.trim();
 
   try {
     const res = await fetch(DENTIST_API_URL);
@@ -174,15 +175,8 @@ async function addOrUpdateDentist() {
 
     const dentists = await res.json();
     const isDuplicate = dentists.some((dentist) => {
-      const existingFullName = `${dentist.firstName || ""} ${
-        dentist.secondName || ""
-      } ${dentist.middleName || ""} ${dentist.lastName || ""}`
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase();
-      return (
-        existingFullName === fullName.toLowerCase() && dentist._id !== editId
-      );
+      const existingFullName = `${dentist.firstName || ""} ${dentist.lastName || ""}`.trim().toLowerCase();
+      return existingFullName === fullName.toLowerCase() && dentist._id !== editId;
     });
 
     if (isDuplicate) {
@@ -192,11 +186,8 @@ async function addOrUpdateDentist() {
 
     const formData = new FormData();
     formData.append("firstName", firstName);
-    formData.append("secondName", secondName);
-    formData.append("middleName", middleName);
     formData.append("lastName", lastName);
-    formData.append("contact", contact);
-    formData.append("gender", gender); // Append the gender to the form data
+    formData.append("gender", gender);
     if (imageFile) {
       formData.append("image", imageFile);
     }
@@ -222,34 +213,82 @@ async function addOrUpdateDentist() {
 }
 
 // Edit dentist (populate fields)
-function editDentist(id, fullName, contact, image) {
+function editDentist(id, fullName, image = "", gender = "") {
   const nameParts = fullName.split(" ");
   const firstName = nameParts[0];
   const lastName = nameParts[nameParts.length - 1];
-  const middleName =
-    nameParts.length > 2 ? nameParts.slice(1, -1).join(" ") : "";
 
   document.getElementById("dentist-first-name").value = firstName;
-  document.getElementById("dentist-second-name").value = middleName;
-  document.getElementById("dentist-middle-name").value = middleName;
   document.getElementById("dentist-last-name").value = lastName;
-  document.getElementById("dentist-contact").value = contact;
+
+  // Set gender dropdown value
+  const genderDropdown = document.getElementById("dentist-gender");
+  if (genderDropdown) {
+    genderDropdown.value = gender || ""; // Set gender if available
+  }
+
   document.getElementById("editdentistId").value = id;
 
+  // Clear the image input field
+  document.getElementById("dentist-image").value = "";
+
+  // Display the current image as a preview
+  const imagePreview = document.getElementById("dentist-image-preview");
+  if (imagePreview) {
+    if (image) {
+      imagePreview.src = image;
+      imagePreview.style.display = "block";
+    } else {
+      imagePreview.style.display = "none";
+    }
+  }
+
   // Update modal title
-  document.getElementById("dentist-modal-title").innerText =
-    "Edit Dentist Details";
+  document.getElementById("dentist-modal-title").innerText = "Edit Dentist Details";
 
   document.getElementById("dentist-modal").style.display = "flex";
 }
 
+// Custom confirmation modal
+function showConfirmationModal(message, onConfirm) {
+  const modal = document.createElement("div");
+  modal.id = "confirmation-modal";
+  modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50";
+
+  modal.innerHTML = `
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Delete Dentist</h2>
+      <p class="text-gray-600 mb-6">${message}</p>
+      <div class="flex justify-end space-x-4">
+        <button id="cancel-delete-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
+          Cancel
+        </button>
+        <button id="confirm-delete-btn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+          Delete
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("cancel-delete-btn").addEventListener("click", () => {
+    document.body.removeChild(modal);
+  });
+
+  document.getElementById("confirm-delete-btn").addEventListener("click", () => {
+    onConfirm();
+    document.body.removeChild(modal);
+  });
+}
+
 // Delete dentist
 async function deleteDentist(id) {
-  if (confirm("Are you sure you want to delete this dentist?")) {
+  showConfirmationModal("Are you sure you want to delete this dentist?", async () => {
     await fetch(`${DENTIST_API_URL}/${id}`, { method: "DELETE" });
     showToast("Dentist deleted successfully!");
     displayDentists();
-  }
+  });
 }
 
 // Open & close modal

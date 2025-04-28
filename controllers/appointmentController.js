@@ -72,13 +72,21 @@ exports.createAppointment = async (req, res) => {
     }
   }
 
+  // Ensure contact numbers start with "0"
+  const formattedContactNumber = contactNumber.startsWith("0")
+    ? contactNumber
+    : `0${contactNumber}`;
+  const formattedEmergencyContactNumber = emergencyContactNumber.startsWith("0")
+    ? emergencyContactNumber
+    : `0${emergencyContactNumber}`;
+
   // Create appointment data
   const appointmentData = {
     patient: req.session.user.id,
     referenceNumber,
     firstName,
     lastName,
-    contactNumber,
+    contactNumber: formattedContactNumber,
     emailAddress,
     preferredDate: formattedPreferredDate,
     preferredTime,
@@ -89,7 +97,7 @@ exports.createAppointment = async (req, res) => {
     gender,
     address,
     emergencyContact,
-    emergencyContactNumber,
+    emergencyContactNumber: formattedEmergencyContactNumber,
     emergencyContactRelationship,
     selectedHistory,
     assignedDentist: assignedDentist || null,
@@ -207,6 +215,8 @@ exports.getAppointmentsByPatient = async (req, res) => {
       return {
         ...apptObj,
         treatmentId: appointment.treatmentId || null,
+        createdAt: appointment.createdAt, // Include createdAt
+        updatedAt: appointment.updatedAt, // Include updatedAt
       };
     });
 
@@ -271,6 +281,8 @@ exports.getAppointmentDetails = async (req, res) => {
       treatments: patientRecord ? patientRecord.treatments : [], // ✅ Ensure treatments is always an array
       uploadedFiles: patientRecord ? patientRecord.uploadedFiles : [], // ✅ Ensure uploadedFiles is always an array
       assignedDentist: dentistName, // Include dentist name
+      createdAt: appointment.createdAt, // Include createdAt
+      updatedAt: appointment.updatedAt, // Include updatedAt
     });
   } catch (error) {
     console.error(error);
@@ -312,13 +324,17 @@ exports.updateAppointmentStatus = async (req, res) => {
         patient: updatedAppointment.patient,
         firstName: updatedAppointment.firstName,
         lastName: updatedAppointment.lastName,
-        contactNumber: updatedAppointment.contactNumber,
+        contactNumber: updatedAppointment.contactNumber.startsWith("0")
+          ? updatedAppointment.contactNumber
+          : `0${updatedAppointment.contactNumber}`,
         gender: updatedAppointment.gender,
         age: updatedAppointment.age,
         birthDay: updatedAppointment.birthDay,
         address: updatedAppointment.address,
         emergencyContact: updatedAppointment.emergencyContact,
-        emergencyContactNumber: updatedAppointment.emergencyContactNumber,
+        emergencyContactNumber: updatedAppointment.emergencyContactNumber.startsWith("0")
+          ? updatedAppointment.emergencyContactNumber
+          : `0${updatedAppointment.emergencyContactNumber}`,
         emergencyContactRelationship:
           updatedAppointment.emergencyContactRelationship,
         selectedHistory: updatedAppointment.selectedHistory,
@@ -365,7 +381,7 @@ exports.updateAppointmentStatus = async (req, res) => {
     user: updatedAppointment.patient,
     userModel: "Patient",
     title: `Appointment ${status}`,
-    message: `Your appointment for ${updatedAppointment.treatmentType} on ${formattedPreferredDate} at ${preferredTime} has been updated to ${status}.`,
+    message: `Your appointment for ${updatedAppointment.treatmentType} on ${formattedDate} at ${updatedAppointment.preferredTime} has been updated to ${status}.`,
     referenceId: updatedAppointment._id,
     type: "Appointment",
     isRead: false,
@@ -381,7 +397,7 @@ exports.updateAppointmentStatus = async (req, res) => {
     user: person._id,
     userModel: "MedicalPersonnel",
     title: `Appointment ${status}`,
-    message: `${updatedAppointment.firstName} ${updatedAppointment.lastName}'s appointment for ${updatedAppointment.treatmentType} on ${formattedPreferredDate} at ${preferredTime} has been marked as ${status}.`,
+    message: `${updatedAppointment.firstName} ${updatedAppointment.lastName}'s appointment for ${updatedAppointment.treatmentType} on ${formattedDate} at ${updatedAppointment.preferredTime} has been marked as ${status}.`,
     referenceId: updatedAppointment._id,
     type: "Appointment",
     isRead: false,
@@ -437,7 +453,9 @@ exports.updateAppointment = async (req, res) => {
     existingRecord.gender = appointment.gender;
     existingRecord.birthDay = appointment.birthDay;
     existingRecord.address = appointment.address;
-    existingRecord.contactNumber = appointment.contactNumber;
+    existingRecord.contactNumber = existingRecord.contactNumber.startsWith("0")
+      ? existingRecord.contactNumber
+      : `0${existingRecord.contactNumber}`;
     existingRecord.emergencyContact = appointment.emergencyContact;
     existingRecord.selectedHistory = appointment.selectedHistory;
 
@@ -469,7 +487,9 @@ exports.updateAppointment = async (req, res) => {
       gender: appointment.gender,
       birthDay: appointment.birthDay,
       address: appointment.address,
-      contactNumber: appointment.contactNumber,
+      contactNumber: appointment.contactNumber.startsWith("0")
+        ? appointment.contactNumber
+        : `0${appointment.contactNumber}`,
       emergencyContact: appointment.emergencyContact,
       selectedHistory: appointment.selectedHistory,
       treatments: [
@@ -741,16 +761,21 @@ exports.assignDentist = async (req, res) => {
   try {
     const { assignedDentist } = req.body;
     const dentist = await Dentist.findById(assignedDentist);
-    if (!dentist) return res.status(404).json({ error: "Dentist not found" });
+    if (!dentist) {
+      console.error('Dentist not found:', assignedDentist);
+      return res.status(404).json({ error: "Dentist not found" });
+    }
 
     const appointment = await Appointment.findByIdAndUpdate(
       req.params.id,
       { assignedDentist },
       { new: true }
-    ).populate("assignedDentist"); // This ensures the dentist details are populated
+    ).populate("assignedDentist");
 
-    if (!appointment)
+    if (!appointment) {
+      console.error('Appointment not found:', req.params.id);
       return res.status(404).json({ error: "Appointment not found" });
+    }
 
     // Build the full name with a gender prefix
     const genderPrefix =
@@ -760,47 +785,44 @@ exports.assignDentist = async (req, res) => {
         ? "Dra."
         : "";
     const fullName = [
-      genderPrefix, // Prefix based on gender
+      genderPrefix,
       dentist.firstName,
       dentist.middleName,
       dentist.lastName,
     ]
       .filter(Boolean)
-      .join(" "); // Filter out any empty values
+      .join(" ");
 
-    // Update the appointment's assignedDentist field with the full name
     appointment.assignedDentist = {
       ...appointment.assignedDentist.toObject(),
-      fullName, // Add full name to the assignedDentist object
+      fullName,
     };
 
-    // ✅ Notify Patient - Assigned Dentist
+    // Notify Patient
     const patientNotification = new Notification({
       user: appointment.patient,
       userModel: "Patient",
       title: "Assigned Dentist for Your Appointment",
-      message: `Your assigned dentist for your appointment on ${formattedPreferredDate} at ${appointment.preferredTime} for ${appointment.treatmentType} is ${dentist.firstName} ${dentist.lastName}.`,
+      message: `Your assigned dentist for your appointment on ${appointment.preferredDate} at ${appointment.preferredTime} for ${appointment.treatmentType} is ${dentist.firstName} ${dentist.lastName}.`,
       referenceId: appointment._id,
       type: "Appointment",
       isRead: false,
       createdAt: new Date(),
-      logoUrl: "${window.location.origin}/media/logo/EJPL.png",
     });
 
     await patientNotification.save();
 
-    // ✅ Notify all Medical Personnel - Assigned Dentist
+    // Notify all Medical Personnel
     const personnel = await MedicalPersonnel.find({});
     const personnelNotifications = personnel.map((person) => ({
       user: person._id,
       userModel: "MedicalPersonnel",
       title: "Assigned Dentist for Appointment",
-      message: `Dr. ${dentist.firstName} ${dentist.lastName} has been assigned to the appointment of ${appointment.firstName} ${appointment.lastName} for ${appointment.treatmentType} on ${formattedPreferredDate} at ${appointment.preferredTime}.`,
+      message: `Dr. ${dentist.firstName} ${dentist.lastName} has been assigned to the appointment of ${appointment.firstName} ${appointment.lastName} for ${appointment.treatmentType} on ${appointment.preferredDate} at ${appointment.preferredTime}.`,
       referenceId: appointment._id,
       type: "Appointment",
       isRead: false,
       createdAt: new Date(),
-      logoUrl: "${window.location.origin}/media/logo/EJPL.png",
     }));
 
     await Notification.insertMany(personnelNotifications);
@@ -810,7 +832,30 @@ exports.assignDentist = async (req, res) => {
       appointment,
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to assign dentist" });
+    console.error('Error in assignDentist:', error);
+    res.status(500).json({ error: "Failed to assign dentist", details: error.message });
+  }
+};
+
+exports.getPatientDetails = async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const patient = await PatientRecord.findOne({ patientId: req.session.user.id });
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+
+    res.json({
+      firstName: patient.firstName,
+      lastName: patient.lastName,
+      emailAddress: patient.emailAddress,
+    });
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

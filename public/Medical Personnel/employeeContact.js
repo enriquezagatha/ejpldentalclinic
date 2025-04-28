@@ -7,11 +7,40 @@ const closeModalBtn = document.querySelector(".close-modal");
 
 // ✅ Reset Form Function
 function resetContactForm() {
+  document.getElementById("contact-type").value = ""; // Reset contact type
   document.getElementById("modal-landline").value = "";
   document.getElementById("modal-phone").value = "";
   document.getElementById("modal-facebook").value = "";
   document.getElementById("modal-facebook-text").value = "";
+
+  // Hide all input fields
+  document.getElementById("landline-section").style.display = "none";
+  document.getElementById("phone-section").style.display = "none";
+  document.getElementById("facebook-section").style.display = "none";
+  document.getElementById("facebook-text-section").style.display = "none";
 }
+
+// ✅ Show Input Field Based on Contact Type
+document.getElementById("contact-type").addEventListener("change", (event) => {
+  const selectedType = event.target.value;
+
+  // Hide all input fields initially
+  document.getElementById("landline-section").style.display = "none";
+  document.getElementById("phone-section").style.display = "none";
+  document.getElementById("facebook-section").style.display = "none";
+  document.getElementById("facebook-text-section").style.display = "none";
+
+  // Show the relevant input field based on the selected type
+  if (selectedType === "landline") {
+    document.getElementById("landline-section").style.display = "block";
+  } else if (selectedType === "phone") {
+    document.getElementById("phone-section").style.display = "block";
+  } else if (selectedType === "facebook_page") {
+    document.getElementById("facebook-section").style.display = "block";
+  } else if (selectedType === "facebook_text") {
+    document.getElementById("facebook-text-section").style.display = "block";
+  }
+});
 
 // ✅ Open the Modal & Reset Form
 openModalBtn.addEventListener("click", () => {
@@ -158,20 +187,29 @@ async function loadContacts() {
 document
   .getElementById("add-contact-btn")
   .addEventListener("click", async function () {
-    const landline = document.getElementById("modal-landline").value.trim();
-    const phone = document.getElementById("modal-phone").value.trim();
-    const facebook_page = document
-      .getElementById("modal-facebook")
-      .value.trim();
-    const facebook_text = document
-      .getElementById("modal-facebook-text")
-      .value.trim();
+    const contactType = document.getElementById("contact-type").value;
+    let contactValue;
+
+    if (contactType === "landline") {
+      contactValue = document.getElementById("modal-landline").value.trim();
+    } else if (contactType === "phone") {
+      contactValue = document.getElementById("modal-phone").value.trim();
+    } else if (contactType === "facebook_page") {
+      contactValue = document.getElementById("modal-facebook").value.trim();
+    } else if (contactType === "facebook_text") {
+      contactValue = document.getElementById("modal-facebook-text").value.trim();
+    }
+
+    if (!contactType || !contactValue) {
+      alert("Please select a contact type and provide a value.");
+      return;
+    }
 
     try {
       const response = await fetch(CONTACT_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ landline, phone, facebook_page, facebook_text }),
+        body: JSON.stringify({ [contactType]: contactValue }),
       });
 
       if (!response.ok) throw new Error("Failed to add contact");
@@ -185,24 +223,57 @@ document
     }
   });
 
-// ✅ Delete a Contact
-async function deleteContact(contactField) {
-  if (!confirm(`Are you sure you want to delete the ${contactField}?`)) return;
+// Custom confirmation modal
+function showConfirmationModal(message, onConfirm) {
+  const modal = document.createElement("div");
+  modal.id = "confirmation-modal";
+  modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50";
 
-  try {
-    const response = await fetch(CONTACT_API_URL, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ field: contactField }),
-    });
+  modal.innerHTML = `
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Delete Contact</h2>
+      <p class="text-gray-600 mb-6">${message}</p>
+      <div class="flex justify-end space-x-4">
+        <button id="cancel-delete-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
+          Cancel
+        </button>
+        <button id="confirm-delete-btn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+          Delete
+        </button>
+      </div>
+    </div>
+  `;
 
-    if (!response.ok) throw new Error("Failed to delete contact");
+  document.body.appendChild(modal);
 
-    showToast(`${contactField} deleted successfully!`);
-    loadContacts(); // Reload the contacts after deletion
-  } catch (error) {
-    console.error("Error deleting contact:", error);
-  }
+  document.getElementById("cancel-delete-btn").addEventListener("click", () => {
+    document.body.removeChild(modal);
+  });
+
+  document.getElementById("confirm-delete-btn").addEventListener("click", () => {
+    onConfirm();
+    document.body.removeChild(modal);
+  });
+}
+
+// Updated Delete Contact Function
+async function deleteContact(contactId) {
+  showConfirmationModal("Are you sure you want to delete this contact?", async () => {
+    try {
+      const response = await fetch(`${CONTACT_API_URL}/${contactId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) throw new Error("Failed to delete contact");
+
+      showToast("Contact deleted successfully!");
+      loadContacts(); // Reload the contacts after deletion
+    } catch (error) {
+      console.error("Error deleting contact:", error);
+      showToast("Failed to delete contact. Please try again.", "bg-red-500");
+    }
+  });
 }
 
 // ✅ Edit Contact

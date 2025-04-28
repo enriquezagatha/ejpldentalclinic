@@ -11,14 +11,14 @@ exports.getPatientRecords = async (req, res) => {
   }
 };
 
-// Fetch a single patient record by ID (if needed)
+// Fetch a single patient record by patientId
 exports.getPatientRecordById = async (req, res) => {
   try {
-    const record = await PatientRecord.findById(req.params.id); // Find the record by ID
+    const record = await PatientRecord.findOne({ patientId: req.params.id }); // ✅ Find by patientId instead
     if (!record) {
       return res.status(404).json({ message: 'Patient record not found' });
     }
-    res.json(record); // Return the single record as a response
+    res.json(record);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving patient record', error });
   }

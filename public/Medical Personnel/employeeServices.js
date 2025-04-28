@@ -220,6 +220,12 @@ function editService(id, name, description, image) {
   document.getElementById("service-id").value = id;
   document.getElementById("service-name").value = name;
   document.getElementById("service-desc").value = description;
+
+  // Set image preview
+  const imagePreview = document.getElementById("service-image-preview");
+  imagePreview.src = image;
+  imagePreview.style.display = "block";
+
   document.getElementById("service-modal-title").textContent = "Edit Service";
   document.getElementById("save-service-btn").textContent = "Update Service";
   document.getElementById("service-modal").style.display = "flex";
@@ -227,7 +233,13 @@ function editService(id, name, description, image) {
 
 // Delete service
 function deleteService(id) {
-  if (confirm("Are you sure you want to delete this service?")) {
+  const confirmationModal = document.getElementById("confirmation-modal");
+  const confirmDeleteButton = document.getElementById("confirm-delete-btn");
+  const cancelDeleteButton = document.getElementById("cancel-delete-btn");
+
+  confirmationModal.style.display = "flex";
+
+  confirmDeleteButton.onclick = () => {
     fetch(`${SERVICE_API_URL}/${id}`, { method: "DELETE" })
       .then((response) => {
         if (!response.ok) {
@@ -239,8 +251,15 @@ function deleteService(id) {
       .catch((error) => {
         console.error("Error deleting service:", error);
         showToast("Error deleting service. Please try again.");
+      })
+      .finally(() => {
+        confirmationModal.style.display = "none";
       });
-  }
+  };
+
+  cancelDeleteButton.onclick = () => {
+    confirmationModal.style.display = "none";
+  };
 }
 
 //Reset form

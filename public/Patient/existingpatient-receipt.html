@@ -37,7 +37,7 @@
 
                 <h3 class="text-lg font-semibold text-black mt-6 pt-4">Patient Information</h3>
                 <p class="text-sm text-black"><strong>Name:</strong> <span id="patient-name"></span></p>
-                <p class="text-sm text-black"><strong>Contact Number:</strong> <span id="patient-contact"></span></p>
+                <p class="text-sm text-black"><strong>Contact Number:</strong> 0<span id="patient-contact"></span></p>
 
                 <h3 class="text-lg font-semibold text-black mt-6 pt-4">Appointment Details</h3>
                 <p class="text-sm text-black"><strong>Preferred Date:</strong> <span id="preferred-date"></span></p>
@@ -144,7 +144,25 @@
         }
 
         function printReceipt() {
+            const originalContent = document.body.innerHTML;
+            const receiptContent = document.querySelector('main').innerHTML;
+
+            const logoSection = `
+            <div class="flex justify-between items-center mb-6">
+            <div class="text-right">
+                <img src="../media/logo/EJPL.png" alt="Clinic Logo" class="w-24 h-24 inline-block">
+            </div>
+            <div class="text-center flex-grow">
+                <h1 class="text-2xl font-bold text-gray-800">EJPL Dental Clinic</h1>
+                <p class="text-sm text-gray-600">B25 L2 Santan St., Queens Row West, Bacoor City, Cavite</p>
+            </div>
+            </div>
+            `;
+
+            document.body.innerHTML = logoSection + receiptContent;
             window.print();
+            document.body.innerHTML = originalContent;
+            window.location.reload(); // Reload to restore event listeners
         }
 
         window.onload = function () {

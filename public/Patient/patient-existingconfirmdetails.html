@@ -82,12 +82,12 @@
             window.location.href = "patient-existingpatientdetails.html";
         }
 
-        function openModal(message) {
-            document.getElementById('confirmation-text').innerText = message;
-            const modal = document.getElementById('confirmation-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
+        // function openModal(message) {
+        //     document.getElementById('confirmation-text').innerText = message;
+        //     const modal = document.getElementById('confirmation-modal');
+        //     modal.classList.remove('hidden');
+        //     modal.classList.add('flex');
+        // }
 
         function closeModal() {
             const modal = document.getElementById('confirmation-modal');
@@ -114,7 +114,7 @@
         <hr class="flex-grow border-black ml-4">
     </div>
     <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Name:</strong> <span class="font-normal">${savedFormData.firstName || 'N/A'} ${savedFormData.lastName || ''}</span></p>
-    <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Contact Number:</strong> <span class="font-normal">09${savedFormData.contactNumber || 'N/A'}</span></p>
+    <p class="text-sm sm:text-base pl-4 sm:pl-12 pt-4 text-black"><strong>Contact Number:</strong> <span class="font-normal">0${savedFormData.contactNumber || 'N/A'}</span></p>
     <div class="flex items-center mt-4">
         <hr class="w-8 border-black mr-4">
         <span class="text-sm sm:text-xl text-black font-semibold pt-4">Appointment Details</span>
@@ -158,7 +158,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        openModal('Appointment confirmed successfully!');
+                        // openModal('Appointment confirmed successfully!');
                         // Send notification
                         fetch('api/notifications', {
                             method: 'POST',
@@ -187,9 +187,9 @@
                 .catch(error => displayError('Request failed: ' + error));
         }
 
-        function displayError(message) {
-            openModal(message);
-        }
+        // function displayError(message) {
+        //     openModal(message);
+        // }
 
         function printReceipt() {
             const receiptSection = document.getElementById('appointment-receipt');

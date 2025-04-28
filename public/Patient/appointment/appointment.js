@@ -1,13 +1,9 @@
 // Function to validate the form
 function validateForm() {
     const requiredFields = [
-        'first-name',
-        'last-name',
-        'age',
         'gender',
         'address',
         'contact-number',
-        'email-address',
         'emergency-contact',
         'emergency-contact-number',
         'selected-history',
@@ -19,22 +15,22 @@ function validateForm() {
 
     // Check if all required fields are filled
     for (let i = 0; i < requiredFields.length; i++) {
-      const field = document.getElementById(requiredFields[i]);
-      if (!field.value.trim()) {
+        const field = document.getElementById(requiredFields[i]);
+        if (!field || !field.value.trim()) { // Ensure field exists and is not empty
             formWarning.style.display = "block"; // Show warning message
-            field.focus(); // Focus the first empty field
+            field?.focus(); // Focus the first empty field
             return false;
         }
     }
 
     // Check if contact numbers are valid
-    const contactNumber = `09${document.getElementById("contact-number").value.trim()}`;
-    const emergencyContactNumber = `09${document.getElementById("emergency-contact-number").value.trim()}`;
+    const contactNumber = document.getElementById("contact-number").value.trim();
+    const emergencyContactNumber = document.getElementById("emergency-contact-number").value.trim();
     if (
-        contactNumber.length !== 11 || 
-        !/^09\d{9}$/.test(contactNumber) || 
-        emergencyContactNumber.length !== 11 || 
-        !/^09\d{9}$/.test(emergencyContactNumber)
+        contactNumber.length !== 10 || 
+        !/^\d{10}$/.test(contactNumber) || 
+        emergencyContactNumber.length !== 10 || 
+        !/^\d{10}$/.test(emergencyContactNumber)
     ) {
         document.getElementById('form-warning').style.display = 'block'; // Show warning message
         return false;
@@ -77,17 +73,46 @@ function saveFormData() {
     sessionStorage.setItem('formData', JSON.stringify(formData));
 }
 
+function computeAge(birthday) {
+    const birthDate = new Date(birthday);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+
+    return age;
+}
+
 // Load form data from session storage
-function loadFormData() {
+async function loadFormData() {
     const savedData = JSON.parse(sessionStorage.getItem('formData'));
+
+    // Fetch logged-in patient data from the server
+    const response = await fetch('/api/patient/profile');
+    const patient = await response.json();
+
+    if (patient) {
+        document.getElementById('first-name').value = patient.firstName || '';
+        document.getElementById('last-name').value = patient.lastName || '';
+        document.getElementById('email-address').value = patient.email || '';
+
+        //compute age from bday
+        if(patient.birthday){
+            document.getElementById('age').value = computeAge(patient.birthday) || '';
+        }
+    }
+
     if (savedData) {
-        document.getElementById('first-name').value = savedData.firstName || '';
-        document.getElementById('last-name').value = savedData.lastName || '';
-        document.getElementById('age').value = savedData.age || '';
+        document.getElementById('first-name').value = savedData.firstName || document.getElementById('first-name').value;
+        document.getElementById('last-name').value = savedData.lastName || document.getElementById('last-name').value;
+        document.getElementById('email-address').value = savedData.emailAddress || document.getElementById('email-address').value;
+        document.getElementById('age').value = savedData.age || document.getElementById('age').value;
         document.getElementById('gender').value = savedData.gender || '';
         document.getElementById('address').value = savedData.address || '';
         document.getElementById('contact-number').value = savedData.contactNumber || '';
-        document.getElementById('email-address').value = savedData.emailAddress || '';
         document.getElementById('emergency-contact').value = savedData.emergencyContact || '';
         document.getElementById('emergency-contact-number').value = savedData.emergencyContactNumber || '';
         document.getElementById('selected-history').value = savedData.selectedHistory || '';
@@ -191,14 +216,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const contactNumber = event.target;
         const contactWarning = document.getElementById('contact-warning');
         
-        // Adjust validation to exclude the static "09" prefix
+        // Adjust validation to exclude the static "+63" prefix
         const inputValue = contactNumber.value;
-        if (inputValue.length > 9) { // Limit to 9 digits after "09"
-        contactNumber.value = inputValue.slice(0, 9);
+        if (inputValue.length > 10) { // Limit to +63 digits after "+63"
+        contactNumber.value = inputValue.slice(0, 10);
         }
 
-        contactWarning.style.display = inputValue.length < 9 ? 'block' : 'none';
-        if (inputValue.length === 9) {
+        contactWarning.style.display = inputValue.length < 10 ? 'block' : 'none';
+        if (inputValue.length === 10) {
         contactWarning.style.display = 'none'; // Hide warning if valid
         }
     }
@@ -208,14 +233,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const emergencyContactNumber = event.target;
         const emergencyContactWarning = document.getElementById('emergency-contact-warning');
         
-        // Adjust validation to exclude the static "09" prefix
+        // Adjust validation to exclude the static "+63" prefix
         const inputValue = emergencyContactNumber.value;
-        if (inputValue.length > 9) { // Limit to 9 digits after "09"
-          emergencyContactNumber.value = inputValue.slice(0, 9);
+        if (inputValue.length > 10) { // Limit to 9 digits after "+63"
+          emergencyContactNumber.value = inputValue.slice(0, 10);
         }
     
-        emergencyContactWarning.style.display = inputValue.length < 9 ? 'block' : 'none';
-        if (inputValue.length === 9) {
+        emergencyContactWarning.style.display = inputValue.length < 10 ? 'block' : 'none';
+        if (inputValue.length === 10) {
           emergencyContactWarning.style.display = 'none'; // Hide warning if valid
         }
     }

@@ -42,7 +42,7 @@ const appointmentSchema = new mongoose.Schema({
         paymentLink: { type: String },
         paymentId: { type: String } // PayMongo payment ID
     }
-});
+}, { timestamps: true }); // Add timestamps for createdAt and updatedAt
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);
 

@@ -43,4 +43,7 @@ router.get("/appointment-report", appointmentController.getAppointmentReport);
 //Assign a dentist to an appointment
 router.patch('/:id/assign-dentist', appointmentController.assignDentist);
 
+//patient details for appointment
+router.get('/patientdetails', appointmentController.getPatientDetails);
+
 module.exports = router;

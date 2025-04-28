@@ -39,14 +39,14 @@
                                     Name</label>
                                 <input type="text" placeholder="First Name"
                                     class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
-                                    id="first-name" required>
+                                    id="first-name" readonly>
                             </div>
                             <div class="flex flex-col w-full">
                                 <label class="text-sm font-inter font-semibold text-black" for="lastname">Last
                                     Name</label>
                                 <input type="text" placeholder="Last Name"
                                     class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
-                                    id="last-name" required>
+                                    id="last-name" readonly>
                             </div>
                         </div>
                         <div class="details-form sm:flex sm:gap-2">
@@ -54,7 +54,7 @@
                                 <label class="text-sm font-inter font-semibold text-black" for="age">Age</label>
                                 <input type="number" placeholder="Age"
                                     class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
-                                    id="age" min="0" max="120" required>
+                                    id="age" min="0" max="120">
                             </div>
                             <div class="flex flex-col w-full">
                                 <label class="text-sm font-inter font-semibold text-black" for="gender">Gender</label>
@@ -164,14 +164,14 @@
                                 <div id="contact-warning"
                                     class="warning-message text-red-500 text-xs font-bold text-left"
                                     style="display: none;">Contact number must be
-                                    exactly 11 digits.</div>
+                                    exactly 10 digits.</div>
                             </div>
                             <div class="flex flex-col w-full">
                                 <label class="text-sm font-inter font-semibold text-black" for="email">Email
                                     Address</label>
                                 <input type="email" placeholder="Email Address"
                                     class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2"
-                                    id="email-address" required>
+                                    id="email-address" readonly>
                             </div>
                         </div>
                         <h1 class="font-inter text-lg mb-2 mt-2 font-semibold">Emergency Contact Details</h1>
@@ -196,7 +196,7 @@
                                 <div id="emergency-contact-warning"
                                     class="warning-message text-red-500 text-xs font-bold text-left"
                                     style="display: none;">Emergency
-                                    Contact number must be exactly 11 digits.</div>
+                                    Contact number must be exactly 10 digits.</div>
 
                             </div>
                         </div>

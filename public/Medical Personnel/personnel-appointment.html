@@ -185,16 +185,8 @@
             </div>
         </div>
 
-        <div id="alert-modal" class="modal fixed inset-0 items-center justify-center bg-black bg-opacity-10 hidden">
-            <div class="modal-content bg-white p-6 rounded-lg shadow-lg w-96 relative">
-                <h2 class="text-xl font-semibold text-gray-800 text-center">Dentist Assigned</h2>
-                <p id="alert-message" class="text-sm text-gray-700 text-center mt-4 mb-4">Dentist has been successfully
-                    assigned.</p>
-                <div class="flex justify-center mt-6">
-                    <button id="alert-ok-button"
-                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">OK</button>
-                </div>
-            </div>
+        <div id="toast-container" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+            <div id="toast-message" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-lg"></div>
         </div>
 
         <script>
@@ -248,15 +240,15 @@
             async function fetchAppointments() {
                 const tbody = document.getElementById('appointments-tbody');
                 tbody.innerHTML = `
-          <tr id="loading-row">
-              <td colspan="8" class="text-center text-gray-500 py-6">
-                  <div class="flex flex-col items-center">
-                      <i class="fas fa-spinner fa-spin text-4xl mb-2 text-gray-400"></i>
-                      <p class="text-lg font-semibold">Loading appointments...</p>
-                  </div>
-              </td>
-          </tr>
-      `; // Show loading state
+                    <tr id="loading-row">
+                        <td colspan="8" class="text-center text-gray-500 py-6">
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-spinner fa-spin text-4xl mb-2 text-gray-400"></i>
+                                <p class="text-lg font-semibold">Loading appointments...</p>
+                            </div>
+                        </td>
+                    </tr>
+                `; // Show loading state
 
                 try {
                     const response = await fetch('/api/appointments');
@@ -271,10 +263,12 @@
                         }, 500); // Delay of 500ms
                     } else {
                         console.error('Failed to fetch appointments:', response.status, response.statusText);
+                        showToast('Failed to fetch appointments. Please try again later.', 'error');
                         tbody.innerHTML = '<tr><td colspan="8" class="text-center text-red-500 font-medium py-4">Error fetching appointments.</td></tr>';
                     }
                 } catch (error) {
                     console.error('Error fetching appointments:', error);
+                    showToast('An error occurred while fetching appointments. Please check your connection.', 'error');
                     tbody.innerHTML = '<tr><td colspan="8" class="text-center text-red-500 font-medium py-4">Error fetching appointments. Please try again later.</td></tr>';
                 }
             }
@@ -349,7 +343,7 @@
                                     onchange="updateStatus('${appointment._id}', this.value, this)"
                                     data-original-status="${appointment.status}" 
                                     data-appointment-id="${appointment._id}">
-                                    <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''} ${appointment.status === 'Confirmed' || appointment.status === 'Cancelled' ? 'disabled' : ''}>Pending</option>
                                     <option value="Confirmed" ${appointment.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
                                     <option value="Cancelled" ${appointment.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
                                     <option value="Completed" ${appointment.status === 'Completed' ? 'selected' : ''}>Completed</option>
@@ -368,6 +362,9 @@
                                     <option value="">${assignedDentistName}</option>
                                     ${dentistSelect}
                                 </select>
+                            </td>
+                            <td class="hidden">
+                                <div id="message-${appointment._id}" class="message-box hidden text-sm mt-2"></div>
                             </td>
                         `;
                         tbody.appendChild(row);
@@ -428,6 +425,18 @@
 
             function updateStatus(appointmentId, newStatus, selectElement) {
                 const currentStatus = selectElement.dataset.originalStatus;
+
+                // Ensure a dentist is assigned before confirming
+                if (newStatus === 'Confirmed') {
+                    const row = selectElement.closest('tr');
+                    const dentistSelect = row.querySelector('td:nth-child(8) select');
+                    if (!dentistSelect || !dentistSelect.value || dentistSelect.value === "Not Assigned") {
+                        showToast('Please assign a dentist before confirming the appointment.', 'error');
+                        selectElement.value = currentStatus; // Revert to the original status
+                        return;
+                    }
+                }
+
                 if (currentStatus === newStatus) return;
                 openModal(`Confirm change of status to ${newStatus}?`, appointmentId, newStatus, selectElement);
             }
@@ -478,46 +487,110 @@
                 setTimeout(() => { messageBox.style.display = 'none'; }, 3000);
             }
 
+            let pendingDentistAssignment = null;
+
             async function assignDentist(appointmentId, dentistId) {
                 if (!dentistId) return; // Prevent empty selection
 
-                try {
-                    const response = await fetch(`/api/appointments/${appointmentId}/assign-dentist`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ assignedDentist: dentistId }), // Ensure dentistId is sent as a string
-                    });
+                // Store pending assignment details
+                pendingDentistAssignment = { appointmentId, dentistId };
 
-                    if (response.ok) {
-                        const updatedAppointment = await response.json(); // Get the updated appointment data
+                // Show the custom modal
+                document.getElementById('assign-dentist-modal').style.display = 'flex';
+            }
 
-                        // Find the row in the table corresponding to the appointment
-                        const row = document.querySelector(`tr[data-appointment-id="${appointmentId}"]`);
-                        if (row) {
-                            // Update the select dropdown to reflect the newly assigned dentist
-                            const select = row.querySelector('select');
-                            if (select) {
-                                select.value = updatedAppointment.assignedDentist._id;
-                            }
+            function closeAssignDentistModal() {
+                if (pendingDentistAssignment) {
+                    const { appointmentId } = pendingDentistAssignment;
 
-                            // Optionally update the displayed name of the assigned dentist
-                            const dentistNameCell = row.querySelector('td:last-child'); // Assuming last column is for dentist
-                            if (dentistNameCell) {
-                                const dentist = updatedAppointment.assignedDentist;
-                                dentistNameCell.textContent = `${dentist.gender === 'Male' ? 'Dr' : 'Dra'} ${dentist.firstName} ${dentist.lastName}`;
-                            }
-                        }
-
-                        // Open the alert modal
-                        document.getElementById('alert-modal').style.display = 'flex';
-                    } else {
-                        console.error('Failed to assign dentist:', response.status, response.statusText);
-                        alert('Failed to assign dentist. Please try again.');
+                    // Find the dropdown for the appointment and reset it to "Not Assigned"
+                    const dropdown = document.querySelector(`select[data-appointment-id="${appointmentId}"]`);
+                    if (dropdown) {
+                        dropdown.value = ""; // Reset to "Not Assigned"
+                        dropdown.dispatchEvent(new Event('change')); // Trigger change event to ensure UI updates
                     }
-                } catch (error) {
-                    console.error('Error assigning dentist:', error);
-                    alert('An error occurred while assigning the dentist. Please try again.');
+
+                    // Update the UI to reflect "Not Assigned"
+                    const row = dropdown.closest('tr');
+                    if (row) {
+                        const dentistCell = row.querySelector('td:nth-child(8)');
+                        if (dentistCell) {
+                            dentistCell.textContent = "Not Assigned";
+                        }
+                    }
                 }
+
+                pendingDentistAssignment = null; // Clear pending assignment
+                document.getElementById('assign-dentist-modal').style.display = 'none';
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const assignConfirmButton = document.getElementById('assign-confirm-button');
+                const assignCancelButton = document.getElementById('assign-cancel-button');
+
+                if (assignConfirmButton) {
+                    assignConfirmButton.onclick = async function () {
+                        if (!pendingDentistAssignment) return;
+
+                        const { appointmentId, dentistId } = pendingDentistAssignment;
+
+                        try {
+                            const response = await fetch(`/api/appointments/${appointmentId}/assign-dentist`, {
+                                method: 'PATCH',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ assignedDentist: dentistId }),
+                            });
+
+                            if (response.ok) {
+                                const updatedAppointment = await response.json();
+
+                                // Update the UI to reflect the assigned dentist
+                                const dropdown = document.querySelector(`select[data-appointment-id="${appointmentId}"]`);
+                                if (dropdown) {
+                                    const row = dropdown.closest('tr');
+                                    const dentistCell = row.querySelector('td:nth-child(8)');
+                                    if (dentistCell) {
+                                        const assignedDentist = cachedDentists.find(dentist => dentist._id === dentistId);
+                                        if (assignedDentist) {
+                                            const prefix = assignedDentist.gender === 'male' ? 'Dr.' : 'Dra.';
+                                            dentistCell.textContent = `${prefix} ${assignedDentist.firstName} ${assignedDentist.lastName}`;
+                                        }
+                                    }
+                                }
+
+                                showToast('Dentist has been successfully assigned.', 'success');
+                            } else {
+                                const errorData = await response.json();
+                                console.error('Failed to assign dentist:', errorData.error || response.statusText);
+                                showToast(`Failed to assign dentist: ${errorData.error || 'Unknown error'}`, 'error');
+                            }
+                        } catch (error) {
+                            console.error('Error assigning dentist:', error.message || error);
+                            showToast('An error occurred while assigning the dentist. Please try again.', 'error');
+                        } finally {
+                            closeAssignDentistModal();
+                        }
+                    };
+                }
+
+                if (assignCancelButton) {
+                    assignCancelButton.onclick = closeAssignDentistModal;
+                }
+            });
+
+            function showToast(message, type) {
+                const toastContainer = document.getElementById('toast-container');
+                const toastMessage = document.getElementById('toast-message');
+
+                toastMessage.innerText = message;
+                toastMessage.className = `px-4 py-2 rounded-md shadow-lg ${
+                    type === 'success' ? 'bg-blue-500 text-white' : 'bg-red-500 text-white'
+                }`;
+
+                toastContainer.classList.remove('hidden');
+                setTimeout(() => {
+                    toastContainer.classList.add('hidden');
+                }, 3000);
             }
 
             window.onload = fetchAppointments;
@@ -538,16 +611,20 @@
                         ? `/uploads/${personnelData.profilePicture}`
                         : '../media/logo/default-profile.png';
                 }
+
+                // Ensure the alert-ok-button exists before setting its onclick
+                const alertOkButton = document.getElementById('alert-ok-button');
+                if (alertOkButton) {
+                    alertOkButton.onclick = function () {
+                        document.getElementById('alert-modal').style.display = 'none';
+                        location.reload();
+                    };
+                }
             });
 
             function displayProfileInfo(data) {
                 document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
-
-            document.getElementById('alert-ok-button').onclick = function () {
-                document.getElementById('alert-modal').style.display = 'none';
-                location.reload();
-            };
         </script>
         <script src="personnelnotification.js"></script>
         <script src="../components/components-personnel/navbarpersonnel-functionalities.js"></script>
@@ -570,6 +647,32 @@
                 document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
         </script>
+
+        <!-- Dentist Assignment Confirmation Modal -->
+        <div id="assign-dentist-modal" class="modal fixed inset-0 items-center justify-center bg-black bg-opacity-10 hidden">
+            <div class="modal-content bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                <button
+                    class="absolute top-2 right-4 text-gray-500 hover:text-gray-700 text-xl font-bold focus:outline-none"
+                    onclick="closeAssignDentistModal()">
+                    &times;
+                </button>
+                <div class="flex flex-col items-center">
+                    <div class="bg-[#E3EBF9] text-[#6E80D1] rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                        <i class="fas fa-question text-3xl"></i>
+                    </div>
+                    <h2 class="text-xl font-semibold text-gray-800 text-center">Are you sure?</h2>
+                </div>
+                <p class="text-sm text-gray-700 text-center mt-2 mb-4">Do you want to assign this dentist?</p>
+                <div class="flex justify-between items-center space-x-4 mt-8">
+                    <button id="assign-cancel-button"
+                        class="bg-gray-300 text-sm text-gray-700 px-4 py-1 rounded-md hover:bg-gray-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-200"
+                        onclick="closeAssignDentistModal()">No</button>
+                    <button id="assign-confirm-button"
+                        class="bg-[#2C4A66] text-sm text-white px-4 py-1 rounded-md hover:bg-[#1E3A56] focus:outline-none focus:ring-2 focus:ring-blue-400">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

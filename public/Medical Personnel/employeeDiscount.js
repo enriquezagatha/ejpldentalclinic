@@ -212,10 +212,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Delete a discount
-  async function deleteDiscount(id) {
-    if (!confirm("Are you sure you want to delete this discount?")) return;
+  // Custom confirmation modal
+function showConfirmationModal(message, onConfirm) {
+  const modal = document.createElement("div");
+  modal.id = "confirmation-modal";
+  modal.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50";
 
+  modal.innerHTML = `
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Delete Discount</h2>
+      <p class="text-gray-600 mb-6">${message}</p>
+      <div class="flex justify-end space-x-4">
+        <button id="cancel-delete-btn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400">
+          Cancel
+        </button>
+        <button id="confirm-delete-btn" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+          Delete
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  document.getElementById("cancel-delete-btn").addEventListener("click", () => {
+    document.body.removeChild(modal);
+  });
+
+  document.getElementById("confirm-delete-btn").addEventListener("click", () => {
+    onConfirm();
+    document.body.removeChild(modal);
+  });
+}
+
+// Update deleteDiscount function to use the new modal
+async function deleteDiscount(id) {
+  showConfirmationModal("Are you sure you want to delete this discount?", async () => {
     try {
       const response = await fetch(
         `${window.location.origin}/api/discount/${id}`,
@@ -231,7 +263,8 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error deleting discount:", error);
       showToast("An error occurred while deleting the discount.", "bg-red-500");
     }
-  }
+  });
+}
 
   // Expose functions globally
   window.openDiscountModal = openDiscountModal;
