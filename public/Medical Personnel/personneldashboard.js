@@ -96,6 +96,59 @@ function populateYears() {
   }
 }
 
+// Function to populate the patient records yearly filter
+function populatePatientRecordsYearlyFilter() {
+  const currentYear = new Date().getFullYear();
+  const startYear = 2024; // Starting year for the dropdown
+  const yearDropdown = document.getElementById("patientRecordsYearlyFilter");
+  yearDropdown.innerHTML = ""; // Clear existing options
+
+  for (let year = startYear; year <= currentYear; year++) {
+    const option = document.createElement("option");
+    option.value = year;
+    option.textContent = year;
+    yearDropdown.appendChild(option);
+  }
+
+  // Set the current year as the default selected option
+  yearDropdown.value = currentYear;
+}
+
+// Function to fetch years from patient records and populate the yearly filter
+async function fetchAndPopulatePatientRecordsYears() {
+  try {
+    const response = await fetch("/api/patientRecords/years");
+    if (response.ok) {
+      const years = await response.json();
+
+      // Add 2024 for testing purposes
+      years.push(2024);
+
+      const yearDropdown = document.getElementById(
+        "patientRecordsYearlyFilter"
+      );
+      yearDropdown.innerHTML = ""; // Clear existing options
+
+      years.forEach((year) => {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearDropdown.appendChild(option);
+      });
+
+      // Set the latest year as the default selected option
+      yearDropdown.value = Math.max(...years);
+    } else {
+      console.error(
+        "Failed to fetch patient record years:",
+        response.statusText
+      );
+    }
+  } catch (error) {
+    console.error("Error fetching patient record years:", error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   // Fetch current month from the backend
   const response = await fetch("/api/appointments/total-status-counts");
@@ -108,6 +161,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Populate months and years dropdowns
   populateMonths(currentMonth);
   populateYears();
+  populatePatientRecordsYearlyFilter();
+  await fetchAndPopulatePatientRecordsYears();
 
   // Set default active button to "All"
   setActiveFilterButton("statusAllFilter");
@@ -129,6 +184,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Fetch and display popular treatments
   fetchPopularTreatments();
+
+  // Update patient records chart
+  updatePatientRecordsChart();
 });
 
 // Add event listeners to filter buttons
@@ -306,10 +364,14 @@ function setupPagination(appointments) {
 
     if (paginatedAppointments.length === 0) {
       upcomingAppointmentsContainer.innerHTML = `
-                <tr>
-                    <td colspan="3" class="text-center text-gray-500">No upcoming appointments</td>
-                </tr>`;
+          <tr>
+            <td colspan="3" class="text-center text-gray-500">No upcoming appointments</td>
+          </tr>`;
+      paginationContainer.classList.add("hidden"); //  Hide pagination container
       return;
+    } else {
+      paginationContainer.classList.remove("hidden"); // Show pagination container
+      paginationContainer.classList.add("flex"); // Ensure flex display
     }
 
     paginatedAppointments.forEach((appointment) => {
@@ -489,6 +551,237 @@ document.addEventListener("DOMContentLoaded", () => {
     "November",
     "December",
   ];
+
+  // Clear existing options to avoid duplicates
+  monthRevenueFilter.innerHTML = "";
+
+  // Fetch revenue for a specific month
+  const fetchRevenue = async (month) => {
+    try {
+      const response = await fetch(`/api/payment/total-revenue?month=${month}`);
+      const data = await response.json();
+      if (response.ok) {
+        return data.revenue;
+      } else {
+        console.error("Failed to fetch revenue:", data.error);
+        return 0;
+      }
+    } catch (error) {
+      console.error("Error fetching revenue:", error);
+      return 0;
+    }
+  };
+
+  // Calculate and display revenue and percentage increase
+  const updateRevenue = async (selectedMonth) => {
+    const currentMonthRevenue = await fetchRevenue(selectedMonth);
+
+    // Calculate previous month
+    const previousMonth =
+      parseInt(selectedMonth, 10) === 1 ? 12 : parseInt(selectedMonth, 10) - 1; // Wrap around to December if January
+    const previousMonthRevenue = await fetchRevenue(
+      previousMonth.toString().padStart(2, "0")
+    );
+
+    // Update revenue display
+    monthlyRevenue.textContent = `₱${currentMonthRevenue.toLocaleString()}`;
+
+    // Check if the selected month is in the future
+    const currentDate = new Date();
+    const selectedDate = new Date(currentDate.getFullYear(), selectedMonth - 1);
+    if (selectedDate > currentDate) {
+      // Hide the percentage increase and set averages to 0 for future months
+      monthlyRevenueIncrease.style.display = "none";
+      document.getElementById("averageDailyRevenue").textContent = "₱0.00";
+      document.getElementById("averageWeeklyRevenue").textContent = "₱0.00";
+      return;
+    }
+
+    // Calculate percentage increase
+    if (currentMonthRevenue === previousMonthRevenue) {
+      // Hide the percentage increase if revenue is the same
+      monthlyRevenueIncrease.style.display = "none";
+    } else {
+      monthlyRevenueIncrease.style.display = "block";
+      if (previousMonthRevenue === 0) {
+        // If there was no revenue last month, consider it a 100% increase
+        monthlyRevenueIncrease.textContent = "+100.00%";
+        monthlyRevenueIncrease.classList.add("text-green-700");
+        monthlyRevenueIncrease.classList.remove("text-red-700");
+      } else {
+        const increase =
+          ((currentMonthRevenue - previousMonthRevenue) /
+            previousMonthRevenue) *
+          100;
+        monthlyRevenueIncrease.textContent = `${increase.toFixed(2)}%`;
+        monthlyRevenueIncrease.classList.toggle(
+          "text-green-700",
+          increase >= 0
+        );
+        monthlyRevenueIncrease.classList.toggle("text-red-700", increase < 0);
+      }
+    }
+
+    // Calculate average daily and weekly revenue
+    if (currentMonthRevenue > 0) {
+      const daysInMonth = new Date(
+        currentDate.getFullYear(),
+        selectedMonth,
+        0
+      ).getDate();
+      const averageDaily = currentMonthRevenue / daysInMonth;
+      const averageWeekly = currentMonthRevenue / 4; // Approximate 4 weeks in a month
+
+      // Update average daily and weekly revenue display
+      document.getElementById(
+        "averageDailyRevenue"
+      ).textContent = `₱${averageDaily.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      })}`;
+      document.getElementById(
+        "averageWeeklyRevenue"
+      ).textContent = `₱${averageWeekly.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      })}`;
+    } else {
+      // Set averages to 0 if revenue is 0
+      document.getElementById("averageDailyRevenue").textContent = "₱0.00";
+      document.getElementById("averageWeeklyRevenue").textContent = "₱0.00";
+    }
+  };
+
+  // Event listener for month filter change
+  monthRevenueFilter.addEventListener("change", (event) => {
+    const selectedMonth = event.target.value;
+    updateRevenue(selectedMonth);
+  });
+
+  // Fetch revenue for the current month on page load
+  const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0"); // MM format
+  monthRevenueFilter.value = currentMonth;
+  updateRevenue(currentMonth);
+});
+
+// Function to update patient records chart
+let patientRecordsChart; // Store the chart instance globally
+
+async function updatePatientRecordsChart() {
+  try {
+    const year = document.getElementById("patientRecordsYearlyFilter").value;
+
+    const response = await fetch(
+      `/api/patientRecords/monthly-patient-records?year=${year}`
+    );
+
+    if (response.ok) {
+      const monthlyData = await response.json();
+
+      // Initialize all months
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const counts = monthlyData.map((data) => data.count);
+
+      // Destroy the existing chart if it exists
+      if (patientRecordsChart) {
+        patientRecordsChart.destroy();
+      }
+
+      const ctx = document.getElementById("myChart");
+      ctx.width = 800; // Set the canvas width to make the chart wider
+      ctx.height = 250; // Set the canvas height to make the chart smaller
+
+      // Create a new chart instance
+      patientRecordsChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: months,
+          datasets: [
+            {
+              label: "Patient Records",
+              data: counts,
+              borderWidth: 2,
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgba(75, 192, 192, 1)",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                font: { size: 14, family: "Arial", weight: "bold" },
+                color: "#333",
+              },
+            },
+            x: {
+              ticks: {
+                font: { size: 10, family: "Arial", weight: "bold" },
+                color: "#333",
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              labels: {
+                font: { size: 16, family: "Arial", weight: "bold" },
+                color: "#333",
+              },
+            },
+          },
+        },
+      });
+    } else {
+      console.error(
+        "Failed to fetch monthly patient records:",
+        response.statusText
+      );
+    }
+  } catch (error) {
+    console.error("Error fetching monthly patient records:", error);
+  }
+}
+
+document
+  .getElementById("patientRecordsYearlyFilter")
+  .addEventListener("change", updatePatientRecordsChart);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const monthRevenueFilter = document.getElementById("monthRevenueFilter");
+  const monthlyRevenue = document.getElementById("monthlyRevenue");
+  const monthlyRevenueIncrease = document.getElementById(
+    "monthlyRevenueIncrease"
+  );
+
+  // Populate month filter with all months
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   months.forEach((month, index) => {
     const option = document.createElement("option");
     option.value = (index + 1).toString().padStart(2, "0"); // Month in MM format
@@ -601,4 +894,5 @@ document.addEventListener("DOMContentLoaded", () => {
   const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, "0"); // MM format
   monthRevenueFilter.value = currentMonth;
   updateRevenue(currentMonth);
+  updatePatientRecordsChart();
 });

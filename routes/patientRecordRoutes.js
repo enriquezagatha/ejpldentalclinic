@@ -1,17 +1,29 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const patientRecordController = require('../controllers/patientRecordController');
+const patientRecordController = require("../controllers/patientRecordController");
 
 // Route to fetch all patient records
-router.get('/patient-records', patientRecordController.getPatientRecords);
+router.get("/patient-records", patientRecordController.getPatientRecords);
 
 // Route to fetch a specific patient record by ID
-router.get('/patient-records/:id', patientRecordController.getPatientRecordById);
+router.get(
+  "/patient-records/:id",
+  patientRecordController.getPatientRecordById
+);
 
 // Route to fetch patient records by daily, weekly, and monthly filters
-router.get('/patient-report', patientRecordController.getPatientReport);
+router.get("/patient-report", patientRecordController.getPatientReport);
 
 // Route to fetch patient treatment report
 router.get("/treatment-report", patientRecordController.getTreatmentReport);
+
+// Route to fetch monthly patient records for a specific year
+router.get(
+  "/monthly-patient-records",
+  patientRecordController.getMonthlyPatientRecords
+);
+
+// Route to fetch distinct years from patient records
+router.get("/years", patientRecordController.getPatientRecordYears);
 
 module.exports = router;

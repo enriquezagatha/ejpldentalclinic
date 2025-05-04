@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-personnel/sidebarfetch-personnel.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Add Chart.js library -->
     <!-- <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
     <link rel="stylesheet" href="../Medical Personnel/reports.css"> -->
 </head>
@@ -191,9 +192,9 @@
                             </section>
                             <section class="mt-10 pl-4">
                                 <p class="text-sm font-medium">Average Daily Revenue:</p>
-                                <p class="text-lg font-bold" id="averageDailyRevenue">₱10,000</p>
+                                <p class="text-lg font-bold" id="averageDailyRevenue"></p>
                                 <p class="text-sm font-medium mt-2">Average Weekly Revenue:</p>
-                                <p class="text-lg font-bold" id="averageWeeklyRevenue">₱10,000</p>
+                                <p class="text-lg font-bold" id="averageWeeklyRevenue"></p>
                             </section>
                         </div>
                         <div class="col-span-1 sm:col-span-2 p-4 bg-[#F5F5F5] text-black h-72 rounded-xl flex flex-col">
@@ -201,9 +202,13 @@
                                 <p class="font-bold overflow-hidden text-ellipsis whitespace-nowrap">Patient Records
                                     Data</p>
                                 <select
-                                    class="px-4 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider">
-                                    <option>Daily</option>
+                                    class="px-4 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider"
+                                    id="patientRecordsYearlyFilter">
+                                    <option></option>
                                 </select>
+                            </div>
+                            <div class="flex justify-center items-center h-full">
+                                <canvas id="myChart"></canvas>
                             </div>
                             <!-- Additional content can go here if needed -->
                         </div>
@@ -237,7 +242,7 @@
                             <div class="flex justify-between items-center mb-4">
                                 <p class="font-bold text-lg">Popular Treatments</p>
                                 <select
-                                    class="px-6 py-1 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider">
+                                    class="px-6 py-0 rounded-lg bg-[#D9D9D9] text-xs sm:text-sm font-medium uppercase tracking-wider">
                                     <option>All Time</option>
                                 </select>
                             </div>
@@ -256,7 +261,6 @@
         <script src="../components/components-personnel/navbarpersonnel-functionalities.js"></script>
         <script src="personnelnotification.js"></script>
         <script src="personneldashboard.js"></script>
-
     </div>
 </body>
 
