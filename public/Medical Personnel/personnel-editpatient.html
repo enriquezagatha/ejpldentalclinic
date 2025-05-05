@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Patient</title>
     <link href="../output.css" rel="stylesheet">
+    <link rel="icon" href="../media/logo/EJPL.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-personnel/sidebarfetch-personnel.js"></script>
@@ -30,11 +32,16 @@
                     <span id="profile-name" class="block font-semibold text-[#232931]">Loading...</span>
                     <span class="block text-xs text-[#232931]">Medical Personnel</span>
                 </div>
-                <svg class="w-4 h-4 ml-6 lg:ml-14 text-[#232931]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a 1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a 1 1 0 010-1.414z" clip-rule="evenodd" />
+                <svg class="w-4 h-4 ml-6 lg:ml-14 text-[#232931]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a 1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a 1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
                 </svg>
-                <div id="desktop-profile-dropdown" class="absolute bg-white border text-[#232931] mt-32 ml-12 rounded shadow-lg w-40 hidden group-hover:block">
-                    <a href="../Medical Personnel/personnel-profile.html" class="block px-4 py-2 hover:bg-gray-100">View Profile</a>
+                <div id="desktop-profile-dropdown"
+                    class="absolute bg-white border text-[#232931] mt-32 ml-12 rounded shadow-lg w-40 hidden group-hover:block">
+                    <a href="../Medical Personnel/personnel-profile.html" class="block px-4 py-2 hover:bg-gray-100">View
+                        Profile</a>
                     <a href="../main page/home.html" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
                 </div>
             </div>
@@ -43,11 +50,12 @@
         <main class="p-3 sm:p-6">
 
             <main class="p-1 sm:p-6 pt-1">
-                <button onclick="window.history.back();" class="bg-[#2C4A66] text-white px-4 py-1 rounded hover:bg-[#1E3A56]">
+                <button onclick="window.history.back();"
+                    class="bg-[#2C4A66] text-white px-4 py-1 rounded hover:bg-[#1E3A56]">
                     <i class="fas fa-arrow-left"></i> <!-- Font Awesome back arrow icon -->
                 </button>
                 <h2 class="text-2xl font-semibold text-gray-800 mt-4">Edit Patient Details</h2>
-            
+
                 <div class="bg-white p-6 rounded-lg shadow mt-6">
                     <h3 class="text-xl font-semibold text-gray-700 mb-4">Patient Details</h3>
 
@@ -55,11 +63,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div>
                             <label for="firstName" class="block text-sm font-medium text-gray-600">First Name:</label>
-                            <input type="text" id="firstName" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <input type="text" id="firstName" class="w-full p-2 border border-gray-300 rounded mt-1"
+                                readonly>
                         </div>
                         <div>
                             <label for="lastName" class="block text-sm font-medium text-gray-600">Last Name:</label>
-                            <input type="text" id="lastName" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <input type="text" id="lastName" class="w-full p-2 border border-gray-300 rounded mt-1"
+                                readonly>
                         </div>
                         <div>
                             <label for="age" class="block text-sm font-medium text-gray-600">Age:</label>
@@ -71,15 +81,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                         <div>
                             <label for="gender" class="block text-sm font-medium text-gray-600">Gender:</label>
-                            <input type="text" id="gender" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <input type="text" id="gender" class="w-full p-2 border border-gray-300 rounded mt-1"
+                                readonly>
                         </div>
                         <div>
                             <label for="address" class="block text-sm font-medium text-gray-600">Address:</label>
-                            <input type="text" id="address" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <input type="text" id="address" class="w-full p-2 border border-gray-300 rounded mt-1"
+                                readonly>
                         </div>
                         <div class="md:col-span-1 lg:col-span-1">
-                            <label for="selectedHistory" class="block text-sm font-medium text-gray-600">Medical History:</label>
-                            <input type="text" id="selectedHistory" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <label for="selectedHistory" class="block text-sm font-medium text-gray-600">Medical
+                                History:</label>
+                            <input type="text" id="selectedHistory"
+                                class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
                         </div>
                     </div>
 
@@ -88,193 +102,211 @@
                     <!-- Third Row -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                         <div>
-                            <label for="contactNumber" class="block text-sm font-medium text-gray-600">Contact Number:</label>
-                            <input type="text" id="contactNumber" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <label for="contactNumber" class="block text-sm font-medium text-gray-600">Contact
+                                Number:</label>
+                            <input type="text" id="contactNumber" class="w-full p-2 border border-gray-300 rounded mt-1"
+                                readonly>
                         </div>
                         <div>
-                            <label for="emailAddress" class="block text-sm font-medium text-gray-600">Email Address:</label>
-                            <input type="text" id="emailAddress" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <label for="emailAddress" class="block text-sm font-medium text-gray-600">Email
+                                Address:</label>
+                            <input type="text" id="emailAddress" class="w-full p-2 border border-gray-300 rounded mt-1"
+                                readonly>
                         </div>
                         <div>
-                            <label for="emergencyContact" class="block text-sm font-medium text-gray-600">Emergency Contact:</label>
-                            <input type="text" id="emergencyContact" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <label for="emergencyContact" class="block text-sm font-medium text-gray-600">Emergency
+                                Contact:</label>
+                            <input type="text" id="emergencyContact"
+                                class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
                         </div>
                         <div>
-                            <label for="emergencyContactNumber" class="block text-sm font-medium text-gray-600">Emergency Contact Number:</label>
-                            <input type="text" id="emergencyContactNumber" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <label for="emergencyContactNumber"
+                                class="block text-sm font-medium text-gray-600">Emergency Contact Number:</label>
+                            <input type="text" id="emergencyContactNumber"
+                                class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
                         </div>
                         <div>
-                            <label for="emergencyContactRelationship" class="block text-sm font-medium text-gray-600">Relationship:</label>
-                            <input type="text" id="emergencyContactRelationship" class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
+                            <label for="emergencyContactRelationship"
+                                class="block text-sm font-medium text-gray-600">Relationship:</label>
+                            <input type="text" id="emergencyContactRelationship"
+                                class="w-full p-2 border border-gray-300 rounded mt-1" readonly>
                         </div>
                     </div>
 
                     <h3 class="text-xl font-semibold text-gray-700 mt-6">Treatment History</h3>
-                    
+
                     <div class="overflow-x-auto mt-4">
                         <div class="min-w-[728px]">
                             <table class="w-full border-collapse border border-gray-300">
                                 <thead>
                                     <tr class="bg-[#2C4A66] text-white">
-                                        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-white">Treatment Type</th>
-                                        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-white">Treatment Date</th>
-                                        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-white">Assigned Dentist</th>
-                                        <th class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-white">Actions</th>
+                                        <th
+                                            class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-white">
+                                            Treatment Type</th>
+                                        <th
+                                            class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-white">
+                                            Treatment Date</th>
+                                        <th
+                                            class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-white">
+                                            Assigned Dentist</th>
+                                        <th
+                                            class="border border-gray-300 px-4 py-2 text-left text-sm font-medium text-white">
+                                            Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="treatmentTableBody" class="divide-y divide-gray-200">
                                     <!-- Treatment rows will be added dynamically here -->
                                 </tbody>
-                            </table>        
+                            </table>
                         </div>
                     </div>
                 </div>
                 <div id="message" class="text-red-600 font-medium mt-4 hidden"></div>
             </main>
-</div>
+    </div>
 
-<script>
-let cachedDentists = [];
+    <script>
+        let cachedDentists = [];
 
-async function fetchPatientDetails() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const appointmentId = urlParams.get('appointmentId'); 
-    const messageDiv = document.getElementById('message');
+        async function fetchPatientDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const appointmentId = urlParams.get('appointmentId');
+            const messageDiv = document.getElementById('message');
 
-    // ✅ Hide any previous error messages
-    messageDiv.style.display = 'none';
+            // ✅ Hide any previous error messages
+            messageDiv.style.display = 'none';
 
-    if (!appointmentId) {
-        messageDiv.textContent = 'No appointment selected.';
-        messageDiv.style.color = 'red';
-        messageDiv.style.display = 'block';
-        return;
-    }
+            if (!appointmentId) {
+                messageDiv.textContent = 'No appointment selected.';
+                messageDiv.style.color = 'red';
+                messageDiv.style.display = 'block';
+                return;
+            }
 
-    try {
-        const response = await fetch(`/api/appointments/details?appointmentId=${encodeURIComponent(appointmentId)}&t=${new Date().getTime()}`);
-        
-        if (!response.ok) throw new Error('Error fetching appointment details.');
+            try {
+                const response = await fetch(`/api/appointments/details?appointmentId=${encodeURIComponent(appointmentId)}&t=${new Date().getTime()}`);
 
-        const patient = await response.json();
+                if (!response.ok) throw new Error('Error fetching appointment details.');
 
-        // Fetch dentist names for treatments
-        await fetchDentists();  // Fetch dentists list to cache
+                const patient = await response.json();
 
-        for (const treatment of patient.treatments) {
-            if (treatment.assignedDentist) {
-                // Check if assignedDentist has $oid or is directly an ObjectId string
-                const dentistId = treatment.assignedDentist.$oid || treatment.assignedDentist;
-                treatment.dentistName = await getDentistName(dentistId); // Use ObjectId for the assigned dentist
+                // Fetch dentist names for treatments
+                await fetchDentists();  // Fetch dentists list to cache
+
+                for (const treatment of patient.treatments) {
+                    if (treatment.assignedDentist) {
+                        // Check if assignedDentist has $oid or is directly an ObjectId string
+                        const dentistId = treatment.assignedDentist.$oid || treatment.assignedDentist;
+                        treatment.dentistName = await getDentistName(dentistId); // Use ObjectId for the assigned dentist
+                    }
+                }
+
+                displayPatientDetails(patient, appointmentId);
+            } catch (error) {
+                messageDiv.textContent = error.message;
+                messageDiv.style.color = 'red';
+                messageDiv.style.display = 'block';
             }
         }
 
-        displayPatientDetails(patient, appointmentId);
-    } catch (error) {
-        messageDiv.textContent = error.message;
-        messageDiv.style.color = 'red';
-        messageDiv.style.display = 'block';
-    }
-}
+        // Fetch dentists once and cache the result
+        async function fetchDentists() {
+            if (cachedDentists.length === 0) {
+                try {
+                    const response = await fetch('/api/dentists'); // Fetch dentists from API
+                    if (response.ok) {
+                        cachedDentists = await response.json();  // Cache dentists
+                    } else {
+                        console.error('Failed to fetch dentists:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error fetching dentists:', error);
+                }
+            }
+            return cachedDentists;
+        }
 
-// Fetch dentists once and cache the result
-async function fetchDentists() {
-    if (cachedDentists.length === 0) {
-        try {
-            const response = await fetch('/api/dentists'); // Fetch dentists from API
-            if (response.ok) {
-                cachedDentists = await response.json();  // Cache dentists
+        // Get dentist's name by ObjectId with prefix based on gender
+        async function getDentistName(dentistId) {
+            console.log("Fetching dentist with ID:", dentistId); // Log dentist ID for debugging
+
+            // Try to find the dentist in the cached list first
+            const dentist = cachedDentists.find(d => d._id === dentistId);
+
+            if (!dentist) {
+                try {
+                    console.log("Dentist not found in cache. Fetching from API...");
+                    const response = await fetch(`/api/dentists/${dentistId}`);
+                    if (response.ok) {
+                        const fetchedDentist = await response.json();
+                        cachedDentists.push(fetchedDentist); // Add to cache for future reference
+                        console.log("Fetched dentist:", fetchedDentist); // Log fetched dentist details
+                        return getFormattedDentistName(fetchedDentist);
+                    } else {
+                        console.warn(`Failed to fetch dentist with ID ${dentistId}`);
+                        return 'Unknown Dentist';
+                    }
+                } catch (error) {
+                    console.error('Error fetching dentist:', error);
+                    return 'Unknown Dentist';
+                }
             } else {
-                console.error('Failed to fetch dentists:', response.statusText);
+                console.log("Dentist found in cache:", dentist); // Log dentist details from cache
+                return getFormattedDentistName(dentist);
             }
-        } catch (error) {
-            console.error('Error fetching dentists:', error);
         }
-    }
-    return cachedDentists;
-}
 
-// Get dentist's name by ObjectId with prefix based on gender
-async function getDentistName(dentistId) {
-    console.log("Fetching dentist with ID:", dentistId); // Log dentist ID for debugging
-    
-    // Try to find the dentist in the cached list first
-    const dentist = cachedDentists.find(d => d._id === dentistId);
-
-    if (!dentist) {
-        try {
-            console.log("Dentist not found in cache. Fetching from API...");
-            const response = await fetch(`/api/dentists/${dentistId}`);
-            if (response.ok) {
-                const fetchedDentist = await response.json();
-                cachedDentists.push(fetchedDentist); // Add to cache for future reference
-                console.log("Fetched dentist:", fetchedDentist); // Log fetched dentist details
-                return getFormattedDentistName(fetchedDentist);
-            } else {
-                console.warn(`Failed to fetch dentist with ID ${dentistId}`);
-                return 'Unknown Dentist';
-            }
-        } catch (error) {
-            console.error('Error fetching dentist:', error);
-            return 'Unknown Dentist';
+        // Helper function to format dentist name with prefix
+        function getFormattedDentistName(dentist) {
+            // Check the gender and add appropriate prefix
+            const prefix = dentist.gender === 'female' ? 'Dra.' : 'Dr.';
+            return `${prefix} ${dentist.firstName} ${dentist.lastName}`;
         }
-    } else {
-        console.log("Dentist found in cache:", dentist); // Log dentist details from cache
-        return getFormattedDentistName(dentist);
-    }
-}
 
-// Helper function to format dentist name with prefix
-function getFormattedDentistName(dentist) {
-    // Check the gender and add appropriate prefix
-    const prefix = dentist.gender === 'female' ? 'Dra.' : 'Dr.';
-    return `${prefix} ${dentist.firstName} ${dentist.lastName}`;
-}
+        function formatDateToLongDate(date) {
+            if (!date) return "Pending"; // ✅ Handle missing date
+            const d = new Date(date);
+            if (isNaN(d.getTime())) return "Invalid Date"; // ✅ Handle invalid date
+            return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
 
-function formatDateToLongDate(date) {
-    if (!date) return "Pending"; // ✅ Handle missing date
-    const d = new Date(date);
-    if (isNaN(d.getTime())) return "Invalid Date"; // ✅ Handle invalid date
-    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-}
+        function displayPatientDetails(patient, appointmentId) {
+            document.getElementById('firstName').value = patient.firstName || '';
+            document.getElementById('lastName').value = patient.lastName || '';
+            document.getElementById('age').value = patient.age || '';
+            document.getElementById('gender').value = patient.gender || '';
+            document.getElementById('address').value = patient.address || '';
+            document.getElementById('contactNumber').value = patient.contactNumber || '';
+            document.getElementById('emailAddress').value = patient.emailAddress || '';
+            document.getElementById('emergencyContact').value = patient.emergencyContact || '';
+            document.getElementById('emergencyContactNumber').value = patient.emergencyContactNumber || '';
+            document.getElementById('emergencyContactRelationship').value = patient.emergencyContactRelationship || '';
+            document.getElementById('selectedHistory').value = patient.selectedHistory || '';
 
-function displayPatientDetails(patient, appointmentId) { 
-    document.getElementById('firstName').value = patient.firstName || '';
-    document.getElementById('lastName').value = patient.lastName || '';
-    document.getElementById('age').value = patient.age || '';
-    document.getElementById('gender').value = patient.gender || '';
-    document.getElementById('address').value = patient.address || '';
-    document.getElementById('contactNumber').value = patient.contactNumber || '';
-    document.getElementById('emailAddress').value = patient.emailAddress || '';
-    document.getElementById('emergencyContact').value = patient.emergencyContact || '';
-    document.getElementById('emergencyContactNumber').value = patient.emergencyContactNumber || '';
-    document.getElementById('emergencyContactRelationship').value = patient.emergencyContactRelationship || '';
-    document.getElementById('selectedHistory').value = patient.selectedHistory || '';
+            const treatmentTable = document.getElementById('treatmentTableBody');
+            treatmentTable.innerHTML = '';
 
-    const treatmentTable = document.getElementById('treatmentTableBody');
-    treatmentTable.innerHTML = '';
-
-    // ✅ Ensure treatments exist and are in an array before looping
-    if (!Array.isArray(patient.treatments) || patient.treatments.length === 0) {
-        treatmentTable.innerHTML = `
+            // ✅ Ensure treatments exist and are in an array before looping
+            if (!Array.isArray(patient.treatments) || patient.treatments.length === 0) {
+                treatmentTable.innerHTML = `
             <tr>
                 <td colspan="4" class="text-center text-gray-500 py-4">
                     No treatments found.
                 </td>
             </tr>
         `;
-        return;
-    }
+                return;
+            }
 
-    patient.treatments.forEach((treatment, index) => {
-        const formattedDate = formatDateToLongDate(treatment.treatmentDate);
+            patient.treatments.forEach((treatment, index) => {
+                const formattedDate = formatDateToLongDate(treatment.treatmentDate);
 
-        // Use cached dentist name or fetch if necessary
-        const dentistName = treatment.dentistName || 'Not Assigned';
+                // Use cached dentist name or fetch if necessary
+                const dentistName = treatment.dentistName || 'Not Assigned';
 
-        const row = document.createElement('tr');
-        row.className = "odd:bg-gray-50"; // Row color alternation
-        row.innerHTML = `
+                const row = document.createElement('tr');
+                row.className = "odd:bg-gray-50"; // Row color alternation
+                row.innerHTML = `
             <td class="border border-gray-300 px-4 py-2">${treatment.treatmentType || 'N/A'}</td>
             <td class="border border-gray-300 px-4 py-2">${formattedDate}</td>
             <td class="border border-gray-300 px-4 py-2">${dentistName}</td>
@@ -286,30 +318,31 @@ function displayPatientDetails(patient, appointmentId) {
             </td>
         `;
 
-        treatmentTable.appendChild(row);
-    });
-}
+                treatmentTable.appendChild(row);
+            });
+        }
 
-document.addEventListener('DOMContentLoaded', fetchPatientDetails);
+        document.addEventListener('DOMContentLoaded', fetchPatientDetails);
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const profileResponse = await fetch('/api/medicalPersonnel/profile');
-    if (profileResponse.ok) {
-        const personnelData = await profileResponse.json();
-        displayProfileInfo(personnelData);
+        document.addEventListener('DOMContentLoaded', async () => {
+            const profileResponse = await fetch('/api/medicalPersonnel/profile');
+            if (profileResponse.ok) {
+                const personnelData = await profileResponse.json();
+                displayProfileInfo(personnelData);
 
-        // Set the profile picture if available
-        const profilePictureElement = document.querySelector('.desktop-profile');
-        profilePictureElement.src = personnelData.profilePicture 
-            ? `/uploads/${personnelData.profilePicture}` 
-            : '../media/logo/default-profile.png';
-    }
-});
+                // Set the profile picture if available
+                const profilePictureElement = document.querySelector('.desktop-profile');
+                profilePictureElement.src = personnelData.profilePicture
+                    ? `/uploads/${personnelData.profilePicture}`
+                    : '../media/logo/default-profile.png';
+            }
+        });
 
-function displayProfileInfo(data) {
-    document.getElementById('profile-name').innerText = `${data.firstName}`;
-}
+        function displayProfileInfo(data) {
+            document.getElementById('profile-name').innerText = `${data.firstName}`;
+        }
 
-</script>       
+    </script>
 </body>
+
 </html>

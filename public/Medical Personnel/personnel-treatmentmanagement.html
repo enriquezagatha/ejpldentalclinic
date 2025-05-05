@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service & Treatment Maintenance</title>
+    <title>Treatment Management</title>
     <!-- <link rel="stylesheet" href="../Medical Personnel/mpstyle.css">
     <link rel="stylesheet" href="../Medical Personnel/services.css"> -->
+    <link rel="icon" href="../media/logo/EJPL.png" type="image/x-icon">
     <link href="../output.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -17,7 +18,9 @@
 
     <!-- Centered Toast Container -->
     <div id="toast" class="fixed inset-0 flex items-center justify-center z-50 hidden pointer-events-none">
-        <div id="toast-message" class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto"></div>
+        <div id="toast-message"
+            class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ease-in-out pointer-events-auto">
+        </div>
     </div>
 
     <!-- Overlay for mobile -->
@@ -204,13 +207,13 @@
                 const treatmentModal = document.getElementById("treatment-modal");
                 const treatmentOverlay = document.getElementById("treatment-overlay");
 
-            document.getElementById("open-treatment-modal-btn").addEventListener("click", () => {
-                treatmentModal.style.display = "flex";
-            });
+                document.getElementById("open-treatment-modal-btn").addEventListener("click", () => {
+                    treatmentModal.style.display = "flex";
+                });
 
-            document.getElementById("close-treatment-modal-btn").addEventListener("click", () => {
-                treatmentModal.style.display = "none";
-            });
+                document.getElementById("close-treatment-modal-btn").addEventListener("click", () => {
+                    treatmentModal.style.display = "none";
+                });
 
                 treatmentOverlay.addEventListener("click", () => {
                     treatmentModal.style.display = "none";
@@ -245,15 +248,15 @@
                 document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
 
-        document.getElementById("open-treatment-modal-btn").addEventListener("click", () => {
-        document.getElementById("treatment-modal").classList.remove("hidden");
+            document.getElementById("open-treatment-modal-btn").addEventListener("click", () => {
+                document.getElementById("treatment-modal").classList.remove("hidden");
             });
 
-        document.getElementById("close-treatment-modal-btn").addEventListener("click", () => {
-        document.getElementById("treatment-modal").classList.add("hidden");
+            document.getElementById("close-treatment-modal-btn").addEventListener("click", () => {
+                document.getElementById("treatment-modal").classList.add("hidden");
             });
 
-    </script>
+        </script>
 
 </body>
 

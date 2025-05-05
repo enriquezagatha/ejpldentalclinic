@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,13 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <!-- <link rel="stylesheet" href="../Medical Personnel/treatmentdetails.css"> -->
     <link href="../output.css" rel="stylesheet">
+    <link rel="icon" href="../media/logo/EJPL.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="../components/components-personnel/sidebarfetch-personnel.js"></script>
 
 </head>
+
 <body class="min-h-screen bg-slate-50 flex font-inter">
 
     <!-- Overlay for mobile -->
@@ -33,27 +36,34 @@
                     <span id="profile-name" class="block font-semibold text-[#232931]">Loading...</span>
                     <span class="block text-xs text-[#232931]">Medical Personnel</span>
                 </div>
-                <svg class="w-4 h-4 ml-6 lg:ml-14 text-[#232931]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a 1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a 1 1 0 010-1.414z" clip-rule="evenodd" />
+                <svg class="w-4 h-4 ml-6 lg:ml-14 text-[#232931]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a 1 1 0 111.414 1.414l-4 4a 1 1 0 01-1.414 0l-4-4a 1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
                 </svg>
-                <div id="desktop-profile-dropdown" class="absolute bg-white border text-[#232931] mt-32 ml-12 rounded shadow-lg w-40 hidden group-hover:block">
-                    <a href="../Medical Personnel/personnel-profile.html" class="block px-4 py-2 hover:bg-gray-100">View Profile</a>
+                <div id="desktop-profile-dropdown"
+                    class="absolute bg-white border text-[#232931] mt-32 ml-12 rounded shadow-lg w-40 hidden group-hover:block">
+                    <a href="../Medical Personnel/personnel-profile.html" class="block px-4 py-2 hover:bg-gray-100">View
+                        Profile</a>
                     <a href="../main page/home.html" class="block px-4 py-2 hover:bg-gray-100">Logout</a>
                 </div>
             </div>
         </header>
-        
+
         <!-- Page Content -->
         <main class="p-6">
             <main class="space-y-6 p-6 pt-1">
-                <button onclick="window.history.back();" class="bg-[#2C4A66] text-white px-4 py-1 rounded hover:bg-[#1E3A56]">
+                <button onclick="window.history.back();"
+                    class="bg-[#2C4A66] text-white px-4 py-1 rounded hover:bg-[#1E3A56]">
                     <i class="fas fa-arrow-left"></i> <!-- Font Awesome back arrow icon -->
                 </button>
                 <h2 class="text-2xl font-bold text-gray-800">Treatment Details</h2>
 
                 <div class="flex justify-between items-center">
                     <h3 class="text-lg font-semibold text-gray-700">Treatment History</h3>
-                    <button class="save-button bg-[#2C4A66] text-white px-4 py-1 rounded-md hover:bg-[#1E3A56]" onclick="openModal()">Save</button>
+                    <button class="save-button bg-[#2C4A66] text-white px-4 py-1 rounded-md hover:bg-[#1E3A56]"
+                        onclick="openModal()">Save</button>
                 </div>
 
                 <table class="w-full border-collapse border border-gray-300 text-sm text-gray-700">
@@ -66,24 +76,30 @@
                     <tbody id="treatmentTableBody">
                         <tr>
                             <td class="border border-gray-300 px-4 py-2">
-                                <input type="text" id="treatmentType" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <input type="text" id="treatmentType"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </td>
                             <td class="border border-gray-300 px-4 py-2">
-                                <input type="text" id="treatmentDate" name="treatmentDate" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <input type="text" id="treatmentDate" name="treatmentDate"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            
+
                 <div class="space-y-4">
                     <div>
-                        <label for="procedure" class="block text-sm font-medium text-gray-700">Procedure Performed:</label>
-                        <textarea id="procedure" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        <label for="procedure" class="block text-sm font-medium text-gray-700">Procedure
+                            Performed:</label>
+                        <textarea id="procedure"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
                     </div>
                 </div>
-                
-                <label for="medicineType" class="block text-lg font-semibold text-gray-700">Prescription Entries:</label>
-                <table id="prescriptionTable" class="w-full border-collapse border border-gray-300 text-sm text-gray-700">
+
+                <label for="medicineType" class="block text-lg font-semibold text-gray-700">Prescription
+                    Entries:</label>
+                <table id="prescriptionTable"
+                    class="w-full border-collapse border border-gray-300 text-sm text-gray-700">
                     <thead>
                         <tr class="bg-[#2C4A66] text-white">
                             <th class="border border-gray-300 px-4 py-2">Prescription Date</th>
@@ -94,169 +110,186 @@
                     <tbody>
                         <tr>
                             <td class="border border-gray-300 px-4 py-2">
-                                <input type="date" class="prescriptionDate w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <input type="date"
+                                    class="prescriptionDate w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </td>
                             <td class="border border-gray-300 px-4 py-2">
-                                <input type="text" class="medicineType w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <input type="text"
+                                    class="medicineType w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </td>
                             <td class="border border-gray-300 px-4 py-2 text-center">
-                                <button class="remove-button text-red-500 hover:underline" onclick="removeRow(this)">Remove</button>
+                                <button class="remove-button text-red-500 hover:underline"
+                                    onclick="removeRow(this)">Remove</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <button class="add-button bg-[#2C4A66] text-white px-4 py-1 rounded-md hover:bg-[#1E3A56]" onclick="addRow()">Add Prescription</button>
-            
-                <label for="treatmentNotes" class="block text-lg font-semibold text-gray-700">Treatment Notes and Observation:</label>
-                <textarea id="treatmentNotes" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-            
+                <button class="add-button bg-[#2C4A66] text-white px-4 py-1 rounded-md hover:bg-[#1E3A56]"
+                    onclick="addRow()">Add Prescription</button>
+
+                <label for="treatmentNotes" class="block text-lg font-semibold text-gray-700">Treatment Notes and
+                    Observation:</label>
+                <textarea id="treatmentNotes"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+
                 <div id="fileUploadContainer" class="file-upload-container space-y-4">
-                    <label for="fileUpload" class="block text-sm font-medium text-gray-700">Upload File (e.g., X-rays, Photos):</label>
-                    <input type="file" id="fileUpload" multiple class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
-                    <button class="upload-button bg-[#2C4A66] text-white px-4 py-1 rounded-md hover:bg-[#1E3A56]" onclick="uploadFiles()">Upload Files</button>
+                    <label for="fileUpload" class="block text-sm font-medium text-gray-700">Upload File (e.g., X-rays,
+                        Photos):</label>
+                    <input type="file" id="fileUpload" multiple
+                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
+                    <button class="upload-button bg-[#2C4A66] text-white px-4 py-1 rounded-md hover:bg-[#1E3A56]"
+                        onclick="uploadFiles()">Upload Files</button>
                 </div>
-                
+
                 <div id="uploadedFilesContainer" class="mt-4">
                     <h4 class="text-lg font-semibold text-gray-700">Uploaded Files:</h4>
                     <div id="uploadedImagesList" class="mt-2"></div>
                     <div id="uploadedOtherFilesList" class="mt-2"></div>
-                </div>        
-            
+                </div>
+
                 <!-- Delete Confirmation Modal -->
-                <div id="deleteModal" class="modal fixed inset-0 items-center justify-center bg-black bg-opacity-50 hidden">
+                <div id="deleteModal"
+                    class="modal fixed inset-0 items-center justify-center bg-black bg-opacity-50 hidden">
                     <div class="modal-content bg-white p-6 rounded-lg shadow-lg">
                         <p class="text-gray-700">Are you sure you want to delete this file?</p>
                         <div class="modal-buttons mt-4 flex justify-end space-x-4">
-                            <button class="confirm-button bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" onclick="confirmDelete()">Yes</button>
-                            <button class="cancel-button bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400" onclick="closeDeleteModal()">No</button>
+                            <button class="confirm-button bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                                onclick="confirmDelete()">Yes</button>
+                            <button
+                                class="cancel-button bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                                onclick="closeDeleteModal()">No</button>
                         </div>
                     </div>
                 </div>
-            
-              
-                
-                <div id="saveModal" class="modal fixed inset-0 items-center justify-center bg-black bg-opacity-10 hidden">
+
+
+
+                <div id="saveModal"
+                    class="modal fixed inset-0 items-center justify-center bg-black bg-opacity-10 hidden">
                     <div class="modal-content bg-white p-6 rounded-lg shadow-lg">
                         <p class="text-gray-700">Are you sure you want to save these details?</p>
                         <div class="modal-buttons mt-4 flex justify-end space-x-4">
-                            <button class="confirm-button bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onclick="confirmSave()">Yes</button>
-                            <button class="cancel-button bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400" onclick="closeModal()">No</button>
+                            <button class="confirm-button bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                                onclick="confirmSave()">Yes</button>
+                            <button
+                                class="cancel-button bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+                                onclick="closeModal()">No</button>
                         </div>
                     </div>
                 </div>
-            
+
                 <div id="message" class="mt-4 text-sm"></div>
             </main>
-    </main>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            flatpickr("#treatmentDate", {
-                dateFormat: "m-d-Y",
+        </main>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                flatpickr("#treatmentDate", {
+                    dateFormat: "m-d-Y",
+                });
             });
-        });
 
-        function formatDateToInput(date) {
-            if (!date) return '';
-            const d = new Date(date);
-            return `${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}-${d.getFullYear()}`;
-        }
-
-        async function fetchTreatmentDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const appointmentId = urlParams.get('appointmentId');
-            let treatmentIndex = parseInt(urlParams.get('treatmentIndex'), 10);
-            const messageDiv = document.getElementById('message');
-
-            if (!appointmentId || isNaN(treatmentIndex)) {
-                messageDiv.textContent = 'Invalid request. Missing appointment or treatment index.';
-                messageDiv.style.color = 'red';
-                return;
+            function formatDateToInput(date) {
+                if (!date) return '';
+                const d = new Date(date);
+                return `${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}-${d.getFullYear()}`;
             }
 
-            const response = await fetch(`/api/appointments/details?appointmentId=${encodeURIComponent(appointmentId)}`);
+            async function fetchTreatmentDetails() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const appointmentId = urlParams.get('appointmentId');
+                let treatmentIndex = parseInt(urlParams.get('treatmentIndex'), 10);
+                const messageDiv = document.getElementById('message');
 
-            if (response.ok) {
-                const patient = await response.json();
-                if (!patient || !Array.isArray(patient.treatments) || treatmentIndex >= patient.treatments.length) {
-                    messageDiv.textContent = 'Invalid treatment index.';
+                if (!appointmentId || isNaN(treatmentIndex)) {
+                    messageDiv.textContent = 'Invalid request. Missing appointment or treatment index.';
                     messageDiv.style.color = 'red';
                     return;
                 }
 
-                displayTreatmentDetails(patient.treatments[treatmentIndex]);
-            } else {
-                messageDiv.textContent = 'Error fetching treatment details.';
-                messageDiv.style.color = 'red';
-            }
-        }
-
-        function displayTreatmentDetails(treatment) {
-            document.getElementById('treatmentDate').value = formatDateToInput(treatment.treatmentDate);
-            document.getElementById('treatmentType').value = treatment.treatmentType || '';
-            document.getElementById('treatmentNotes').value = treatment.treatmentNotes || '';
-        }
-
-        async function updateTreatmentDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const appointmentId = urlParams.get('appointmentId');
-            let treatmentIndex = parseInt(urlParams.get('treatmentIndex'), 10);
-            const messageDiv = document.getElementById('message');
-
-            if (!appointmentId || isNaN(treatmentIndex)) {
-                messageDiv.textContent = 'Invalid request.';
-                messageDiv.style.color = 'red';
-                alert('⚠️ Invalid request. Missing appointment ID or treatment index.');
-                return;
-            }
-
-            const updatedTreatment = {
-                treatmentType: document.getElementById('treatmentType').value || "",
-                treatmentDate: document.getElementById('treatmentDate').value || "",
-                treatmentNotes: document.getElementById('treatmentNotes').value || "",
-                prescriptionDate: document.getElementById('prescriptionDate')?.value || "",
-                medicineType: document.getElementById('medicineType')?.value || "",
-                procedure: document.getElementById('procedure')?.value || ""
-            };
-
-            console.log("🚀 Sending Update Request: ", {
-                appointmentId,
-                treatmentIndex,
-                updatedTreatment
-            });
-
-            try {
-                const response = await fetch('/api/appointments/update-treatment', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ appointmentId, treatmentIndex, updatedTreatment })
-                });
-
-                const result = await response.json();
-                console.log("✅ Response from server:", result);
+                const response = await fetch(`/api/appointments/details?appointmentId=${encodeURIComponent(appointmentId)}`);
 
                 if (response.ok) {
-                    await fetchTreatmentDetails();
-                    messageDiv.textContent = '✅ Treatment updated successfully.';
-                    messageDiv.style.color = 'green';
-                    alert('✅ Treatment updated successfully!');
+                    const patient = await response.json();
+                    if (!patient || !Array.isArray(patient.treatments) || treatmentIndex >= patient.treatments.length) {
+                        messageDiv.textContent = 'Invalid treatment index.';
+                        messageDiv.style.color = 'red';
+                        return;
+                    }
+
+                    displayTreatmentDetails(patient.treatments[treatmentIndex]);
                 } else {
-                    messageDiv.textContent = result.message || '❌ Error updating treatment.';
+                    messageDiv.textContent = 'Error fetching treatment details.';
                     messageDiv.style.color = 'red';
-                    alert(`❌ Error: ${result.message || 'Failed to update treatment.'}`);
                 }
-            } catch (error) {
-                console.error("❌ Error updating treatment:", error);
-                messageDiv.textContent = '❌ Error updating treatment. Check console for details.';
-                messageDiv.style.color = 'red';
-                alert('❌ Error updating treatment. Please try again.');
             }
-        }
+
+            function displayTreatmentDetails(treatment) {
+                document.getElementById('treatmentDate').value = formatDateToInput(treatment.treatmentDate);
+                document.getElementById('treatmentType').value = treatment.treatmentType || '';
+                document.getElementById('treatmentNotes').value = treatment.treatmentNotes || '';
+            }
+
+            async function updateTreatmentDetails() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const appointmentId = urlParams.get('appointmentId');
+                let treatmentIndex = parseInt(urlParams.get('treatmentIndex'), 10);
+                const messageDiv = document.getElementById('message');
+
+                if (!appointmentId || isNaN(treatmentIndex)) {
+                    messageDiv.textContent = 'Invalid request.';
+                    messageDiv.style.color = 'red';
+                    alert('⚠️ Invalid request. Missing appointment ID or treatment index.');
+                    return;
+                }
+
+                const updatedTreatment = {
+                    treatmentType: document.getElementById('treatmentType').value || "",
+                    treatmentDate: document.getElementById('treatmentDate').value || "",
+                    treatmentNotes: document.getElementById('treatmentNotes').value || "",
+                    prescriptionDate: document.getElementById('prescriptionDate')?.value || "",
+                    medicineType: document.getElementById('medicineType')?.value || "",
+                    procedure: document.getElementById('procedure')?.value || ""
+                };
+
+                console.log("🚀 Sending Update Request: ", {
+                    appointmentId,
+                    treatmentIndex,
+                    updatedTreatment
+                });
+
+                try {
+                    const response = await fetch('/api/appointments/update-treatment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ appointmentId, treatmentIndex, updatedTreatment })
+                    });
+
+                    const result = await response.json();
+                    console.log("✅ Response from server:", result);
+
+                    if (response.ok) {
+                        await fetchTreatmentDetails();
+                        messageDiv.textContent = '✅ Treatment updated successfully.';
+                        messageDiv.style.color = 'green';
+                        alert('✅ Treatment updated successfully!');
+                    } else {
+                        messageDiv.textContent = result.message || '❌ Error updating treatment.';
+                        messageDiv.style.color = 'red';
+                        alert(`❌ Error: ${result.message || 'Failed to update treatment.'}`);
+                    }
+                } catch (error) {
+                    console.error("❌ Error updating treatment:", error);
+                    messageDiv.textContent = '❌ Error updating treatment. Check console for details.';
+                    messageDiv.style.color = 'red';
+                    alert('❌ Error updating treatment. Please try again.');
+                }
+            }
 
 
-        function addRow() {
-            const table = document.getElementById('prescriptionTable').getElementsByTagName('tbody')[0];
-            const newRow = table.insertRow();
-            newRow.innerHTML = `
+            function addRow() {
+                const table = document.getElementById('prescriptionTable').getElementsByTagName('tbody')[0];
+                const newRow = table.insertRow();
+                newRow.innerHTML = `
                 <td class="border border-gray-300 px-4 py-2">
                     <input type="date" class="prescriptionDate w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </td>
@@ -267,46 +300,47 @@
                     <button class="remove-button text-red-500 hover:underline" onclick="removeRow(this)">Remove</button>
                 </td>
             `;
-        }
-
-        function removeRow(button) {
-            button.closest('tr').remove();
-        }
-
-        function openModal() {
-            document.getElementById('saveModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('saveModal').style.display = 'none';
-        }
-
-        async function confirmSave() {
-            await updateTreatmentDetails();
-            closeModal();
-        }
-
-        window.onload = async function () {
-            await fetchTreatmentDetails();
-        };
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const profileResponse = await fetch('/api/medicalPersonnel/profile');
-            if (profileResponse.ok) {
-                const personnelData = await profileResponse.json();
-                displayProfileInfo(personnelData);
-
-                // Set the profile picture if available
-                const profilePictureElement = document.querySelector('.desktop-profile');
-                profilePictureElement.src = personnelData.profilePicture 
-                    ? `/uploads/${personnelData.profilePicture}` 
-                    : '../media/logo/default-profile.png';
             }
+
+            function removeRow(button) {
+                button.closest('tr').remove();
+            }
+
+            function openModal() {
+                document.getElementById('saveModal').style.display = 'flex';
+            }
+
+            function closeModal() {
+                document.getElementById('saveModal').style.display = 'none';
+            }
+
+            async function confirmSave() {
+                await updateTreatmentDetails();
+                closeModal();
+            }
+
+            window.onload = async function () {
+                await fetchTreatmentDetails();
+            };
+
+            document.addEventListener('DOMContentLoaded', async () => {
+                const profileResponse = await fetch('/api/medicalPersonnel/profile');
+                if (profileResponse.ok) {
+                    const personnelData = await profileResponse.json();
+                    displayProfileInfo(personnelData);
+
+                    // Set the profile picture if available
+                    const profilePictureElement = document.querySelector('.desktop-profile');
+                    profilePictureElement.src = personnelData.profilePicture
+                        ? `/uploads/${personnelData.profilePicture}`
+                        : '../media/logo/default-profile.png';
+                }
             });
 
             function displayProfileInfo(data) {
-            document.getElementById('profile-name').innerText = `${data.firstName}`;
+                document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
-    </script>
+        </script>
 </body>
+
 </html>
