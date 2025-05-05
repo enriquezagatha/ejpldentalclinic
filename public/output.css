@@ -649,9 +649,6 @@ video {
 .float-right {
   float: right;
 }
-.m-auto {
-  margin: auto;
-}
 .mx-1 {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
@@ -941,6 +938,21 @@ video {
 }
 .w-full {
   width: 100%;
+}
+.w-60 {
+  width: 15rem;
+}
+.w-56 {
+  width: 14rem;
+}
+.w-\[13rem\] {
+  width: 13rem;
+}
+.w-\[13\.5rem\] {
+  width: 13.5rem;
+}
+.w-\[13\.8rem\] {
+  width: 13.8rem;
 }
 .min-w-\[1024px\] {
   min-width: 1024px;
@@ -1479,6 +1491,10 @@ video {
   padding-left: 2rem;
   padding-right: 2rem;
 }
+.py-0 {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
 .py-1 {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -1502,10 +1518,6 @@ video {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-}
-.py-0 {
-  padding-top: 0px;
-  padding-bottom: 0px;
 }
 .pb-1 {
   padding-bottom: 0.25rem;
@@ -1761,6 +1773,14 @@ video {
   --tw-text-opacity: 1;
   color: rgb(202 138 4 / var(--tw-text-opacity, 1));
 }
+.text-gray-200 {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity, 1));
+}
+.text-\[\#007bff\] {
+  --tw-text-opacity: 1;
+  color: rgb(0 123 255 / var(--tw-text-opacity, 1));
+}
 .underline {
   text-decoration-line: underline;
 }
@@ -1961,6 +1981,11 @@ video {
 .hover\:bg-red-600:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-gray-300:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity, 1));
 }
 
 .hover\:bg-opacity-90:hover {

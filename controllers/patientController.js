@@ -309,12 +309,25 @@ exports.getPatientRecords = async (req, res) => {
 // Controller to get patient by ID
 exports.getPatientById = async (req, res) => {
   try {
-    const patient = await PatientRecord.findById(req.params.id);
+    // Fetch the patient record by ID
+    const patientRecord = await PatientRecord.findById(req.params.id);
+    if (!patientRecord) {
+      return res.status(404).json({ message: "Patient record not found" });
+    }
+
+    // Find the corresponding patient in the Patient database
+    const patient = await Patient.findById(patientRecord.patientId);
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
-    res.json(patient);
+
+    // Return the patient details with emailAddress
+    res.json({
+      ...patientRecord.toObject(),
+      emailAddress: patient.email, // Add emailAddress from Patient
+    });
   } catch (error) {
+    console.error("Error fetching patient by ID:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
