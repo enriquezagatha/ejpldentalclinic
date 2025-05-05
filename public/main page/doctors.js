@@ -46,9 +46,7 @@ async function fetchdentists() {
                     <h3 class="text-xl px-1 text-left text-black font-inter font-bold">${title} ${
               dentist.firstName
             } ${dentist.lastName}</h3>
-                    <p class="text-center text-black mt-8 mb-2 tracking-widest">${contactNumber} ${
-              dentist.contact
-            }</p>
+                    <p class="text-center text-black mt-10 mb-2 tracking-widest"></p>
                 </li>`;
           })
           .join("")}
