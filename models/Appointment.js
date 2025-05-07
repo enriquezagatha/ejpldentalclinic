@@ -41,7 +41,10 @@ const appointmentSchema = new mongoose.Schema({
         status: { type: String, default: 'unpaid' }, // No enum restriction
         paymentLink: { type: String },
         paymentId: { type: String } // PayMongo payment ID
-    }
+    },
+
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
 }, { timestamps: true }); // Add timestamps for createdAt and updatedAt
 
 const Appointment = mongoose.model('Appointment', appointmentSchema);

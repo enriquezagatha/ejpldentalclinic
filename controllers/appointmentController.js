@@ -1,5 +1,4 @@
 const Appointment = require("../models/Appointment");
-const { generateReferenceNumber } = require("../services/appointmentService");
 const PatientRecord = require("../models/PatientRecord");
 const fs = require("fs");
 const {
@@ -20,6 +19,7 @@ exports.createAppointment = async (req, res) => {
   }
 
   const {
+    referenceNumber,
     firstName,
     lastName,
     gender,
@@ -38,8 +38,6 @@ exports.createAppointment = async (req, res) => {
     selectedHistory,
     assignedDentist, // This is the dentist's ID (can be null)
   } = req.body;
-
-  const referenceNumber = generateReferenceNumber();
 
   const existingAppointments = await Appointment.find({
     preferredDate,
@@ -76,9 +74,11 @@ exports.createAppointment = async (req, res) => {
   const formattedContactNumber = contactNumber.startsWith("0")
     ? contactNumber
     : `0${contactNumber}`;
-  const formattedEmergencyContactNumber = emergencyContactNumber.startsWith("0")
-    ? emergencyContactNumber
-    : `0${emergencyContactNumber}`;
+  const formattedEmergencyContactNumber = emergencyContactNumber
+    ? emergencyContactNumber.startsWith("0")
+      ? emergencyContactNumber
+      : `0${emergencyContactNumber}`
+    : "N/A"; // Default to "N/A" if undefined
 
   // Create appointment data
   const appointmentData = {

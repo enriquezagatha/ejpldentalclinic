@@ -87,16 +87,12 @@
 
         function loadReceiptData() {
             const urlParams = new URLSearchParams(window.location.search);
-            let referenceNumber = localStorage.getItem('referenceNumber'); // Check local storage
-            let confirmationDate = localStorage.getItem('confirmationDate'); // Check local storage for date
-            let confirmationTime = localStorage.getItem('confirmationTime'); // Check local storage for time
-
-            if (!referenceNumber) {
-                referenceNumber = generateReferenceNumber();
-                localStorage.setItem('referenceNumber', referenceNumber); // Store in local storage
-            }
+            const referenceNumber = generateReferenceNumber(); // Always generate a new reference number
 
             document.getElementById('receipt-reference-number').innerText = referenceNumber;
+
+            let confirmationDate = localStorage.getItem('confirmationDate'); // Check local storage for date
+            let confirmationTime = localStorage.getItem('confirmationTime'); // Check local storage for time
 
             // If confirmation date and time do not exist, create them
             if (!confirmationDate || !confirmationTime) {
