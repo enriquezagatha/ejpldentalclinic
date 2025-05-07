@@ -132,56 +132,98 @@ exports.updatePatientProfile = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const { email, newPassword } = req.body;
-  const patient = await findUserByEmail(Patient, req.session.user.email);
-  if (!patient) {
-    return res.status(404).json({ message: "Patient not found" });
+  const { email, currentPassword, newPassword } = req.body;
+
+  // Validate input
+  if (!currentPassword) {
+    return res.status(400).json({ message: "Current password is required." });
   }
 
-  let emailUpdated = false;
-  let passwordUpdated = false;
-
-  if (email && email !== patient.email) {
-    patient.email = email;
-    emailUpdated = true;
+  if (!email && !newPassword) {
+    return res.status(400).json({ message: "No updates provided." });
   }
 
-  if (newPassword) {
-    patient.password = await bcrypt.hash(newPassword, 10);
-    passwordUpdated = true;
-  }
+  try {
+    const patient = await findUserByEmail(Patient, req.session.user.email);
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
 
-  const saveResult = await patient.save();
-  if (!saveResult) {
-    return res.status(500).json({ message: "Error updating profile." });
-  }
+    // Validate current password
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      patient.password
+    );
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Incorrect current password." });
+    }
 
-  req.session.user.email = email; // Update session email if changed
+    let emailUpdated = false;
+    let passwordUpdated = false;
 
-  // Create notification
-  const updateMessage =
-    emailUpdated && passwordUpdated
-      ? "Your email and password have been successfully updated."
-      : emailUpdated
-      ? "Your email has been successfully updated."
-      : passwordUpdated
-      ? "Your password has been successfully updated."
-      : null;
+    // Update email if provided and different
+    if (email && email !== patient.email) {
+      patient.email = email;
+      emailUpdated = true;
+    }
 
-  if (updateMessage) {
-    await Notification.create({
-      user: patient._id,
-      title: "Profile Updated",
-      message: updateMessage,
-      type: "Profile",
+    // Update password if provided
+    if (newPassword) {
+      patient.password = await bcrypt.hash(newPassword, 10);
+      passwordUpdated = true;
+    }
+
+    // Save patient changes
+    await patient.save();
+
+    // Update session email if it was changed
+    if (emailUpdated) {
+      req.session.user.email = email;
+    }
+
+    // Create notification if updates were made
+    const updateMessage =
+      emailUpdated && passwordUpdated
+        ? "Your email and password have been successfully updated."
+        : emailUpdated
+        ? "Your email has been successfully updated."
+        : passwordUpdated
+        ? "Your password has been successfully updated."
+        : null;
+
+    if (updateMessage) {
+      try {
+        await Notification.create({
+          user: patient._id,
+          title: "Profile Updated",
+          message: updateMessage,
+          type: "Profile",
+        });
+      } catch (notificationError) {
+        console.error("Error creating notification:", notificationError);
+        return res.status(500).json({
+          message: "Profile updated, but failed to create notification.",
+          successMessage: updateMessage,
+          errorMessage: "Failed to create notification.",
+        });
+      }
+    }
+
+    res.json({
+      message: "Profile updated successfully",
+      successMessage: updateMessage,
+      errorMessage: null,
+      emailUpdated,
+      passwordUpdated,
+    });
+  } catch (error) {
+    console.error("Error updating patient profile:", error);
+    res.status(500).json({
+      message: "Error updating profile.",
+      successMessage: null,
+      errorMessage: "An error occurred while updating the profile.",
     });
   }
-
-  res.json({
-    message: "Profile updated successfully",
-    emailUpdated,
-    passwordUpdated,
-  });
 };
 
 // Upload profile picture

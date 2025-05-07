@@ -244,27 +244,60 @@
                                     class="text-gray-500 pl-2 mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 read-only:">
                             </div>
                             <div>
-                                <label for="current-password" class="block text-sm font-medium text-gray-700">Current
+                                <label class="block text-sm font-medium text-gray-700">Current
                                     Password:</label>
-                                <input type="password" id="current-password" name="currentPassword" required
-                                    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                <div class="relative">
+                                    <input type="password" id="current-password" name="currentPassword" required
+                                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                    <i class="fas fa-eye absolute top-2/4 right-3 transform -translate-y-2/4 text-gray-500 cursor-pointer"
+                                        onclick="togglePasswordVisibility('current-password', this)"></i>
+                                </div>
                             </div>
                             <div>
-                                <label for="new-password" class="block text-sm font-medium text-gray-700">New
+                                <label class="block text-sm font-medium text-gray-700">New
                                     Password:</label>
-                                <input type="password" id="new-password" name="newPassword"
-                                    class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div class="flex items-center">
-                                <input type="checkbox" id="toggle-password" onclick="togglePasswordVisibility()"
-                                    class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                <label for="toggle-password" class="ml-2 block text-sm text-gray-700">Show
-                                    Password</label>
+                                <div class="relative">
+                                    <input type="password" id="new-password" name="newPassword"
+                                        class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                    <i class="fas fa-eye absolute top-2/4 right-3 transform -translate-y-2/4 text-gray-500 cursor-pointer"
+                                        onclick="togglePasswordVisibility('new-password', this)"></i>
+                                </div>
                             </div>
                             <div id="edit-error-message" class="text-red-500 text-sm hidden"></div>
                             <div id="edit-success-message" class="text-green-500 text-sm hidden"></div>
                             <button type="button" onclick="confirmSave()"
                                 class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Save</button>
+
+                            <!-- Confirmation Modal -->
+                            <div id="profileconfirmation-modal"
+                                class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+                                <div class="relative bg-white rounded-lg shadow-lg max-w-sm w-full px-6 py-6">
+
+                                    <!-- Close button -->
+                                    <button onclick="closeConfirmationModal()"
+                                        class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-xl font-bold">
+                                        &times;
+                                    </button>
+
+                                    <!-- Modal Content -->
+                                    <h2 class="text-xl font-semibold text-gray-800 mb-3 text-center">Confirm Changes
+                                    </h2>
+                                    <p class="text-sm text-gray-600 mb-6 text-center">Do you want to save the changes?
+                                    </p>
+
+                                    <!-- Action Buttons -->
+                                    <div class="flex justify-center gap-4">
+                                        <button type="button" onclick="confirmChanges(true)"
+                                            class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-5 rounded">
+                                            Yes
+                                        </button>
+                                        <button type="button" onclick="confirmChanges(false)"
+                                            class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-5 rounded">
+                                            No
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -277,6 +310,19 @@
     </footer>
 
     <script>
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
 
             await fetchProfile();

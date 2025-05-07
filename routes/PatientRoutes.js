@@ -14,7 +14,7 @@ router.post("/login", patientController.loginPatient);
 router.get("/profile", patientController.getPatientProfile);
 
 // Route to update patient profile
-router.put("/profile", patientController.updatePatientProfile); // Changed to PUT
+router.put("/update", patientController.updatePatientProfile); // Changed to PUT
 
 // Route to patient logout
 router.post("/logout", patientController.logoutPatient); // Changed to POST
