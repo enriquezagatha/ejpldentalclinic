@@ -1,6 +1,6 @@
 const Appointment = require("../models/Appointment");
 const PatientRecord = require("../models/PatientRecord");
-const fs = require("fs");
+const { generateReferenceNumber } = require('../services/appointmentService');const fs = require("fs");
 const {
   startOfDay,
   endOfDay,
@@ -19,7 +19,6 @@ exports.createAppointment = async (req, res) => {
   }
 
   const {
-    referenceNumber,
     firstName,
     lastName,
     gender,
@@ -38,6 +37,8 @@ exports.createAppointment = async (req, res) => {
     selectedHistory,
     assignedDentist, // This is the dentist's ID (can be null)
   } = req.body;
+
+  const referenceNumber = generateReferenceNumber();
 
   const existingAppointments = await Appointment.find({
     preferredDate,
@@ -968,3 +969,21 @@ exports.getAllAppointmentsForPopularTreatments = async (req, res) => {
 
 //Export the controller functions
 module.exports = exports;
+
+exports.getReferenceNumber = async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    try {
+        const appointment = await Appointment.findOne({ patient: req.session.user.id }).sort({ createdAt: -1 });
+        if (!appointment) {
+            return res.status(404).json({ message: "No appointment found" });
+        }
+
+        res.json({ referenceNumber: appointment.referenceNumber });
+    } catch (error) {
+        console.error("Error fetching reference number:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};

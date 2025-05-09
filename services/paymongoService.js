@@ -43,7 +43,7 @@ async function createPaymentIntent(userName, userEmail, treatment, amount) {
                 data: {
                     attributes: {
                         amount: amount, // Convert PHP to centavos
-                        payment_method_allowed: ["gcash", "card", "grab_pay"],
+                        payment_method_allowed: ["gcash"], // Restrict to GCash
                         currency: "PHP",
                         capture_type: "automatic"
                     }

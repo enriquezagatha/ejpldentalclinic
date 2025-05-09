@@ -8,7 +8,6 @@ const PAYMONGO_SECRET_KEY = process.env.PAYMONGO_SECRET_KEY;
 const PAYMONGO_WEBHOOK_SECRET = process.env.PAYMONGO_WEBHOOK_SECRET;
 const PAYMONGO_API_URL = "https://api.paymongo.com/v1";
 
-// ✅ Create Payment Link
 exports.createPaymentLink = async (req, res) => {
   try {
     const { patientName, patientEmail, treatmentType, amount } = req.body;
@@ -17,12 +16,15 @@ exports.createPaymentLink = async (req, res) => {
       return res.status(400).json({ error: "Invalid amount" });
     }
 
+    // Convert amount to cents for PayMongo (1 PHP = 100 cents)
+    const amountInCents = amount;
+
     const response = await axios.post(
       `${PAYMONGO_API_URL}/links`,
       {
         data: {
           attributes: {
-            amount: amount, // Convert to cents
+            amount: amountInCents, // Send the amount in cents
             description: `Payment for ${treatmentType}`,
             currency: "PHP",
           },
@@ -40,12 +42,13 @@ exports.createPaymentLink = async (req, res) => {
 
     const result = response.data;
 
+    // Store the amount in PHP in the database (no conversion)
     const newPayment = new Payment({
       patientName,
       email: patientEmail,
       treatment: treatmentType,
-      amount: amount, // Store in cents
-      status: "unpaid", // Default status
+      amount: amount / 100, // Store in PHP (no conversion to cents)
+      status: "paid", // Default status
       paymentLink: result.data.attributes.checkout_url,
       referenceId: result.data.id,
     });

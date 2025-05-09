@@ -66,29 +66,22 @@
     </footer>
 
     <script>
-        function generateReferenceNumber() {
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const numbers = '0123456789';
-            let randomString = 'EJPL';  // The fixed prefix
-
-            randomString += '-';  // Add a dash
-
-            // Generate 9 random characters (letters and numbers mixed)
-            for (let i = 0; i < 9; i++) {
-                if (Math.random() < 0.5) {
-                    randomString += letters.charAt(Math.floor(Math.random() * letters.length));
-                } else {
-                    randomString += numbers.charAt(Math.floor(Math.random() * numbers.length));
+        async function fetchReferenceNumber() {
+            try {
+                const response = await fetch('/api/appointments/reference-number');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch reference number');
                 }
+                const data = await response.json();
+                return data.referenceNumber;
+            } catch (error) {
+                console.error('Error fetching reference number:', error);
+                return 'N/A'; // Fallback value
             }
-
-            return randomString;
         }
 
-        function loadReceiptData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const referenceNumber = generateReferenceNumber(); // Always generate a new reference number
-
+        async function loadReceiptData() {
+            const referenceNumber = await fetchReferenceNumber(); // Fetch reference number from the server
             document.getElementById('receipt-reference-number').innerText = referenceNumber;
 
             let confirmationDate = localStorage.getItem('confirmationDate'); // Check local storage for date
@@ -107,6 +100,7 @@
             document.getElementById('receipt-confirmation-date').innerText = confirmationDate;
             document.getElementById('receipt-confirmation-time').innerText = confirmationTime;
 
+            const urlParams = new URLSearchParams(window.location.search);
             const receiptDetails = JSON.parse(decodeURIComponent(urlParams.get('receiptDetails')));
 
             if (receiptDetails) {
@@ -118,6 +112,7 @@
             } else {
                 console.error('Receipt details not found');
             }
+
             // Set appointment status
             const appointmentStatus = localStorage.getItem('appointmentStatus') || 'Pending';
             document.getElementById('appointment-status').innerText = appointmentStatus;

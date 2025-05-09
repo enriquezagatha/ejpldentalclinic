@@ -36,12 +36,7 @@ const appointmentSchema = new mongoose.Schema({
     assignedDentist: { type: mongoose.Schema.Types.ObjectId, ref: 'Dentist', default: null },
 
     // Payment details
-    payment: {
-        amount: { type: Number, default: 0 },
-        status: { type: String, default: 'unpaid' }, // No enum restriction
-        paymentLink: { type: String },
-        paymentId: { type: String } // PayMongo payment ID
-    },
+    payment: { type: mongoose.Schema.Types.ObjectId, ref: 'Payment', default: null },
 
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

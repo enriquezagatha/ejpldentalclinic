@@ -218,16 +218,19 @@
         const appointmentsPerPage = 5;
         let currentPage = 1;
 
+        // Filter appointments to include only those with 'Completed' status
+        const completedAppointments = appointments.filter(appointment => appointment.status === 'Completed');
+
         appointmentsTableBody.innerHTML = '';
         paginationContainer.innerHTML = '';
 
-        if (appointments.length === 0) {
+        if (completedAppointments.length === 0) {
             appointmentsTableBody.innerHTML = `
                 <tr>
                     <td colspan="6" class="text-center text-gray-500 py-6">
                         <div class="flex flex-col items-center">
                             <i class="fas fa-credit-card text-4xl mb-2 text-gray-400"></i>
-                            <p class="text-lg font-semibold">No payments found</p>
+                            <p class="text-lg font-semibold">No completed payments found</p>
                             <p class="text-sm text-gray-400">Try adjusting your search or check back later.</p>
                         </div>
                     </td>
@@ -248,12 +251,12 @@
             `;
 
             const startIndex = (page - 1) * appointmentsPerPage;
-            const endIndex = Math.min(startIndex + appointmentsPerPage, appointments.length);
+            const endIndex = Math.min(startIndex + appointmentsPerPage, completedAppointments.length);
 
             setTimeout(() => {
                 appointmentsTableBody.innerHTML = ''; // Clear the loading row
                 for (let i = startIndex; i < endIndex; i++) {
-                    const appointment = appointments[i];
+                    const appointment = completedAppointments[i];
                     const row = document.createElement('tr');
 
                     row.innerHTML = `
@@ -263,14 +266,16 @@
                         <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentType}</td>
                         <td class="border-y border-gray-300 px-4 py-6 break-words">${appointment.treatmentPrice}</td>
                         <td class="border-y border-gray-300 px-4 py-6 break-words">
-                            <button class="payButton bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-[#1E354A]"
-                                data-reference="${appointment.referenceNumber}" 
-                                data-name="${appointment.firstName} ${appointment.lastName}"
-                                data-email="${appointment.emailAddress}"
-                                data-treatment="${appointment.treatmentType}"
-                                data-amount="${appointment.treatmentPrice}">
-                                Generate Payment
-                            </button>
+                            ${appointment.isPaid ? 
+                                '<span class="text-green-600 font-semibold">Paid</span>' : 
+                                `<button class="payButton bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-[#1E354A]"
+                                    data-reference="${appointment.referenceNumber}" 
+                                    data-name="${appointment.firstName} ${appointment.lastName}"
+                                    data-email="${appointment.emailAddress}"
+                                    data-treatment="${appointment.treatmentType}"
+                                    data-amount="${appointment.treatmentPrice}">
+                                    Generate Payment
+                                </button>`}
                         </td>
                     `;
 
@@ -283,7 +288,7 @@
 
         function renderPagination() {
             paginationContainer.innerHTML = '';
-            const totalPages = Math.ceil(appointments.length / appointmentsPerPage);
+            const totalPages = Math.ceil(completedAppointments.length / appointmentsPerPage);
 
             for (let i = 1; i <= totalPages; i++) {
                 const button = document.createElement('button');
@@ -377,6 +382,27 @@
             }
         }
 
+        // Check if the patient is eligible for senior discount
+        async function checkSeniorEligibility() {
+            try {
+                const response = await fetch(`${window.location.origin}/api/patient/profile`);
+                if (!response.ok) throw new Error("Failed to fetch patient profile");
+
+                const profile = await response.json();
+                const birthDate = new Date(profile.birthDate);
+                const age = new Date().getFullYear() - birthDate.getFullYear();
+
+                if (age >= 60) {
+                    seniorDiscountCheckbox.parentElement.style.display = "block";
+                } else {
+                    seniorDiscountCheckbox.parentElement.style.display = "none";
+                }
+            } catch (error) {
+                console.error("Error checking senior eligibility:", error);
+                seniorDiscountCheckbox.parentElement.style.display = "none";
+            }
+        }
+
         // Apply Discount to the Amount
         function applyDiscount() {
             if (!amountInput) {
@@ -393,16 +419,25 @@
 
             if (seniorDiscountCheckbox.checked) {
                 const discountedAmount = originalAmount * ((100 - discountPercentage) / 100);
-                amountInput.value = discountedAmount.toFixed(2);
+                amountInput.value = discountedAmount.toLocaleString("en-US");
                 seniorDiscountForm.style.display = "block";
             } else {
-                amountInput.value = originalAmount.toFixed(2);
+                amountInput.value = originalAmount.toLocaleString("en-US");
                 seniorDiscountForm.style.display = "none";
             }
+
+            // Add commas to the amount input dynamically
+            amountInput.addEventListener("input", function () {
+                let value = amountInput.value.replace(/,/g, ""); // Remove existing commas
+                if (!isNaN(value) && value !== "") {
+                    amountInput.value = parseFloat(value).toLocaleString("en-US");
+                }
+            });
         }
 
-        // Fetch discount before allowing interaction
+        // Fetch discount and check senior eligibility before allowing interaction
         await fetchDiscount();
+        await checkSeniorEligibility();
 
         // Attach event listener to senior discount checkbox
         seniorDiscountCheckbox.addEventListener("change", applyDiscount);

@@ -59,7 +59,6 @@ router.patch("/:id/assign-dentist", appointmentController.assignDentist);
 //patient details for appointment
 router.get('/patientdetails', appointmentController.getPatientDetails);
 
-module.exports = router;
 // Route to get total status counts
 router.get("/total-status-counts", appointmentController.getTotalStatusCounts);
 
@@ -68,5 +67,8 @@ router.get("/upcoming", appointmentController.getUpcomingAppointments);
 
 // Route to fetch all appointments for popular treatments
 router.get("/all",appointmentController.getAllAppointmentsForPopularTreatments);
+
+// Route to handle the new endpoint for fetching the reference number
+router.get('/reference-number', appointmentController.getReferenceNumber);
 
 module.exports = router;
