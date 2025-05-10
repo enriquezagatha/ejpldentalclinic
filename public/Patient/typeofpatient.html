@@ -78,14 +78,63 @@
     </main>
 
     <script>
-        function selectPatientType(type) {
+        async function selectPatientType(type) {
             if (type === 'new') {
-                window.location.href = "patient-newappointmentdetails.html";
+                try {
+                    const response = await fetch('/api/patient/has-record', { method: 'GET', credentials: 'include' });
+                    const data = await response.json();
+
+                    if (data.hasRecord) {
+                        showToast("You already have a record in our system. Please proceed as an existing patient.", "error");
+                        return;
+                    }
+                    window.location.href = "patient-newappointmentdetails.html";
+                } catch (error) {
+                    console.error("Error checking patient record:", error);
+                    showToast("An error occurred. Please try again later.", "error");
+                }
             } else {
                 window.location.href = "patient-existingappointmentdetails.html";
             }
         }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000);
+        }
     </script>
+    <style>
+        .toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .toast.error {
+            background-color: #243c54;
+        }
+
+        .toast.fade-out {
+            opacity: 0;
+            transform: translate(-50%, -40%);
+        }
+    </style>
 </body>
 <script src="patientnotifications.js"></script>
 

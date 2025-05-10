@@ -1,5 +1,6 @@
 const Appointment = require("../models/Appointment");
 const PatientRecord = require("../models/PatientRecord");
+const paymentController = require("../controllers/paymentController"); // Import payment controller
 const { generateReferenceNumber } = require('../services/appointmentService');const fs = require("fs");
 const {
   startOfDay,

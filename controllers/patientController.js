@@ -485,5 +485,24 @@ exports.resetPassword = async (req, res) => {
   }); // Add this for success
 };
 
+exports.checkPatientRecord = async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const patient = await Patient.findOne({ email: req.session.user.email });
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
+
+    const patientRecord = await PatientRecord.findOne({ patientId: patient._id });
+    res.json({ hasRecord: !!patientRecord });
+  } catch (error) {
+    console.error("Error checking patient record:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // Export the controller functions
 module.exports = exports;

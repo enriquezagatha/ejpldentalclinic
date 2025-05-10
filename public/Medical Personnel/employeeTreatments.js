@@ -93,7 +93,7 @@ function showToast(message, bgColor = "bg-green-500") {
   // Hide after 3 seconds
   setTimeout(() => {
     toast.classList.add("hidden");
-  }, 3000);
+  }, 2000);
 }
 
 //Fetch all treatments

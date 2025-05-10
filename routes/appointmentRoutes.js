@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const appointmentController = require("../controllers/appointmentController");
+const paymentController = require("../controllers/paymentController"); // Import payment controller
 const upload = require("../middleware/fileUploadMiddleware");
 const { authorizeAdmin } = require("../routes/authRoutes"); // Unused, consider removing if not needed
 const Appointment = require("../models/Appointment"); // Unused, consider removing if not needed
@@ -70,5 +71,8 @@ router.get("/all",appointmentController.getAllAppointmentsForPopularTreatments);
 
 // Route to handle the new endpoint for fetching the reference number
 router.get('/reference-number', appointmentController.getReferenceNumber);
+
+// Route to create a payment link
+router.post("/create-payment-link", paymentController.createPaymentLink);
 
 module.exports = router;

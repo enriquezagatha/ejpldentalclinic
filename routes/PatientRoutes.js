@@ -44,4 +44,7 @@ router.post("/forgot-password", patientController.forgotPassword);
 // Route to handle password reset (update password)
 router.post("/reset-password", patientController.resetPassword);
 
+// Route to check if the patient has an existing record
+router.get("/has-record", patientController.checkPatientRecord);
+
 module.exports = router;

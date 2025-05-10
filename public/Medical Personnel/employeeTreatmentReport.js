@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Hide after 3 seconds
     setTimeout(() => {
       toast.classList.add("hidden");
-    }, 3000);
+    }, 2000);
   }
 
   async function fetchTreatmentReport() {
