@@ -28,17 +28,25 @@ exports.addService = async (req, res) => {
 // Update a service with optional image update
 exports.updateService = async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, description, existingImage } = req.body; // Include existingImage from the request
         let updatedData = { name, description };
 
-        // If a new image is uploaded, update image path
+        // If a new image is uploaded, update the image path
         if (req.file) {
             updatedData.image = `/uploads/${req.file.filename}`;
+        } else if (existingImage) {
+            // Retain the existing image if no new image is uploaded
+            updatedData.image = existingImage;
         }
 
-        await Service.findByIdAndUpdate(req.params.id, updatedData);
-        res.json({ message: 'Service updated successfully' });
+        const updatedService = await Service.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+        if (!updatedService) {
+            return res.status(404).json({ message: 'Service not found' });
+        }
+
+        res.json({ message: 'Service updated successfully', service: updatedService });
     } catch (error) {
+        console.error('Error updating service:', error);
         res.status(500).json({ message: 'Failed to update service', error });
     }
 };

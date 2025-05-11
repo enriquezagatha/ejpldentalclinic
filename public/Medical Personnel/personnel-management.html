@@ -49,10 +49,12 @@
                     <div class="modal-content">
                         <span id="close-service-modal-btn" class="close-btn">&times;</span>
                         <h2 id="service-modal-title">Add New Service</h2>
-                        <input type="hidden" id="service-id"> <!-- For editing -->
-                        <input type="text" id="service-name" placeholder="Service Name" required>
-                        <input type="text" id="service-desc" placeholder="Service Description" required>
-                        <input type="file" id="service-image" accept="image/*">
+                        <form id="service-form"> <!-- Ensure this form exists -->
+                            <input type="hidden" id="service-id"> <!-- For editing -->
+                            <input type="text" id="service-name" placeholder="Service Name" required>
+                            <input type="text" id="service-desc" placeholder="Service Description" required>
+                            <input type="file" id="service-image" accept="image/*">
+                        </form>
                         <button id="save-service-btn">Save Service</button>
                     </div>
                 </div>

@@ -11,7 +11,7 @@ router.post('/upload', upload.single('file'), (req, res) => {
     }
 
     // Additional check for file type (if needed)
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf']; // example mime types
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'application/pdf', 'image/webp']; // added 'image/webp'
     if (!allowedMimeTypes.includes(req.file.mimetype)) {
         return res.status(400).json({ message: 'Invalid file type' });
     }

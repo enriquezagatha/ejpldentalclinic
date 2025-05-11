@@ -158,37 +158,30 @@ document
     const name = document.getElementById("service-name").value.trim();
     const description = document.getElementById("service-desc").value.trim();
     const imageInput = document.getElementById("service-image").files[0];
+    const existingImageUrl = document.getElementById("existing-image-url")?.value;
 
     if (!name || !description) {
       showToast("Please enter service name and description.", "error");
       return;
-    }    
+    }
 
     try {
-      // Fetch existing services to check for duplicate names
-      const response = await fetch(SERVICE_API_URL);
-      if (!response.ok) {
-        throw new Error("Failed to fetch services.");
-      }
-
-      const services = await response.json();
-      const isDuplicate = services.some(
-        (service) =>
-          service.name.toLowerCase() === name.toLowerCase() &&
-          service._id !== id
-      );
-
-      if (isDuplicate) {
-        showToast("A service with this name already exists. Please choose a different name.", "error");
-        return;
-      }      
-
       // Prepare form data
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
+
       if (imageInput) {
-        formData.append("image", imageInput);
+        console.log("Appending new image to FormData:", imageInput.name);
+        formData.append("image", imageInput); // Append new image if provided
+      } else if (existingImageUrl) {
+        console.log("Using existing image URL:", existingImageUrl);
+        formData.append("existingImage", existingImageUrl); // Append existing image URL
+      }
+
+      // Debugging: Log FormData contents
+      for (let [key, value] of formData.entries()) {
+        console.log(`FormData entry: ${key} = ${value}`);
       }
 
       const method = id ? "PUT" : "POST";
@@ -201,6 +194,8 @@ document
       });
 
       if (!saveResponse.ok) {
+        const errorText = await saveResponse.text(); // Capture error details
+        console.error("Error response:", saveResponse.status, errorText);
         throw new Error("Failed to save service.");
       }
 
@@ -226,9 +221,31 @@ function editService(id, name, description, image) {
   imagePreview.src = image;
   imagePreview.style.display = "block";
 
+  // Clear the file input to allow selecting a new image
+  document.getElementById("service-image").value = "";
+
+  // Ensure the form is ready for editing
   document.getElementById("service-modal-title").textContent = "Edit Service";
   document.getElementById("save-service-btn").textContent = "Update Service";
   document.getElementById("service-modal").style.display = "flex";
+
+  // Add a hidden input to track the existing image URL
+  const serviceForm = document.getElementById("service-form");
+  console.log("Service form element:", serviceForm); // Debug log
+  if (serviceForm) { // Ensure the form exists
+    const existingImageInput = document.getElementById("existing-image-url");
+    if (!existingImageInput) {
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.id = "existing-image-url";
+      hiddenInput.value = image;
+      serviceForm.appendChild(hiddenInput);
+    } else {
+      existingImageInput.value = image;
+    }
+  } else {
+    console.error("Service form not found. Ensure an element with ID 'service-form' exists in the HTML.");
+  }
 }
 
 // Delete service
@@ -269,3 +286,8 @@ function resetServiceForm() {
   document.getElementById("service-desc").value = "";
   document.getElementById("service-image").value = "";
 }
+
+// Ensure DOM is fully loaded before attaching event listeners
+document.addEventListener("DOMContentLoaded", () => {
+  // Attach event listeners or initialize code here if needed
+});
