@@ -363,6 +363,7 @@ exports.updateAppointmentStatus = async (req, res) => {
         medicineType: "",
         procedure: "",
         treatmentNotes: "",
+        bloodPressure: "",
       });
     }
 
@@ -425,6 +426,8 @@ exports.updateAppointment = async (req, res) => {
     medicineType,
     procedure,
     treatmentNotes,
+    bloodPressure,
+    assignedDentist,
   } = req.body;
 
   // Fetch the appointment details first
@@ -469,6 +472,8 @@ exports.updateAppointment = async (req, res) => {
       medicineType,
       procedure,
       treatmentNotes,
+      bloodPressure,
+      assignedDentist,
     });
 
     // Append new files to existing uploadedFiles
@@ -502,6 +507,8 @@ exports.updateAppointment = async (req, res) => {
           medicineType,
           procedure,
           treatmentNotes,
+          bloodPressure,
+          assignedDentist,
         },
       ],
       uploadedFiles: files,

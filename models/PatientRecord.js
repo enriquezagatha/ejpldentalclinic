@@ -29,6 +29,7 @@ const patientRecordSchema = new mongoose.Schema(
         medicineType: String,
         procedure: String,
         treatmentNotes: String,
+        bloodPressure: String, // Added blood pressure field
         assignedDentist: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Dentist",

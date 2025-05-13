@@ -190,14 +190,11 @@
 
                 const patient = await response.json();
 
-                // Fetch dentist names for treatments
-                await fetchDentists();  // Fetch dentists list to cache
-
                 for (const treatment of patient.treatments) {
                     if (treatment.assignedDentist) {
                         // Check if assignedDentist has $oid or is directly an ObjectId string
-                        const dentistId = treatment.assignedDentist.$oid || treatment.assignedDentist;
-                        treatment.dentistName = await getDentistName(dentistId); // Use ObjectId for the assigned dentist
+                        const assignedDentist = treatment.assignedDentist.$oid || treatment.assignedDentist;
+                        treatment.assignedDentist = await getassignedDentist(assignedDentist); // Use ObjectId for the assigned dentist
                     }
                 }
 
@@ -215,7 +212,7 @@
                 try {
                     const response = await fetch('/api/dentists'); // Fetch dentists from API
                     if (response.ok) {
-                        cachedDentists = await response.json();  // Cache dentists
+                        cachedDentists = await response.json(); // Cache dentists
                     } else {
                         console.error('Failed to fetch dentists:', response.statusText);
                     }
@@ -226,42 +223,36 @@
             return cachedDentists;
         }
 
-        // Get dentist's name by ObjectId with prefix based on gender
-        async function getDentistName(dentistId) {
-            console.log("Fetching dentist with ID:", dentistId); // Log dentist ID for debugging
-
-            // Try to find the dentist in the cached list first
-            const dentist = cachedDentists.find(d => d._id === dentistId);
-
-            if (!dentist) {
-                try {
-                    console.log("Dentist not found in cache. Fetching from API...");
-                    const response = await fetch(`/api/dentists/${dentistId}`);
-                    if (response.ok) {
-                        const fetchedDentist = await response.json();
-                        cachedDentists.push(fetchedDentist); // Add to cache for future reference
-                        console.log("Fetched dentist:", fetchedDentist); // Log fetched dentist details
-                        return getFormattedDentistName(fetchedDentist);
-                    } else {
-                        console.warn(`Failed to fetch dentist with ID ${dentistId}`);
-                        return 'Unknown Dentist';
-                    }
-                } catch (error) {
-                    console.error('Error fetching dentist:', error);
+        // Assign dentist by fetching their details
+        async function assignDentist(dentistsId) {
+            try {
+                const response = await fetch(`/api/dentists/${encodeURIComponent(dentistsId)}`);
+                if (response.ok) {
+                    const dentistData = await response.json();
+                    return `${dentistData.firstName} ${dentistData.lastName}`;
+                } else if (response.status === 404) {
+                    console.warn(`Dentist with ID ${dentistsId} not found.`);
+                    return 'Dentist Not Found';
+                } else {
+                    console.error('Failed to fetch dentist:', response.status, response.statusText);
                     return 'Unknown Dentist';
                 }
-            } else {
-                console.log("Dentist found in cache:", dentist); // Log dentist details from cache
-                return getFormattedDentistName(dentist);
+            } catch (error) {
+                console.error('Error fetching dentist:', error);
+                return 'Unknown Dentist';
             }
         }
 
-        // Helper function to format dentist name with prefix
-        function getFormattedDentistName(dentist) {
-            // Check the gender and add appropriate prefix
-            const prefix = dentist.gender === 'female' ? 'Dra.' : 'Dr.';
-            return `${prefix} ${dentist.firstName} ${dentist.lastName}`;
-        }
+        // function getAssignedDentistName(appointment, dentists) {
+        //     const assignedDentist = appointment.assignedDentist
+        //         ? dentists.find(dentist => dentist._id === appointment.assignedDentist)
+        //         : null;
+        //     if (assignedDentist) {
+        //         return `${assignedDentist.firstName} ${assignedDentist.lastName}`;
+        //     } else {
+        //         return 'Not Assigned';
+        //     }
+        // }
 
         function formatDateToLongDate(date) {
             if (!date) return "Pending"; // ✅ Handle missing date
@@ -298,25 +289,25 @@
                 return;
             }
 
-            patient.treatments.forEach((treatment, index) => {
+            patient.treatments.forEach(async (treatment, index) => {
                 const formattedDate = formatDateToLongDate(treatment.treatmentDate);
 
                 // Use cached dentist name or fetch if necessary
-                const dentistName = treatment.dentistName || 'Not Assigned';
+                const assignedDentist = treatment.assignedDentist || 'Not Assigned';
 
                 const row = document.createElement('tr');
                 row.className = "odd:bg-gray-50"; // Row color alternation
                 row.innerHTML = `
-            <td class="border border-gray-300 px-4 py-2">${treatment.treatmentType || 'N/A'}</td>
-            <td class="border border-gray-300 px-4 py-2">${formattedDate}</td>
-            <td class="border border-gray-300 px-4 py-2">${dentistName}</td>
-            <td class="border border-gray-300 px-4 py-2">
-                <button class="bg-[#2C4A66] text-sm text-white px-3 py-1 rounded hover:bg-[#1E3A56]"
-                    onclick="window.location.href='personnel-treatmentdetails.html?appointmentId=${appointmentId}&treatmentIndex=${index}'">
-                    Show Details
-                </button>
-            </td>
-        `;
+                <td class="border border-gray-300 px-4 py-2">${treatment.treatmentType || 'N/A'}</td>
+                <td class="border border-gray-300 px-4 py-2">${formattedDate}</td>
+                <td class="border border-gray-300 px-4 py-2">${assignedDentist}</td>
+                <td class="border border-gray-300 px-4 py-2">
+                    <button class="bg-[#2C4A66] text-sm text-white px-3 py-1 rounded hover:bg-[#1E3A56]"
+                        onclick="window.location.href='personnel-treatmentdetails.html?appointmentId=${appointmentId}&treatmentIndex=${index}'">
+                        Show Details
+                    </button>
+                </td>
+            `;
 
                 treatmentTable.appendChild(row);
             });

@@ -88,6 +88,13 @@
                 </table>
 
                 <div class="space-y-4">
+                    <label for="bloodPressure" class="block text-lg font-semibold text-gray-700">Blood Pressure (mmHg):</label>
+                    <input type="text" id="bloodPressure"
+                        placeholder="e.g., 120/80"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+
+                <div class="space-y-4">
                     <div>
                         <label for="procedure" class="block text-sm font-medium text-gray-700">Procedure
                             Performed:</label>
@@ -227,6 +234,19 @@
                 document.getElementById('treatmentDate').value = formatDateToInput(treatment.treatmentDate);
                 document.getElementById('treatmentType').value = treatment.treatmentType || '';
                 document.getElementById('treatmentNotes').value = treatment.treatmentNotes || '';
+                document.getElementById('bloodPressure').value = treatment.bloodPressure || ''; 
+            }
+
+            function showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.className = `fixed bottom-4 right-4 px-4 py-2 rounded shadow-lg ${
+                    type === 'success' ? 'bg-blue-500' : 'bg-red-500'
+                } text-white`;
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 3000);
             }
 
             async function updateTreatmentDetails() {
@@ -242,13 +262,15 @@
                     return;
                 }
 
+                const bloodPressureInput = document.getElementById('bloodPressure').value.split('/');
                 const updatedTreatment = {
                     treatmentType: document.getElementById('treatmentType').value || "",
                     treatmentDate: document.getElementById('treatmentDate').value || "",
                     treatmentNotes: document.getElementById('treatmentNotes').value || "",
                     prescriptionDate: document.getElementById('prescriptionDate')?.value || "",
                     medicineType: document.getElementById('medicineType')?.value || "",
-                    procedure: document.getElementById('procedure')?.value || ""
+                    procedure: document.getElementById('procedure')?.value || "",
+                    bloodPressure: document.getElementById('bloodPressure').value || "",
                 };
 
                 console.log("🚀 Sending Update Request: ", {
@@ -268,20 +290,23 @@
                     console.log("✅ Response from server:", result);
 
                     if (response.ok) {
+                        // Ensure blood pressure values remain in the fields
+                        document.getElementById('bloodPressure').value = updatedTreatment.bloodPressure || '';
+
                         await fetchTreatmentDetails();
                         messageDiv.textContent = '✅ Treatment updated successfully.';
                         messageDiv.style.color = 'green';
-                        alert('✅ Treatment updated successfully!');
+                        showToast('✅ Treatment updated successfully!', 'success');
                     } else {
                         messageDiv.textContent = result.message || '❌ Error updating treatment.';
                         messageDiv.style.color = 'red';
-                        alert(`❌ Error: ${result.message || 'Failed to update treatment.'}`);
+                        showToast(`❌ Error: ${result.message || 'Failed to update treatment.'}`, 'error');
                     }
                 } catch (error) {
                     console.error("❌ Error updating treatment:", error);
                     messageDiv.textContent = '❌ Error updating treatment. Check console for details.';
                     messageDiv.style.color = 'red';
-                    alert('❌ Error updating treatment. Please try again.');
+                    showToast('❌ Error updating treatment. Please try again.', 'error');
                 }
             }
 
@@ -341,6 +366,10 @@
                 document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
         </script>
+
+        <div id="toast" class="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded shadow-lg hidden"></div>
+    </div>
+
 </body>
 
 </html>

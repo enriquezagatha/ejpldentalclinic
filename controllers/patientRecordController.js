@@ -11,7 +11,10 @@ const {
 // Fetch all patient records
 exports.getPatientRecords = async (req, res) => {
   try {
-    const patientRecords = await PatientRecord.find(); // Fetch all patient records
+    const patientRecords = await PatientRecord.find().populate(
+      "treatments.assignedDentist",
+      "firstName lastName"
+    ); // Fetch records with populated dentist info
     res.json(patientRecords); // Return the records as a response
   } catch (error) {
     res
@@ -245,6 +248,19 @@ exports.getPatientRecordYears = async (req, res) => {
   } catch (error) {
     console.error("Error fetching patient record years:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Controller to fetch all patient records
+exports.getAllPatientRecords = async (req, res) => {
+  try {
+    const patientRecords = await PatientRecord.find().populate(
+      "treatments.assignedDentist"
+    );
+    res.status(200).json(patientRecords);
+  } catch (error) {
+    console.error("Error fetching patient records:", error);
+    res.status(500).json({ message: "Error fetching patient records" });
   }
 };
 

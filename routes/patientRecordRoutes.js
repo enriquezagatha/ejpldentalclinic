@@ -3,7 +3,7 @@ const router = express.Router();
 const patientRecordController = require("../controllers/patientRecordController");
 
 // Route to fetch all patient records
-router.get("/patient-records", patientRecordController.getPatientRecords);
+router.get("/all-patient-records", patientRecordController.getAllPatientRecords);
 
 // Route to fetch a specific patient record by ID
 router.get(
