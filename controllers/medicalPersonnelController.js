@@ -40,6 +40,8 @@ exports.loginPersonnel = async (req, res) => {
     email: personnel.email,
     role: "medical-personnel",
     userModel: "MedicalPersonnel",
+    name: `${personnel.firstName} ${personnel.lastName}`, // Store full name
+    position: personnel.position || "Medical Personnel", // Store position
   };
 
   return res.status(200).json({

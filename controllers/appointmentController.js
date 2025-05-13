@@ -988,3 +988,65 @@ exports.getReferenceNumber = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+
+exports.rescheduleAppointment = async (req, res) => {
+    console.log('Reschedule request received:', req.body);
+
+    if (!req.session.user || req.session.user.role !== "medical-personnel") {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { id } = req.params;
+    const { preferredDate, preferredTime } = req.body;
+
+    if (!preferredDate || !preferredTime) {
+        console.error('Missing required fields:', { preferredDate, preferredTime });
+        return res.status(400).json({ message: "Preferred date and time are required." });
+    }
+
+    try {
+        const appointment = await Appointment.findById(id);
+        if (!appointment) {
+            console.error('Appointment not found:', id);
+            return res.status(404).json({ message: "Appointment not found." });
+        }
+
+        // Check if the new date and time slot is already full
+        const existingAppointments = await Appointment.find({
+            preferredDate,
+            preferredTime,
+            _id: { $ne: id }, // Exclude the current appointment
+        });
+
+        if (existingAppointments.length >= 2) {
+            console.error('Time slot full:', { preferredDate, preferredTime });
+            return res.status(400).json({
+                message: "The selected date and time slot is already full.",
+            });
+        }
+
+        // Update the appointment
+        appointment.preferredDate = preferredDate;
+        appointment.preferredTime = preferredTime;
+        await appointment.save();
+
+        // Notify the patient about the reschedule
+        const notification = new Notification({
+            user: appointment.patient,
+            userModel: "Patient",
+            title: "Appointment Rescheduled",
+            message: `Your appointment for ${appointment.treatmentType} has been rescheduled to ${preferredDate} at ${preferredTime}.`,
+            referenceId: appointment._id,
+            type: "Appointment",
+            isRead: false,
+            createdAt: new Date(),
+        });
+
+        await notification.save();
+
+        res.json({ message: "Appointment rescheduled successfully.", appointment });
+    } catch (error) {
+        console.error("Error rescheduling appointment:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};

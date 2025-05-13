@@ -181,6 +181,7 @@ function populateTimeOptions(selectedDate = null, selectedTime = null) {
       '<option value="" disabled selected>Preferred Time</option>';
 
     let timeSlots = [];
+    const now = new Date();
 
     if (selectedDate) {
       const selectedDateObj = new Date(selectedDate);
@@ -193,8 +194,8 @@ function populateTimeOptions(selectedDate = null, selectedTime = null) {
         // Saturday
         timeSlots = [
           ...generateTimeSlots(0, 2), // 12 AM - 2 AM
-          ...generateTimeSlots(8, 12), // 8 AM - 12 PM
-          ...generateTimeSlots(14, 24), // 2 PM - 12 AM
+          ...generateTimeSlots(10, 12), // 10 AM - 12 PM
+          ...generateTimeSlots(13, 24), // 1 PM - 12 AM
         ];
       } else {
         // Tuesday - Friday & Sunday
@@ -203,18 +204,37 @@ function populateTimeOptions(selectedDate = null, selectedTime = null) {
           ...generateTimeSlots(14, 24), // 2 PM - 12 AM
         ];
       }
+
+      // Filter out past time slots if the selected date is today
+      if (selectedDateObj.toDateString() === now.toDateString()) {
+        const currentHour = now.getHours();
+        timeSlots = timeSlots.filter((slot) => {
+          const [startTime] = slot.split(" - ");
+          const [hour, period] = startTime.split(" ");
+          const slotHour = period === "PM" && hour !== "12" 
+            ? parseInt(hour) + 12 
+            : parseInt(hour) % 12;
+          return slotHour >= currentHour;
+        });
+      }
     }
 
     // Add time slots to the dropdown
     timeSlots.forEach((slot) => {
-      const bookedCount = bookingRecords[slot] || 0;
-      if (bookedCount < 1) {
-        // Limit to only 1 patient per slot
-        const option = document.createElement("option");
-        option.value = slot;
-        option.textContent = slot;
-        timeSelect.appendChild(option);
+      const bookedCount = bookingRecords[selectedDate]?.[slot] || 0;
+
+      const option = document.createElement("option");
+      option.value = slot;
+      option.textContent = slot;
+
+      if (bookedCount >= 1) {
+        // Disable the option if the slot already has an appointment
+        option.disabled = true;
+        option.textContent += " (Booked)";
+        option.style.cursor = "not-allowed"; // Add visual feedback for disabled options
       }
+
+      timeSelect.appendChild(option);
     });
 
     // If there's a preferred time, ensure it is selected

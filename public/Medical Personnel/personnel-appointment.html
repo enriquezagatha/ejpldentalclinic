@@ -360,7 +360,8 @@
                                 <select class="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     onchange="updateStatus('${appointment._id}', this.value, this)"
                                     data-original-status="${appointment.status}" 
-                                    data-appointment-id="${appointment._id}">
+                                    data-appointment-id="${appointment._id}"
+                                    ${appointment.status === 'Completed' ? 'disabled' : ''}>
                                     <option value="Pending" ${appointment.status === 'Pending' ? 'selected' : ''} ${appointment.status === 'Confirmed' || appointment.status === 'Cancelled' ? 'disabled' : ''}>Pending</option>
                                     <option value="Confirmed" ${appointment.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
                                     <option value="Cancelled" ${appointment.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
@@ -377,7 +378,8 @@
                                 <select class="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     onchange="assignDentist('${appointment._id}', this.value)"
                                     data-original-dentist-id="${appointment.assignedDentist || 'not-assigned'}"
-                                    data-appointment-id="${appointment._id}">
+                                    data-appointment-id="${appointment._id}"
+                                    ${['Confirmed', 'Cancelled', 'Completed'].includes(appointment.status) ? 'disabled' : ''}>
                                     <option value="not-assigned">${assignedDentistName}</option>
                                     ${dentistSelect}
                                 </select>
@@ -449,7 +451,7 @@
                 if (newStatus === 'Confirmed') {
                     const row = selectElement.closest('tr');
                     const dentistSelect = row.querySelector('td:nth-child(8) select');
-                    if (!dentistSelect || !dentistSelect.value || dentistSelect.value === "Not Assigned") {
+                    if (!dentistSelect || !dentistSelect.value || dentistSelect.value === "not-assigned") {
                         showToast('Please assign a dentist before confirming the appointment.', 'error');
                         selectElement.value = currentStatus; // Revert to the original status
                         return;
@@ -529,37 +531,82 @@
                 if (pendingDentistAssignment) {
                     const { appointmentId } = pendingDentistAssignment;
 
+                    // Show loading effect
+                    const cancelButton = document.getElementById('assign-cancel-button');
+                    cancelButton.disabled = true;
+
+                    // Show a centered loading message
+                    const loadingMessage = document.createElement('div');
+                    loadingMessage.style.position = 'fixed';
+                    loadingMessage.style.top = '50%';
+                    loadingMessage.style.left = '50%';
+                    loadingMessage.style.transform = 'translate(-50%, -50%)';
+                    loadingMessage.style.backgroundColor = '#2C4A66';
+                    loadingMessage.style.color = 'white';
+                    loadingMessage.style.padding = '20px';
+                    loadingMessage.style.borderRadius = '8px';
+                    loadingMessage.style.zIndex = '1000';
+                    loadingMessage.style.textAlign = 'center';
+
+                    const spinnerIcon = document.createElement('i');
+                    spinnerIcon.className = 'fas fa-spinner fa-spin text-4xl mb-2 text-gray-400';
+                    spinnerIcon.style.display = 'block';
+                    spinnerIcon.style.marginBottom = '10px';
+
+                    const loadingText = document.createElement('p');
+                    loadingText.className = 'text-lg font-semibold';
+                    loadingText.innerText = 'Processing... Please wait.';
+
+                    loadingMessage.appendChild(spinnerIcon);
+                    loadingMessage.appendChild(loadingText);
+                    document.body.appendChild(loadingMessage);
+
+                    // Simulate processing delay and refresh the page
+                    setTimeout(() => {
+                        document.body.removeChild(loadingMessage);
+                        location.reload();
+                    }, 2000); // 2-second delay
+
                     // Find the dropdown for the dentist
                     const dentistDropdown = document.querySelector(`select[data-appointment-id="${appointmentId}"]`);
+
                     if (dentistDropdown) {
-                        // Reset the dropdown to 'Not Assigned' or the previously selected dentist
-                        dentistDropdown.value = originalDentistId || "not-assigned";
+                        // Revert the dropdown to the original dentist or "Not Assigned"
+                        const originalValue = originalDentistId || "not-assigned";
+                        dentistDropdown.value = originalValue;
 
-                        // Optional: Ensure the "Not Assigned" option exists in the dropdown (if needed)
-                        if (!Array.from(dentistDropdown.options).some(option => option.value === "not-assigned")) {
-                            const option = document.createElement('option');
-                            option.value = "not-assigned";
-                            option.text = "Not Assigned";
-                            dentistDropdown.appendChild(option);
+                        // Explicitly set the dropdown's dataset to reflect the original state
+                        dentistDropdown.dataset.originalDentistId = originalValue;
+
+                        // Update the UI text for "Not Assigned"
+                        if (originalValue === "not-assigned") {
+                            dentistDropdown.options[0].text = "Not Assigned";
                         }
+
+                        // Manually trigger the change event to update the UI properly
+                        const changeEvent = new Event('change', { bubbles: true });
+                        dentistDropdown.dispatchEvent(changeEvent);
                     }
 
-                    // Find the status dropdown and reset it to the original value
-                    const statusDropdown = document.querySelector(`select[data-appointment-id="${appointmentId}"][data-original-status]`);
-                    if (statusDropdown) {
-                        const originalStatus = statusDropdown.dataset.originalStatus || "not-assigned";
-                        statusDropdown.value = originalStatus; // Revert to the original status value
-                    }
+                    // Simulate processing delay
+                    setTimeout(() => {
+                        // Reset the cancel button
+                        cancelButton.disabled = false;
+                        cancelButton.innerText = 'Cancel';
+
+                        // Reset the pending assignment and close the modal
+                        pendingDentistAssignment = null;
+                        originalDentistId = null;
+                        document.getElementById('assign-dentist-modal').style.display = 'none';
+                    }, 500); // 500ms delay for effect
                 }
-
-                pendingDentistAssignment = null; // Clear pending assignment
-                document.getElementById('assign-dentist-modal').style.display = 'none';
             }
+
 
             // Prevent triggering the status confirmation modal when resetting the dropdown
             document.querySelectorAll('select[data-appointment-id]').forEach(select => {
                 select.addEventListener('change', event => {
-                    if (event.bubbles === false) {
+                    if (event.target.dataset.originalDentistId === event.target.value) {
                         event.stopImmediatePropagation(); // Stop further event propagation
                     }
                 });
@@ -670,6 +717,61 @@
             function displayProfileInfo(data) {
                 document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
+
+            // Define getStartOfWeek and getEndOfWeek globally
+            // function getStartOfWeek() {
+            //     const now = new Date();
+            //     const dayOfWeek = now.getDay();
+            //     const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust for Monday as the start of the week
+            //     const startOfWeek = new Date(now.setDate(diff));
+            //     return startOfWeek.toISOString().split('T')[0];
+            // }
+
+            // function getEndOfWeek() {
+            //     const now = new Date();
+            //     const dayOfWeek = now.getDay();
+            //     const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1) + 6; // Adjust for Sunday as the end of the week
+            //     const endOfWeek = new Date(now.setDate(diff));
+            //     return endOfWeek.toISOString().split('T')[0];
+            // }
+
+            // Commenting out the rescheduleAppointment function
+            /*
+            async function rescheduleAppointment(appointmentId, newDate) {
+                if (!newDate) {
+                    showToast('Please select a valid date.', 'error');
+                    return;
+                }
+
+                const newTime = document.querySelector(`#time-select-${appointmentId}`)?.value;
+                if (!newTime) {
+                    showToast('Please select a valid time.', 'error');
+                    return;
+                }
+
+                console.log('Rescheduling with:', { preferredDate: newDate, preferredTime: newTime });
+
+                try {
+                    const response = await fetch(`/api/appointments/${appointmentId}/reschedule`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ preferredDate: newDate, preferredTime: newTime }),
+                    });
+
+                    if (response.ok) {
+                        showToast('Appointment rescheduled successfully.', 'success');
+                        await fetchAppointments(); // Refresh the appointments list
+                    } else {
+                        const errorData = await response.json();
+                        console.error('Failed to reschedule appointment:', response.status, response.statusText, errorData);
+                        showToast(`Failed to reschedule appointment: ${errorData.message || 'Unknown error'}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error rescheduling appointment:', error);
+                    showToast('An error occurred while rescheduling the appointment.', 'error');
+                }
+            }
+            */
         </script>
         <script src="personnelnotification.js"></script>
         <script src="../components/components-personnel/navbarpersonnel-functionalities.js"></script>

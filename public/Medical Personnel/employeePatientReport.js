@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const patientList = document.getElementById("patientList");
   const totalPatientsElement = document.getElementById("totalPatients");
   const downloadPdfBtn = document.getElementById("patientdownloadPdfBtn");
+  const patientSearchInput = document.getElementById("patientSearch");
 
   const today = new Date().toISOString().split("T")[0];
   startDateInput.value = today;
@@ -78,9 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
               appointment.patientName || "N/A"
             }</td>
             <td class="px-4 py-2 text-gray-700">${
-              appointment.patientGender || "N/A"
-            }</td>
-            <td class="px-4 py-2 text-gray-700">${
               appointment.contactNumber || "N/A"
             }</td>
             <td class="px-4 py-2 text-gray-700">${new Date(
@@ -109,10 +107,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
   patientfilterButton.addEventListener("click", fetchReport);
 
+  // Function to get the profile of the logged-in user
+  async function getProfile() {
+    const response = await fetch("/api/medicalPersonnel/profile");
+
+    if (response.ok) {
+      const data = await response.json();
+      return data;  // Return the profile data
+    } else {
+      alert("Failed to fetch profile data.");
+      return null;
+    }
+  }
+
   // ✅ Update PDF Download Function
-  downloadPdfBtn.addEventListener("click", function () {
+  downloadPdfBtn.addEventListener("click", async function () {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+
+    // Get logged-in user's profile data
+    const userProfile = await getProfile();
+    if (!userProfile) return; // If profile fetch fails, stop the PDF generation
+
+    const preparedByName = `${userProfile.firstName} ${userProfile.lastName}`; // Full name
+    const preparedByPosition = userProfile.position || "Medical Personnel"; // Position if available, fallback if not
 
     // ✅ Add Large Logo (Positioned on the Left)
     const imgUrl = "../media/logo/EJPL.png"; // Replace with actual logo URL or Base64
@@ -200,8 +218,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ Footer Section
     const pageCount = doc.internal.getNumberOfPages();
-    const preparedByName = "Dr. Ely Jesse P. Legaspi"; // Replace dynamically with logged-in user
-    const preparedByPosition = "Position in the Company"; // Replace dynamically if needed
 
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
@@ -225,4 +241,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // ✅ Save PDF
     doc.save("EJPL-PatientAppointmentReport.pdf");
   });
+
+  function filterPatientList() {
+    const searchTerm = patientSearchInput.value.toLowerCase();
+    const rows = patientList.querySelectorAll("tr");
+
+    rows.forEach((row) => {
+      const nameCell = row.querySelector("td:first-child");
+      if (nameCell) {
+        const name = nameCell.textContent.toLowerCase();
+        row.style.display = name.includes(searchTerm) ? "" : "none";
+      }
+    });
+  }
+
+  patientSearchInput.addEventListener("input", filterPatientList);
 });

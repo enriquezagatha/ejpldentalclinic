@@ -75,4 +75,7 @@ router.get('/reference-number', appointmentController.getReferenceNumber);
 // Route to create a payment link
 router.post("/create-payment-link", paymentController.createPaymentLink);
 
+// Route to reschedule an appointment
+router.patch("/:id/reschedule", appointmentController.rescheduleAppointment);
+
 module.exports = router;

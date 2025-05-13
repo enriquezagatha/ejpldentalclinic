@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const paymentDropdownContent = document.getElementById(
     "paymentdropdownContent"
   );
-  const treatmentDropdownBtn = document.getElementById("treatmentdropdownBtn");
-  const treatmentDropdownContent = document.getElementById(
-    "treatmentdropdownContent"
-  );
+  // const treatmentDropdownBtn = document.getElementById("treatmentdropdownBtn");
+  // const treatmentDropdownContent = document.getElementById(
+  //   "treatmentdropdownContent"
+  // );
   const paymentfilterButton = document.getElementById("paymentfilterButton");
   const startDateInput = document.getElementById("paymentstartDate");
   const endDateInput = document.getElementById("paymentendDate");
@@ -32,9 +32,9 @@ document.addEventListener("DOMContentLoaded", function () {
     paymentDropdownContent.classList.toggle("hidden");
   });
 
-  treatmentDropdownBtn.addEventListener("click", function () {
-    treatmentDropdownContent.classList.toggle("hidden");
-  });
+  // treatmentDropdownBtn.addEventListener("click", function () {
+  //   treatmentDropdownContent.classList.toggle("hidden");
+  // });
 
   // ✅ Handle dropdown selection for status
   document
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .forEach((option) => {
       option.addEventListener("click", function () {
         selectedTreatment = this.dataset.value;
-        treatmentDropdownBtn.textContent = this.textContent;
+        // treatmentDropdownBtn.textContent = this.textContent;
         treatmentDropdownContent.classList.add("hidden"); // Use class toggle instead of style.display
         console.log("✅ Selected Treatment:", selectedTreatment);
       });
@@ -68,12 +68,12 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
       paymentDropdownContent.classList.add("hidden");
     }
-    if (
-      !treatmentDropdownBtn.contains(event.target) &&
-      !treatmentDropdownContent.contains(event.target)
-    ) {
-      treatmentDropdownContent.classList.add("hidden");
-    }
+    // if (
+    //   !treatmentDropdownBtn.contains(event.target) &&
+    //   !treatmentDropdownContent.contains(event.target)
+    // ) {
+    //   treatmentDropdownContent.classList.add("hidden");
+    // }
   });
 
   // Fetch and display payments with filters
@@ -197,104 +197,154 @@ document.addEventListener("DOMContentLoaded", function () {
   // Attach event listener to the filter button
   paymentfilterButton.addEventListener("click", fetchPayments);
 
-  // ✅ Function to download treatment report as PDF
-  downloadPaymentPdfBtn.addEventListener("click", function () {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+  // Function to get the profile of the logged-in user
+async function getProfile() {
+  const response = await fetch("/api/medicalPersonnel/profile");
 
-    // ✅ Add Large Logo (Positioned on the Left)
-    const imgUrl = "../media/logo/EJPL.png"; // Replace with actual logo URL or Base64
-    doc.addImage(imgUrl, "PNG", 14, 10, 40, 40);
+  if (response.ok) {
+    const data = await response.json();
+    return data;  // Return the profile data
+  } else {
+    alert("Failed to fetch profile data.");
+    return null;
+  }
+}
 
-    // ✅ Header Section
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.text("EJPL Dental Clinic", 105, 20, null, null, "center");
+// ✅ Update PDF Download Function
+downloadPaymentPdfBtn.addEventListener("click", async function () {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
 
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.text(
-      "B25 L2 Santan St. Queens Row West, Bacoor City, Cavite, Philippines",
-      105,
-      26,
-      null,
-      null,
-      "center"
-    );
-    doc.text(
-      "Phone: 0915-179-7522 | Landline: (046) 502-2063",
-      105,
-      32,
-      null,
-      null,
-      "center"
-    );
+  // Get logged-in user's profile data
+  const userProfile = await getProfile();
+  if (!userProfile) return; // If profile fetch fails, stop the PDF generation
 
-    // ✅ Horizontal line
-    doc.setLineWidth(0.5);
-    doc.line(14, 44, 196, 44);
+  const preparedByName = `${userProfile.firstName} ${userProfile.lastName}`; // Full name
+  const preparedByPosition = userProfile.position || "Medical Personnel"; // Position if available, fallback if not
 
-    // ✅ Report Title
-    doc.setFontSize(18);
-    doc.text("Patient Payment Report", 105, 50, null, null, "center");
+  // ✅ Add Large Logo (Positioned on the Left)
+  const imgUrl = "../media/logo/EJPL.png"; // Replace with actual logo URL or Base64
+  doc.addImage(imgUrl, "PNG", 14, 10, 40, 40); // Logo on the left (X=14, Y=10, Width=40, Height=40)
 
-    // ✅ Date & Summary Information
-    const now = new Date();
-    const formattedDate = now
-      .toLocaleString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      })
-      .replace(",", "");
-    const totalPayments = totalPaymentsEl.textContent;
+  // ✅ Header Section (Clinic Name Bold, Address & Phone Normal)
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text("EJPL Dental Clinic", 105, 20, null, null, "center");
 
-    doc.setFontSize(11);
-    doc.text(`Total Patients: ${totalPayments}`, 14, 58);
-    doc.text(`As of ${formattedDate}`, 14, 64);
+  doc.setFont("helvetica", "normal"); // Address & phone in normal font
+  doc.setFontSize(10);
+  doc.text(
+    "B25 L2 Santan St. Queens Row West, Bacoor City, Cavite, Philippines",
+    105,
+    26,
+    null,
+    null,
+    "center"
+  );
+  doc.text(
+    "Phone: 0915-179-7522 | Landline: (046) 502-2063",
+    105,
+    32,
+    null,
+    null,
+    "center"
+  );
 
-    // ✅ Extract Table Data
-    const table = document.querySelector("table");
-    const rows = Array.from(table.querySelectorAll("tbody tr")).map((row) =>
-      Array.from(row.children).map((cell) => cell.innerText)
-    );
+  // ✅ Horizontal line under header
+  doc.setLineWidth(0.5);
+  doc.line(14, 44, 196, 44); // Positioned below contact details
 
-    // ✅ Table Formatting
-    doc.autoTable({
-      head: [["Name", "Gender", "Contact Number"]],
-      body: rows,
-      startY: 70,
-      theme: "striped",
-    });
+  // ✅ Report Title (Moved Down for Better Spacing)
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(18);
+  doc.text("Patient Payment Report", 105, 50, null, null, "center");
 
-    // ✅ Footer Section
-    const pageCount = doc.internal.getNumberOfPages();
-    const preparedByName = "Dr. Ely Jesse P. Legaspi"; // Replace dynamically with logged-in user
-    const preparedByPosition = "Position in the Company"; // Replace dynamically if needed
+  // ✅ Date & Summary Information
+  const now = new Date();
+  const options = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+  const formattedDate = now.toLocaleString("en-US", options).replace(",", "");
 
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
+  const totalPayments = totalPaymentsEl.textContent;
 
-      // ✅ "Prepared by" on the bottom **left**, moved higher
-      doc.text(`Prepared By:`, 14, doc.internal.pageSize.height - 30);
-      doc.text(preparedByName, 30, doc.internal.pageSize.height - 20);
-      doc.text(preparedByPosition, 30, doc.internal.pageSize.height - 15);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.text(`Total Payments: ${totalPayments}`, 14, 58);
+  doc.text(`As of ${formattedDate}`, 14, 64);
 
-      // ✅ Page number **centered**
-      doc.text(
-        `Page ${i} of ${pageCount}`,
-        105,
-        doc.internal.pageSize.height - 10,
-        null,
-        null,
-        "center"
-      );
-    }
+  // ✅ Extract Table Data
+  const table = document.querySelector("table");
+  const rows = Array.from(table.querySelectorAll("tbody tr")).map((row) =>
+    Array.from(row.children).map((cell) => cell.innerText)
+  );
 
-    // ✅ Save PDF
-    doc.save("EJPL-PaymentReport.pdf");
+  // ✅ Table Formatting
+  doc.autoTable({
+    head: [["Patient Name", "Email", "Treatment", "Amount", "Status", "Date"]],
+    body: rows,
+    startY: 70, // Adjusted for proper spacing
+    theme: "striped",
+    styles: {
+      fontSize: 10,
+      cellPadding: 3,
+      valign: "middle",
+    },
+    headStyles: {
+      fillColor: [41, 128, 185],
+      textColor: [255, 255, 255],
+      fontSize: 11,
+      fontStyle: "bold",
+    },
+    alternateRowStyles: {
+      fillColor: [240, 240, 240],
+    },
   });
+
+  // ✅ Footer Section
+  const pageCount = doc.internal.getNumberOfPages();
+
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+
+    // ✅ "Prepared by" on the bottom **left**, moved higher
+    doc.text(`Prepared By:`, 14, doc.internal.pageSize.height - 30);
+    doc.text(preparedByName, 30, doc.internal.pageSize.height - 20);
+    doc.text(preparedByPosition, 30, doc.internal.pageSize.height - 15);
+
+    // ✅ Page number **centered**
+    doc.text(
+      `Page ${i} of ${pageCount}`,
+      105,
+      doc.internal.pageSize.height - 10,
+      null,
+      null,
+      "center"
+    );
+  }
+
+  // ✅ Save PDF
+  doc.save("EJPL-PaymentReport.pdf");
+});
+
+// Attach event listener to the search bar
+const paymentReportsSearch = document.getElementById("paymentReportsSearch");
+paymentReportsSearch.addEventListener("input", function () {
+  const searchTerm = this.value.toLowerCase();
+  const rows = paymentList.querySelectorAll("tr");
+
+  rows.forEach((row) => {
+    const patientName = row.children[0]?.textContent.toLowerCase() || "";
+    if (patientName.includes(searchTerm)) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+});
 });

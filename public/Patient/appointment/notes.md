@@ -1,266 +1,428 @@
-step 3
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Appointment</title>
-    <link rel="stylesheet" href="patientscheduling.css">
-    <style>
-        /* Modal styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+const bookingRecords = {};
+
+const savedBookings = JSON.parse(localStorage.getItem("bookingRecords"));
+if (savedBookings) {
+  Object.assign(bookingRecords, savedBookings);
+}
+
+// Navigate to the previous step and save data
+function goToAppointmentBack() {
+  localStorage.removeItem("preferredDate");
+  localStorage.removeItem("preferredTime");
+  localStorage.removeItem("treatmentType");
+  localStorage.removeItem("treatmentPrice");
+  localStorage.removeItem("isNavigating");
+
+  window.location.href = "../Patient/typeofpatient.html";
+}
+
+function showToast(message) {
+  let warningDiv = document.getElementById("form-warning");
+  if (!warningDiv) {
+    warningDiv = document.createElement("div");
+    warningDiv.id = "form-warning";
+    warningDiv.className = "warning-message text-red-500 text-sm mt-2";
+    warningDiv.style.display = "none";
+    document.body.appendChild(warningDiv);
+  }
+
+  warningDiv.textContent = message;
+  warningDiv.style.display = "block";
+}
+
+// Navigate to the next step and save data
+function goToAppointmentNext() {
+  const preferredDate = document.querySelector(".date-input")?.value || "";
+  const preferredTime = document.querySelector(".time-select")?.value || "";
+  const treatmentType =
+    document.querySelector(".typeoftreatment-select")?.value || "";
+
+  if (!preferredDate && !preferredTime && !treatmentType) {
+    showToast("Please fill up all the required fields.");
+    return;
+  }
+
+  if (!preferredDate) {
+    showToast("Please select a preferred date.");
+    return;
+  }
+
+  if (!preferredTime) {
+    showToast("Please select a preferred time.");
+    return;
+  }
+
+  if (!treatmentType) {
+    showToast("Please select a treatment type.");
+    return;
+  }
+
+  localStorage.setItem("isNavigating", "true"); // Set flag for navigation
+  saveFormData();
+  window.location.href = "patient-existingpatientdetails.html";
+}
+
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+function saveFormData() {
+  const preferredDate = document.querySelector(".date-input")?.value || "";
+  const preferredTime = document.querySelector(".time-select")?.value || "";
+  const treatmentType =
+    document.querySelector(".typeoftreatment-select")?.value || "";
+  const selectedOption = document.querySelector(".typeoftreatment-select")
+    ?.selectedOptions[0];
+  const treatmentPrice = selectedOption?.dataset?.price || "";
+  localStorage.setItem("preferredDate", preferredDate);
+  localStorage.setItem("preferredTime", preferredTime);
+  localStorage.setItem("treatmentType", treatmentType);
+  localStorage.setItem("treatmentPrice", treatmentPrice);
+}
+
+function loadFormData() {
+  const isNavigating = localStorage.getItem("isNavigating");
+
+  if (isNavigating) {
+    const preferredDate = localStorage.getItem("preferredDate");
+    const preferredTime = localStorage.getItem("preferredTime");
+    const treatmentType = localStorage.getItem("treatmentType");
+    const treatmentPrice = localStorage.getItem("treatmentPrice");
+
+    if (preferredDate) {
+      const [year, month, day] = preferredDate.split("-");
+      const monthName = monthNames[parseInt(month, 10) - 1];
+      const formattedDate = `${monthName} ${day}, ${year}`;
+
+      const dateInput = document.querySelector(".date-input");
+      if (dateInput) {
+        dateInput.value = preferredDate;
+      }
+
+      const datePlaceholder = document.querySelector(".date-placeholder");
+      if (datePlaceholder) {
+        datePlaceholder.textContent = formattedDate;
+      }
+    }
+
+    // Load preferred time correctly
+    if (preferredTime) {
+      const timeSelect = document.querySelector(".time-select");
+      if (timeSelect) {
+        if (timeSelect.tagName === "SELECT") {
+          timeSelect.querySelectorAll("option").forEach((option) => {
+            if (option.value === preferredTime) {
+              option.selected = true; // Ensure that the preferred time is selected
+            }
+          });
         }
+      }
+    }
 
-        .modal-content {
-            background-color: #2C3E50;
-            margin: 15% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
-            text-align: center;
+    if (treatmentType) {
+      const treatmentElement = document.querySelector(
+        ".typeoftreatment-select"
+      );
+      if (treatmentElement) {
+        if (treatmentElement.tagName.toLowerCase() === "select") {
+          treatmentElement.querySelectorAll("option").forEach((option) => {
+            if (option.value === treatmentType) {
+              option.selected = true;
+            }
+          });
+        } else if (treatmentElement.tagName.toLowerCase() === "input") {
+          treatmentElement.value = treatmentType;
         }
+      }
+    }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+    const treatmentPriceInput = document.getElementById("treatment-price");
+    if (treatmentPriceInput) {
+      treatmentPriceInput.value =
+        treatmentPrice && treatmentPrice !== "0"
+          ? treatmentPrice.includes("-")
+            ? `₱${treatmentPrice.split("-")[0].trim()} - ₱${treatmentPrice
+                .split("-")[1]
+                .trim()}`
+            : `₱${treatmentPrice}`
+          : "";
+    }
+
+    if (preferredDate) {
+      populateTimeOptions(preferredDate, preferredTime); // Populate time options based on the saved preferred date and time
+    }
+  } else {
+    document.querySelector(".date-input").value = "";
+    document.querySelector(".time-select").value = "";
+    document.querySelector(".typeoftreatment-select").value = "";
+    const treatmentPriceInput = document.getElementById("treatment-price");
+    if (treatmentPriceInput) {
+      treatmentPriceInput.value = "";
+    }
+  }
+}
+
+function populateTimeOptions(selectedDate = null, selectedTime = null) {
+  const timeSelect = document.querySelector(".time-select");
+  if (timeSelect) {
+    // Clear the existing options and add the default placeholder
+    timeSelect.innerHTML =
+      '<option value="" disabled selected>Preferred Time</option>';
+
+    let timeSlots = [];
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const isToday = selectedDate === now.toISOString().split("T")[0];
+
+    if (selectedDate) {
+      const selectedDateObj = new Date(selectedDate);
+      const dayOfWeek = selectedDateObj.getDay();
+
+      if (dayOfWeek === 1) {
+        // Monday
+        timeSlots = generateTimeSlots(18, 24).concat(generateTimeSlots(0, 2)); // 6 PM - 2 AM
+      } else if (dayOfWeek === 6) {
+        // Saturday
+        timeSlots = generateTimeSlots(10, 24).concat(generateTimeSlots(0, 2)); // 10 AM - 2 AM
+      } else if (dayOfWeek === 0) {
+        // Sunday
+        timeSlots = generateTimeSlots(14, 24).concat(generateTimeSlots(0, 2)); // 2 PM - 2 AM
+      } else {
+        // Tuesday - Friday
+        timeSlots = generateTimeSlots(14, 24).concat(generateTimeSlots(0, 2)); // 2 PM - 2 AM
+      }
+
+      // Filter out past time slots if the selected date is today
+      if (isToday) {
+        timeSlots = timeSlots.filter((slot) => {
+          const [start] = slot.split(" - ");
+          const [startHour, startPeriod] = parseTime(start);
+          const startTimeInMinutes =
+            (startHour % 12 || 12) * 60 + (startPeriod === "PM" ? 720 : 0);
+
+          const currentTimeInMinutes = currentHour * 60 + currentMinute;
+
+          // Include slots that start at or after the current time
+          return startTimeInMinutes >= currentTimeInMinutes;
+        });
+      }
+    }
+
+    // Add time slots to the dropdown
+    timeSlots.forEach((slot) => {
+      const bookedCount = bookingRecords[slot] || 0;
+      const option = document.createElement("option");
+      option.value = slot;
+      option.textContent = slot;
+
+      if (bookedCount >= 1) {
+        // Disable the option if the slot is already booked
+        option.disabled = true;
+        option.textContent += " (Booked)";
+      }
+
+      timeSelect.appendChild(option);
+    });
+
+    // If there's a preferred time, ensure it is selected
+    if (selectedTime) {
+      const timeOptions = timeSelect.querySelectorAll("option");
+      timeOptions.forEach((option) => {
+        if (option.value === selectedTime) {
+          option.selected = true;
         }
+      });
+    }
+  }
+}
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <nav class="nav-container">
-            <img src="/media/logo/EJPL.png" alt="Logo" class="logo">
-            <div class="nav-links">
-                <a href="../patient-home.html" class="disabled-link">Home</a>
-                <a href="../patient-aboutus.html" class="disabled-link">About Us</a>
-                <a href="../patient-doctors.html" class="disabled-link">Doctors</a>
-                <a href="../patient-services.html" class="disabled-link">Services</a>
-                <a href="../patient-contact.html" class="disabled-link">Contact Us</a>
-                <a href="../patient-location.html" class="disabled-link">Location</a>
-            </div>
-            <a href="../Patient/patient-notifications.html" class="notification-icon">
-                <img src="../media/logo/notif.png" alt="Notification Icon">
-                <span class="notification-badge"></span>
-            </a>
-            <a href="../patient-profile.html" class="disabled-link">
-                <img src="/media/logo/profile.png" alt="Profile Icon" class="profile-icon">
-            </a>
-        </nav>
-    </header>
-        <main>
-            <button class="appointment-back-button" onclick="goToAppointmentBack()">← Back</button>
-            <button class="appointment-next-button" onclick="confirmAppointment()">Confirm Appointment</button>
-            <div class="content">
-                <h1>EJPL Dental Clinic Appointment Form</h1>
-                <h2>Step 3: Confirm Your Appointment</h2>
-                <div class="login-form">
-                    <div class="confirmation-info">
-                        <!-- Confirmation details will be dynamically inserted here -->
-                    </div>
+function parseTime(time) {
+  const [hourMinute, period] = time.split(" ");
+  const [hour] = hourMinute.split(":");
+  return [parseInt(hour, 10), period];
+}
 
-                    <!-- Modal for Confirmation Message -->
-                    <div id="confirmation-modal" class="modal">
-                        <div class="modal-content">
-                            <span class="close" onclick="closeModal()">&times;</span>
-                            <p id="confirmation-text"></p>
-                        </div>
-                    </div>
-                </div>
+function generateTimeSlots(startHour, endHour) {
+  const slots = [];
+  for (let hour = startHour; hour < endHour; hour++) {
+    const startTime = formatTime(hour);
+    const endTime = formatTime(hour + 1);
+    slots.push(`${startTime} - ${endTime}`);
+  }
+  return slots;
+}
 
-                <!-- Receipt Section -->
-                <div id="appointment-receipt" style="display: none;">
-                    <h2>Appointment Confirmation Receipt</h2>
-                    <p><strong>Clinic Name:</strong> EJPL Dental Clinic</p>
-                    <div class="receipt-info">
-                        <!-- Receipt details will be dynamically inserted here -->
-                    </div>
-                    <p><strong>Date of Confirmation:</strong> <span id="confirmation-date"></span></p>
-                    <p>Please bring this receipt to the clinic on the day of your appointment.</p>
-                </div>
-            </div>
-            <script>
-                const monthNames = [
-                    "January", "February", "March", "April", "May", "June",
-                    "July", "August", "September", "October", "November", "December"
-                ];
+function formatTime(hour) {
+  if (hour === 24) return "12:00 AM"; // Midnight case
+  if (hour === 12) return "12:00 PM"; // Noon case
+  const period = hour >= 12 ? "PM" : "AM";
+  const formattedHour = hour % 12 || 12; // Convert 24-hour format to 12-hour format
+  return `${formattedHour}:00 ${period}`;
+}
 
-                const appointmentRecords = JSON.parse(localStorage.getItem('appointmentRecords')) || {}; // Load from localStorage or initialize as empty object
+document.addEventListener("DOMContentLoaded", function () {
+  loadFormData();
+  populateTimeOptions();
 
-                function formatDate(dateStr) {
-                    const [year, month, day] = dateStr.split('-');
-                    const monthName = monthNames[parseInt(month, 10) - 1]; // Convert month number to month name
-                    return `${monthName}-${day}-${year}`;
-                }
+  const calendarIcon = document.querySelector(".calendar-icon");
+  if (calendarIcon) {
+    calendarIcon.addEventListener("click", function () {
+      const dateInput = document.querySelector(".date-input");
+      if (dateInput && !dateInput.disabled) {
+        // Check if the input is not disabled
+        dateInput.showPicker();
+      }
+    });
+  }
 
-                function loadConfirmationData() {
-                    // Load form data from sessionStorage
-                    const savedFormData = JSON.parse(sessionStorage.getItem('formData'));
-                    const savedScheduleData = {
-                        preferredDate: localStorage.getItem('preferredDate'),
-                        preferredTime: localStorage.getItem('preferredTime'),
-                        treatmentType: localStorage.getItem('treatmentType'),
-                        treatmentPrice: localStorage.getItem('treatmentPrice'),
-                    };
+  const dateInputField = document.getElementById("dateInput");
+  if (dateInputField) {
+    const today = new Date();
+    const maxDate = new Date(today);
+    maxDate.setDate(today.getDate() + 7);
 
-                    console.log('Saved Form Data:', savedFormData);
-                    console.log('Saved Schedule Data:', savedScheduleData);
+    const formatDate = (date) => date.toISOString().split("T")[0];
 
-                    if (savedFormData) {
-                        const confirmationHTML = `
-                            <p><strong>Patient Name:</strong> ${savedFormData.firstName || 'N/A'} ${savedFormData.lastName || 'N/A'}</p>
-                            <p><strong>Age:</strong> ${savedFormData.age || 'N/A'}</p>
-                            <p><strong>Gender:</strong> ${savedFormData.gender || 'N/A'}</p>
-                            <p><strong>Address:</strong> ${savedFormData.address || 'N/A'}</p>
-                            <p><strong>Contact Number:</strong> ${savedFormData.contactNumber || 'N/A'}</p>
-                            <p><strong>Email Address:</strong> ${savedFormData.emailAddress || 'N/A'}</p>
-                            <p><strong>Medical History:</strong> ${savedFormData.selectedHistory || 'N/A'}</p>
-                            <p><strong>Emergency Contact Person:</strong> ${savedFormData.emergencyContact || 'N/A'}</p>
-                            <p><strong>Emergency Contact Number:</strong> ${savedFormData.emergencyContactNumber || 'N/A'}</p>
-                            <p><strong>Emergency Contact Relationship:</strong> ${savedFormData.emergencyContactRelationship || 'N/A'}</p>
-                            <p><strong>Preferred Date:</strong> ${savedScheduleData.preferredDate ? formatDate(savedScheduleData.preferredDate) : 'N/A'}</p>
-                            <p><strong>Preferred Time:</strong> ${savedScheduleData.preferredTime || 'N/A'}</p>
-                            <p><strong>Type of Treatment:</strong> ${savedScheduleData.treatmentType || 'N/A'}</p>
-                            <p><strong>Treatment Price:</strong> ${savedScheduleData.treatmentPrice || 'N/A'}</p>
-                        `;
-                        document.querySelector('.confirmation-info').innerHTML = confirmationHTML;
-                        document.querySelector('.receipt-info').innerHTML = confirmationHTML;
-                        document.getElementById('confirmation-date').innerText = new Date().toLocaleDateString();
-                    }
-                }
+    dateInputField.min = formatDate(today);
+    dateInputField.max = formatDate(maxDate);
 
-                document.addEventListener('DOMContentLoaded', loadConfirmationData);
+    const previouslySelectedDate = localStorage.getItem("preferredDate");
+    if (previouslySelectedDate) {
+      const storedDate = new Date(previouslySelectedDate);
+      if (storedDate >= today && storedDate <= maxDate) {
+        dateInputField.value = previouslySelectedDate;
+      } else {
+        // If not, reset the value to ensure the user selects a valid date
+        dateInputField.value = "";
+      }
+    }
+  }
 
-                function goToAppointmentBack() {
-                    window.location.href = "step1appointment.html";
-                }
+  document.querySelector(".date-input").addEventListener("change", function () {
+    const dateInputValue = this.value;
+    const selectedTime = document.querySelector(".time-select")?.value; // Get the currently selected time
+    populateTimeOptions(dateInputValue, selectedTime); // Pass the selected time
 
-                function openModal(message) {
-                    document.getElementById('confirmation-text').innerText = message;
-                    document.getElementById('confirmation-modal').style.display = 'block';
-                }
+    const [year, month, day] = dateInputValue.split("-");
+    const monthName = monthNames[parseInt(month, 10) - 1];
+    const formattedDate = `${monthName} ${day}, ${year}`;
 
-                function closeModal() {
-                    document.getElementById('confirmation-modal').style.display = 'none';
-                }
+    const datePlaceholder = document.querySelector(".date-placeholder");
+    if (datePlaceholder && datePlaceholder.tagName === "INPUT") {
+      datePlaceholder.placeholder = formattedDate;
+    } else if (datePlaceholder) {
+      datePlaceholder.textContent = formattedDate;
+    }
+  });
+});
 
-                function confirmAppointment() {
-                    const preferredTime = localStorage.getItem('preferredTime');
+document.addEventListener("DOMContentLoaded", async function () {
+  const treatmentSelect = document.getElementById("treatment-select");
+  const treatmentPrice = document.getElementById("treatment-price"); // This is an input field
 
-                    // Prepare the appointment details
-                    const savedFormData = JSON.parse(sessionStorage.getItem('formData')) || {};
-                    const savedScheduleData = {
-                        preferredDate: localStorage.getItem('preferredDate'),
-                        preferredTime: preferredTime,
-                        treatmentType: localStorage.getItem('treatmentType'),
-                        treatmentPrice: localStorage.getItem('treatmentPrice'),
-                    };
+  try {
+    const response = await fetch(`${window.location.origin}/api/treatments`);
+    const treatments = await response.json();
 
-                    // Data to send to the backend
-                    const appointmentData = {
-                        firstName: savedFormData.firstName || 'N/A',
-                        lastName: savedFormData.lastName || 'N/A',
-                        age: savedFormData.age || 'N/A',
-                        gender: savedFormData.gender || 'N/A',
-                        address: savedFormData.address || 'N/A',
-                        contactNumber: savedFormData.contactNumber || 'N/A',
-                        emailAddress: savedFormData.emailAddress || 'N/A',
-                        selectedHistory: savedFormData.selectedHistory || 'N/A',
-                        emergencyContact: savedFormData.emergencyContact || 'N/A',
-                        preferredDate: savedScheduleData.preferredDate || 'N/A',
-                        preferredTime: savedScheduleData.preferredTime || 'N/A',
-                        treatmentType: savedScheduleData.treatmentType || 'N/A',
-                        treatmentPrice: savedScheduleData.treatmentPrice || 'N/A',
-                        emergencyContactNumber: savedFormData.emergencyContactNumber || 'N/A',
-                        emergencyContactRelationship: savedFormData.emergencyContactRelationship || 'N/A',
-                    };
+    treatments.forEach((treatment) => {
+      const option = document.createElement("option");
+      option.value = treatment.name;
+      option.dataset.price = treatment.price; // Store price in dataset
+      option.textContent = treatment.name;
+      treatmentSelect.appendChild(option);
+    });
 
-                    // Send a POST request to the backend API
-                    fetch('/api/appointments/patient/appointments', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(appointmentData)
-                    })
-                    .then(response => {
-                        if (response.status === 401) {
-                            displayError('Unauthorized. Please log in to confirm your appointment.');
-                        } else if (response.status === 400) { // Check for appointment slot full error
-                            response.json().then(errorData => {
-                                displayError(errorData.message || 'Appointment slot is full for this time.');
-                            });
-                        } else if (!response.ok) {
-                            response.json().then(errorData => {
-                                displayError(errorData.message || 'Network response was not ok');
-                            });
-                        } else {
-                            return response.json(); // Proceed to the next promise
-                        }
-                    })
-                    .then(data => {
-                        if (data) {
-                            if (data.success) { // Check if 'data.success' is true
-                                const receiptUrl = `receipt.html?receiptDetails=${encodeURIComponent(JSON.stringify(appointmentData))}`;
-                                window.location.href = receiptUrl;
+    loadFormData();
 
-                                // Clear session and local storage
-                                sessionStorage.removeItem('formData');
-                                localStorage.removeItem('preferredDate');
-                                localStorage.removeItem('preferredTime');
-                                localStorage.removeItem('treatmentType');
-                                localStorage.removeItem('treatmentPrice');
+    // Update price when selection changes
+    treatmentSelect.addEventListener("change", function () {
+      const selectedOption =
+        treatmentSelect.options[treatmentSelect.selectedIndex];
+      let price = selectedOption.dataset.price || "0";
 
-                                // Clear confirmation display area if needed
-                                document.querySelector('.confirmation-info').innerHTML = '';
-                                document.getElementById('confirmation-message').style.display = 'none';
-                                document.getElementById('confirmation-text').innerText = '';
-                            }
-                        }
-                    });
-                }
+      // Ensure both numbers in the range get the peso sign
+      if (price.includes("-")) {
+        const [minPrice, maxPrice] = price.split("-");
+        price = `₱${minPrice.trim()} - ₱${maxPrice.trim()}`;
+      } else {
+        price = `₱${price}`;
+      }
 
-                function displayError(message) {
-                    openModal(message); // Show the error message in the modal
-                }
+      treatmentPrice.value = price; // Set properly formatted price
+    });
+  } catch (error) {
+    console.error("Error fetching treatments:", error);
+  }
+});
 
-                function printReceipt() {
-                    const receiptSection = document.getElementById('appointment-receipt').innerHTML;
-                    const originalContent = document.body.innerHTML;
+// document.addEventListener("DOMContentLoaded", function () {
+//   const form = document.getElementById("schedule-form");
+//   if (form) {
+//     form.reset();
+//   } else {
+//     console.error("Form with ID 'schedule-form' not found.");
+//   }
+// });
 
-                    // Replace the body content with the receipt
-                    document.body.innerHTML = receiptSection;
+function updateSlotsAvailable() {
+  const slotsAvailableElement = document.getElementById("slotsavailable");
+  if (!slotsAvailableElement) return;
 
-                    // Print the receipt
-                    window.print();
+  const dateInput = document.querySelector(".date-input");
+  if (!dateInput) return;
 
-                    // Restore the original content after printing
-                    document.body.innerHTML = originalContent;
+  const selectedDate =
+    dateInput.value || new Date().toISOString().split("T")[0]; // Default to today if empty
+  const selectedDateObj = new Date(selectedDate);
+  const dayOfWeek = selectedDateObj.getDay();
+  let totalSlots = 0,
+    bookedSlots = 0;
 
-                    // Reload the page to bring back functionality after print
-                    location.reload();
+  // Determine available slots based on the day
+  if (dayOfWeek === 1) {
+    // Monday
+    totalSlots = generateTimeSlots(18, 24).length;
+  } else if (dayOfWeek === 6) {
+    // Saturday
+    totalSlots =
+      generateTimeSlots(0, 2).length +
+      generateTimeSlots(8, 12).length +
+      generateTimeSlots(14, 24).length;
+  } else {
+    // Tuesday - Friday & Sunday
+    totalSlots =
+      generateTimeSlots(0, 2).length + generateTimeSlots(14, 24).length;
+  }
 
-                }
+  // Count booked slots for the selected date
+  bookedSlots = Object.values(bookingRecords).filter(
+    (record) => record.date === selectedDate
+  ).length;
 
-            </script>
-        </main>
-    </body>
-</html>
+  const availableSlots = totalSlots - bookedSlots;
+
+  // Update the slots available text
+  slotsAvailableElement.textContent = `${availableSlots} slots available`;
+}
+
+// Call this function when the document loads and when a date is selected
+document.addEventListener("DOMContentLoaded", function () {
+  updateSlotsAvailable();
+
+  const dateInput = document.querySelector(".date-input");
+  if (dateInput) {
+    dateInput.addEventListener("change", updateSlotsAvailable);
+  }
+});

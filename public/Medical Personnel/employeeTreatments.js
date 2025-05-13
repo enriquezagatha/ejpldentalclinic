@@ -117,19 +117,21 @@ async function fetchTreatments() {
 
     tableBody.innerHTML = ""; // Clear the loading message
     paginatedTreatments.forEach((treatment) => {
+      const priceDisplay = treatment.minPrice && treatment.maxPrice
+        ? `${formatPrice(treatment.minPrice)} - ${formatPrice(treatment.maxPrice)}` // Price range
+        : treatment.price // Original price string
+        ? formatPrice(treatment.price) // Ensure price includes peso sign
+        : "₱0.00"; // Default if no price is available
+
       const row = document.createElement("tr");
       row.className = "border-b hover:bg-gray-100"; // Add row styling
       row.innerHTML = `
                 <td class="px-4 py-2 text-gray-700">${treatment.name}</td>
-                <td class="px-4 py-2 text-gray-700">${formatPrice(
-                  treatment.price
-                )}</td>
+                <td class="px-4 py-2 text-gray-700">${priceDisplay}</td>
                 <td class="px-4 py-2 flex space-x-2 gap-2">
                     <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="editTreatment('${
                       treatment._id
-                    }', '${treatment.name}', '${
-        treatment.price
-      }')">Edit</button>
+                    }', '${treatment.name}', '${priceDisplay}')">Edit</button>
                     <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteTreatment('${
                       treatment._id
                     }')">Delete</button>
@@ -154,12 +156,8 @@ async function fetchTreatments() {
 function formatPrice(price) {
   if (!price) return "₱0.00"; // Handle empty values
 
-  if (!isNaN(price)) {
-    // Single number price
-    return `₱${parseFloat(price).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-    })}`;
-  }
+  // Ensure price is a string for further processing
+  price = String(price);
 
   // ✅ Handle range format (e.g., "1000-1500")
   if (price.includes("-")) {
@@ -169,6 +167,21 @@ function formatPrice(price) {
         max
       ).toLocaleString()}`;
     }
+  }
+
+  // ✅ Handle "and up" format (e.g., "12,000 and up")
+  if (price.toLowerCase().includes("and up")) {
+    const [basePrice] = price.split("and").map((val) => val.trim());
+    if (!isNaN(basePrice)) {
+      return `₱${parseFloat(basePrice).toLocaleString()} and up`;
+    }
+  }
+
+  // ✅ Handle single price format
+  if (!isNaN(price)) {
+    return `₱${parseFloat(price).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+    })}`;
   }
 
   return `₱${price}`; // Default case
@@ -191,7 +204,7 @@ async function updateTreatmentDropdown() {
     treatments.forEach((treatment) => {
       const option = document.createElement("option");
       option.value = treatment.name;
-      option.dataset.price = treatment.price;
+      option.dataset.price = formatPrice(treatment.price); // Ensure price includes peso sign
       option.textContent = treatment.name;
       treatmentSelect.appendChild(option);
     });
@@ -200,10 +213,8 @@ async function updateTreatmentDropdown() {
     treatmentSelect.addEventListener("change", function () {
       const selectedOption =
         treatmentSelect.options[treatmentSelect.selectedIndex];
-      const price = selectedOption.dataset.price || "0";
-      treatmentPrice.textContent = `Price: ${formatPrice(
-        selectedOption.dataset.price
-      )}`;
+      const price = selectedOption.dataset.price || "₱0.00"; // Default to ₱0.00
+      treatmentPrice.textContent = `Price: ${price}`;
     });
   } catch (error) {
     console.error("Error updating treatment dropdown:", error);
@@ -224,64 +235,71 @@ function closeModal() {
 //Add or Update Treatment
 async function saveTreatment() {
   const name = document.getElementById("treatment-name").value.trim();
-  const price = document.getElementById("treatment-price").value.trim();
+  const priceInput = document.getElementById("treatment-price").value.trim();
   const treatmentId = document.getElementById("save-treatment-btn").dataset.id;
 
-  if (!name || !price) {
+  if (!name || !priceInput) {
     return showToast(
-      "Please enter a valid treatment name and price.",
+      "Please enter a valid treatment name and price or price range.",
       "bg-red-500"
     );
   }
 
-  try {
-    // Fetch existing treatments to check for duplicate names
-    const res = await fetch(TREATMENTS_API_URL);
-    if (!res.ok) throw new Error("Failed to fetch treatments");
-
-    const treatments = await res.json();
-    const isDuplicate = treatments.some(
-      (treatment) =>
-        treatment.name.toLowerCase() === name.toLowerCase() &&
-        treatment._id !== treatmentId
-    );
-
-    if (isDuplicate) {
-      return showToast(
-        "A treatment with this name already exists. Please choose a different name.",
-        "bg-red-500"
-      );
+  let price, minPrice, maxPrice;
+  if (priceInput.includes("-")) {
+    // Parse price range (e.g., "1000-1500")
+    [minPrice, maxPrice] = priceInput.split("-").map((p) => parseFloat(p.trim()));
+    if (
+      isNaN(minPrice) ||
+      isNaN(maxPrice) ||
+      minPrice < 0 ||
+      maxPrice < 0 ||
+      minPrice > maxPrice
+    ) {
+      return showToast("Invalid price range. Please enter a valid range.", "bg-red-500");
     }
+  } else {
+    // Single price
+    price = parseFloat(priceInput);
+    if (isNaN(price) || price < 0) {
+      return showToast("Invalid price. Please enter a valid price.", "bg-red-500");
+    }
+  }
 
+  try {
     let response;
     if (treatmentId) {
       // Update Treatment
       response = await fetch(`${TREATMENTS_API_URL}/${treatmentId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, price }),
+        body: JSON.stringify({ name, price, minPrice, maxPrice }),
       });
     } else {
       // Add New Treatment
       response = await fetch(TREATMENTS_API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, price }),
+        body: JSON.stringify({ name, price, minPrice, maxPrice }),
       });
     }
 
-    if (!response.ok) throw new Error("Failed to save treatment");
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Server response:", errorText);
+      throw new Error("Failed to save treatment");
+    }
 
     showToast("Treatment saved successfully!");
     closeModal();
     fetchTreatments();
 
-    // Only update dropdown if it exists
     if (document.getElementById("treatment-select")) {
       updateTreatmentDropdown();
     }
   } catch (error) {
     console.error("Error saving treatment:", error);
+    showToast("Error saving treatment. Please try again.", "bg-red-500");
   }
 }
 

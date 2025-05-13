@@ -488,6 +488,96 @@
             }
         });
     });
+
+    document.addEventListener("DOMContentLoaded", async function () {
+        const submitPayment = document.getElementById("submitPayment");
+        const validationMessage = document.getElementById("validationMessage");
+        const treatmentTypeInput = document.getElementById("treatmentType");
+        const amountInput = document.getElementById("amount");
+
+        // Fetch treatment price range from the server
+        async function fetchTreatmentPriceRange(treatmentType) {
+            try {
+                const response = await fetch(`${window.location.origin}/api/treatments?name=${encodeURIComponent(treatmentType)}`);
+                if (!response.ok) throw new Error("Failed to fetch treatment price range");
+
+                const treatment = await response.json();
+                return { minPrice: treatment.minPrice, maxPrice: treatment.maxPrice };
+            } catch (error) {
+                console.error("Error fetching treatment price range:", error);
+                return null;
+            }
+        }
+
+        // Update the amount input placeholder and validation based on the selected treatment
+        async function updatePriceRange() {
+            const treatmentType = treatmentTypeInput.value.trim();
+            if (!treatmentType) return;
+
+            const priceRange = await fetchTreatmentPriceRange(treatmentType);
+            if (priceRange) {
+                amountInput.placeholder = `Enter amount (PHP ${priceRange.minPrice} - PHP ${priceRange.maxPrice})`;
+                amountInput.dataset.minPrice = priceRange.minPrice;
+                amountInput.dataset.maxPrice = priceRange.maxPrice;
+            } else {
+                amountInput.placeholder = "Enter amount (Invalid treatment)";
+                delete amountInput.dataset.minPrice;
+                delete amountInput.dataset.maxPrice;
+            }
+        }
+
+        // Attach event listener to treatment type input
+        treatmentTypeInput.addEventListener("input", updatePriceRange);
+
+        // Payment submission logic
+        submitPayment.addEventListener("click", async function () {
+            const patientReference = document.getElementById("patientReference").value;
+            const patientName = document.getElementById("patientName").value;
+            const patientEmail = document.getElementById("patientEmail").value;
+            const treatmentType = treatmentTypeInput.value.trim();
+            const amountInPHP = parseFloat(amountInput.value.replace(/,/g, ""));
+
+            if (!patientReference || !patientName || !patientEmail || !treatmentType || isNaN(amountInPHP) || amountInPHP <= 0) {
+                validationMessage.innerText = "Please fill out all fields with valid information.";
+                validationMessage.style.display = "block";
+                return;
+            }
+
+            const minPrice = parseFloat(amountInput.dataset.minPrice);
+            const maxPrice = parseFloat(amountInput.dataset.maxPrice);
+
+            if (amountInPHP < minPrice || amountInPHP > maxPrice) {
+                validationMessage.innerText = `The amount must be between PHP ${minPrice.toLocaleString()} and PHP ${maxPrice.toLocaleString()}.`;
+                validationMessage.style.display = "block";
+                return;
+            }
+
+            validationMessage.style.display = "none";
+
+            const amountInCents = amountInPHP * 100;
+            const paymentData = { patientReference, patientName, patientEmail, treatmentType, amount: amountInCents };
+
+            const response = await fetch(`${window.location.origin}/api/payment/create-payment-link`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(paymentData)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Server Error: ", errorText);
+                alert("An error occurred while processing the payment link.");
+            } else {
+                const result = await response.json();
+                if (result.paymentLink) {
+                    const paymentUrl = result.paymentLink;
+                    document.getElementById("paymentLink").innerHTML = `<a href="${paymentUrl}" target="_blank">Click here to pay</a>`;
+                } else {
+                    alert("Failed to generate payment link. Please try again.");
+                }
+            }
+        });
+    });
 </script>
 <script src="patientpayments.js"></script>
 <script src="patientnotifications.js"></script>

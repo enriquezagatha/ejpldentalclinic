@@ -8,13 +8,18 @@ const TreatmentSchema = new mongoose.Schema({
         trim: true
     },
     price: {
-        type: String,
-        required: true,
-        min: 0 // Ensure price is not negative
+        type: String, // Allow price to be a string for backward compatibility
+        default: null // Default to null if not provided
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
+    minPrice: {
+        type: Number,
+        min: 0, // Minimum price for range (optional)
+        default: null // Default to null if not provided
+    },
+    maxPrice: {
+        type: Number,
+        min: 0, // Maximum price for range (optional)
+        default: null // Default to null if not provided
     }
 });
 

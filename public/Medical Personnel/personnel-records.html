@@ -354,6 +354,15 @@
                 window.location.href = `personnel-editpatient.html?appointmentId=${encodeURIComponent(appointmentId)}`;
             }
 
+            function searchPatientRecords() {
+                const searchInput = document.getElementById('patientRecordsSearch').value.toLowerCase();
+                const filteredAppointments = allAppointments.filter(appointment => {
+                    const fullName = `${appointment.firstName} ${appointment.lastName}`.toLowerCase();
+                    return fullName.includes(searchInput);
+                });
+                displayAppointments(filteredAppointments);
+            }
+
             // Ensure data is loaded when the page starts
             fetchAppointments();
 
@@ -374,6 +383,8 @@
             function displayProfileInfo(data) {
                 document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
+
+            document.getElementById('patientRecordsSearch').addEventListener('input', searchPatientRecords);
         </script>
 </body>
 
