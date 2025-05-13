@@ -74,31 +74,31 @@ exports.createPatient = async (req, res) => {
 
 // Verify OTP
 exports.verifyOtp = async (req, res) => {
-  const { email, otp } = req.body;
+    const { otp } = req.body;
 
-  if (!email || !otp) {
-    return res.status(400).json({ message: "Email and OTP are required." });
-  }
+    if (!otp) {
+        return res.status(400).json({ message: "OTP is required." });
+    }
 
-  const patient = await Patient.findOne({ email });
-  if (!patient) {
-    return res.status(404).json({ message: "Patient not found." });
-  }
+    const patient = await Patient.findOne({ otp: parseInt(otp) }); // Find patient by OTP
+    if (!patient) {
+        return res.status(404).json({ message: "Patient not found. Please check the OTP." });
+    }
 
-  if (patient.isVerified) {
-    return res.status(400).json({ message: "Email is already verified." });
-  }
+    if (patient.isVerified) {
+        return res.status(400).json({ message: "Email is already verified." });
+    }
 
-  if (patient.otp !== parseInt(otp) || Date.now() > patient.otpExpiration) {
-    return res.status(400).json({ message: "Invalid or expired OTP." });
-  }
+    if (Date.now() > patient.otpExpiration) {
+        return res.status(400).json({ message: "OTP has expired. Please request a new one." });
+    }
 
-  patient.isVerified = true;
-  patient.otp = undefined;
-  patient.otpExpiration = undefined;
-  await patient.save();
+    patient.isVerified = true;
+    patient.otp = undefined;
+    patient.otpExpiration = undefined;
+    await patient.save();
 
-  res.status(200).json({ message: "Email verified successfully." });
+    res.status(200).json({ message: "Email verified successfully." });
 };
 
 // Handle patient login
@@ -575,6 +575,47 @@ exports.checkEmailExists = async (req, res) => {
     console.error("Error checking email existence:", error);
     res.status(500).json({ message: "Server error while checking email." });
   }
+};
+
+// Resend OTP
+exports.resendOtp = async (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    try {
+        const patient = await Patient.findById(req.session.user.id);
+        if (!patient) {
+            return res.status(404).json({ message: "Patient not found." });
+        }
+
+        const otp = crypto.randomInt(100000, 999999); // Generate a new 6-digit OTP
+        patient.otp = otp;
+        patient.otpExpiration = Date.now() + 300000; // OTP valid for 5 minutes
+        await patient.save();
+
+        // Send OTP to email
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
+
+        const mailOptions = {
+            from: `EJPL Dental Clinic <${process.env.EMAIL_USER}>`,
+            to: patient.email,
+            subject: "Your New OTP",
+            text: `Your new OTP is ${otp}. It is valid for 5 minutes.`,
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: "A new OTP has been sent to your email." });
+    } catch (error) {
+        console.error("Error resending OTP:", error);
+        res.status(500).json({ message: "Failed to resend OTP." });
+    }
 };
 
 // Export the controller functions

@@ -19,6 +19,16 @@
     </header>
     <main
         class="flex justify-center items-center min-h-[calc(100vh-4rem)] mt-20 sm:mt-20 md:mt-10 overflow-y-auto pt-4">
+        <!-- Add loading spinner -->
+        <div id="loadingSpinner" class="hidden fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+            <div class="relative w-16 h-16">
+                <div class="absolute inset-0 border-8 border-white rounded-full"></div>
+                <div
+                    class="absolute inset-0 border-8 border-t-transparent border-r-transparent border-b-transparent border-l-[#2C4A66] rounded-full animate-spin">
+                </div>
+            </div>
+        </div>
+        <!-- End loading spinner -->
         <section class="container flex justify-center items-center max-w-[95%] sm:max-w-full mt-0 mb-0 sm:mt-6 sm:mb-6">
             <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 w-full max-w-lg mb-4 mt-4 sm:max-w-xl">
                 <h1 class="text-4xl font-bold font-inter text-center">Create Account</h1>
@@ -109,6 +119,16 @@
                         <button id="create-account-button"
                             class="create-button w-full bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-opacity-90 font-inter font-bold mt-4">Create
                             Account</button>
+                        <div id="otp-section" class="hidden flex flex-col w-full">
+                            <label class="text-sm font-inter font-semibold text-black mb-2" for="otp">Enter OTP</label>
+                            <input type="text" id="otp" placeholder="123456"
+                                class="input-field w-full px-3 mb-4 h-10 border border-gray-300 rounded pl-2" required>
+                            <div id="otp-error" class="error-message text-xs font-inter font-bold mb-4 text-red-500"></div>
+                            <button id="verify-otp-button"
+                                class="create-button w-full bg-[#2C4A66] text-white px-4 py-2 rounded hover:bg-opacity-90 font-inter font-bold mt-4">
+                                Verify OTP
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -170,6 +190,9 @@
 
         document.getElementById('create-account-button').addEventListener('click', async function (event) {
             event.preventDefault(); // Prevent default behavior
+
+            // Show loading spinner
+            document.getElementById('loadingSpinner').classList.remove('hidden');
 
             const firstName = document.getElementById('first-name').value.trim();
             const lastName = document.getElementById('last-name').value.trim();
@@ -269,9 +292,8 @@
                 });
 
                 if (response.ok) {
-                    // Show OTP section and hide the sign-up form
-                    document.querySelector('.login-form').classList.add('hidden');
-                    document.getElementById('otp-section').classList.remove('hidden');
+                    // Redirect to verify-otp.html
+                    window.location.href = "verify-otp.html";
                 } else {
                     const result = await response.json();
                     const errorMessage = result.message || 'An error occurred.';
@@ -280,38 +302,41 @@
             } catch (error) {
                 console.error('Error creating account:', error);
                 document.getElementById('email-error').textContent = 'An unexpected error occurred.';
+            } finally {
+                // Hide loading spinner
+                document.getElementById('loadingSpinner').classList.add('hidden');
             }
         });
 
-        document.getElementById('verify-otp-button').addEventListener('click', async function () {
-            const email = document.getElementById('email').value.trim();
-            const otp = document.getElementById('otp').value.trim();
+        // document.getElementById('verify-otp-button').addEventListener('click', async function () {
+        //     const email = document.getElementById('email').value.trim();
+        //     const otp = document.getElementById('otp').value.trim();
 
-            if (!otp) {
-                document.getElementById('otp-error').textContent = 'OTP is required.';
-                return;
-            }
+        //     if (!otp) {
+        //         document.getElementById('otp-error').textContent = 'OTP is required.';
+        //         return;
+        //     }
 
-            try {
-                const response = await fetch('/api/patient/verify-otp', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, otp }),
-                });
+        //     try {
+        //         const response = await fetch('/api/patient/verify-otp', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify({ email, otp }),
+        //         });
 
-                if (response.ok) {
-                    window.location.href = "login-patient.html";
-                } else {
-                    const result = await response.json();
-                    document.getElementById('otp-error').textContent = result.message || 'Invalid OTP.';
-                }
-            } catch (error) {
-                console.error('Error verifying OTP:', error);
-                document.getElementById('otp-error').textContent = 'An unexpected error occurred.';
-            }
-        });
+        //         if (response.ok) {
+        //             window.location.href = "login-patient.html";
+        //         } else {
+        //             const result = await response.json();
+        //             document.getElementById('otp-error').textContent = result.message || 'Invalid OTP.';
+        //         }
+        //     } catch (error) {
+        //         console.error('Error verifying OTP:', error);
+        //         document.getElementById('otp-error').textContent = 'An unexpected error occurred.';
+        //     }
+        // });
 
         document.getElementById('first-name').addEventListener('input', function () {
             this.value = this.value.slice(0, 20); // Restrict to 20 characters

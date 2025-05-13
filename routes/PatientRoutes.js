@@ -53,4 +53,7 @@ router.get("/check-email", patientController.checkEmailExists);
 // Route to verify OTP
 router.post("/verify-otp", patientController.verifyOtp);
 
+// Route to resend OTP
+router.post("/resend-otp", patientController.resendOtp);
+
 module.exports = router;
