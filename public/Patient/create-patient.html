@@ -212,7 +212,7 @@
             if (!firstName) {
                 document.getElementById('first-name-error').textContent = 'First Name is required.';
                 hasError = true;
-            } else if (!/^[A-Za-z]{1,20}$/.test(firstName)) {
+            } else if (!/^[A-Za-z\s]{1,20}$/.test(firstName)) {
                 document.getElementById('first-name-error').textContent = 'First Name must contain only letters and be up to 20 characters.';
                 hasError = true;
             }

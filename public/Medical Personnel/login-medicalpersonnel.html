@@ -74,6 +74,12 @@
                                 <i class="fas fa-eye"></i>
                             </button>
                         </div>
+                        <ul id="passwordChecklist" class="text-xs text-gray-600 mt-2 space-y-1">
+                            <li id="lengthCheck" class="invalid">•At least 8 characters</li>
+                            <li id="uppercaseCheck" class="invalid">•At least 1 uppercase letter</li>
+                            <li id="numberCheck" class="invalid">•At least 1 number</li>
+                            <li id="specialCharCheck" class="invalid">•At least 1 special character</li>
+                        </ul>
                     </div>
                     <div>
                         <label for="confirmPassword" class="block text-sm font-medium text-black font-inter">Confirm New
@@ -208,6 +214,13 @@
                 passwordError.style.display = 'none'; // Hide error if passwords match
             }
 
+            // Validate password against checklist
+            const isValidPassword = Object.values(checklist).every((regex) => regex.test(newPassword));
+            if (!isValidPassword) {
+                showNotification('Password does not meet the requirements.', 'red');
+                return;
+            }
+
             const email = document.getElementById('email')?.value || ''; // Get email if exists
             const response = await fetch('/api/medicalPersonnel/change-password', {
                 method: 'POST',
@@ -295,7 +308,40 @@
                 icon.classList.add('fa-eye');
             }
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const newPasswordInput = document.getElementById('newPassword');
+            const checklist = {
+                lengthCheck: /.{8,}/,
+                uppercaseCheck: /[A-Z]/,
+                numberCheck: /\d/,
+                specialCharCheck: /[!@#$%^&*(),.?":{}|<>]/,
+            };
+
+            newPasswordInput.addEventListener('input', () => {
+                const value = newPasswordInput.value;
+                for (const [id, regex] of Object.entries(checklist)) {
+                    const element = document.getElementById(id);
+                    if (regex.test(value)) {
+                        element.classList.remove('invalid');
+                        element.classList.add('valid');
+                    } else {
+                        element.classList.remove('valid');
+                        element.classList.add('invalid');
+                    }
+                }
+            });
+        });
     </script>
+    <style>
+        .valid {
+            color: green;
+        }
+
+        .invalid {
+            color: red;
+        }
+    </style>
 </body>
 
 </html>
