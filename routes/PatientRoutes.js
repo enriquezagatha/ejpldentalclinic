@@ -47,4 +47,10 @@ router.post("/reset-password", patientController.resetPassword);
 // Route to check if the patient has an existing record
 router.get("/has-record", patientController.checkPatientRecord);
 
+// Route to check if the email exists
+router.get("/check-email", patientController.checkEmailExists);
+
+// Route to verify OTP
+router.post("/verify-otp", patientController.verifyOtp);
+
 module.exports = router;

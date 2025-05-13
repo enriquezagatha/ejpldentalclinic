@@ -11,6 +11,9 @@ const patientSchema = new mongoose.Schema({
     isFirstLogin: {type: Boolean, default: true},
     resetToken: String,
     resetTokenExpiration: Date,
+    otp: { type: Number },
+    otpExpiration: { type: Date },
+    isVerified: { type: Boolean, default: false },
 });
 
 const Patient = mongoose.model('Patient', patientSchema);

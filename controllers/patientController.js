@@ -19,30 +19,86 @@ exports.createPatient = async (req, res) => {
     return res.status(400).json({ message: "Please fill in all fields." });
   }
 
-  const formattedBirthday = formatDate(birthday);
-
+  // Check if the email is already registered
   const existingPatient = await Patient.findOne({ email });
   if (existingPatient) {
-    return res.status(400).json({ message: "Email already registered." });
+    return res.status(400).json({ message: "Email already existed." });
   }
 
+  const formattedBirthday = formatDate(birthday);
   const hashedPassword = await bcrypt.hash(password, 10);
+
+  const otp = crypto.randomInt(100000, 999999); // Generate a 6-digit OTP
+  const otpExpiration = Date.now() + 300000; // OTP valid for 5 minutes
+
   const newPatient = new Patient({
     firstName,
     lastName,
     birthday: formattedBirthday,
     email,
     password: hashedPassword,
+    otp,
+    otpExpiration,
+    isVerified: false,
   });
 
-  const saveResult = await newPatient.save();
-  if (saveResult) {
-    return res.status(201).json({ message: "Account created successfully." });
-  } else {
-    return res
-      .status(500)
-      .json({ message: "An error occurred while creating the account." });
+  await newPatient.save();
+
+  // Send OTP to email
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: `EJPL Dental Clinic <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "Verify Your Email Address",
+    text: `Your OTP is ${otp}. It is valid for 5 minutes.`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(201).json({
+      message:
+        "Account created. Verify your email with the OTP sent.",
+    });
+  } catch (error) {
+    console.error("Error sending OTP email:", error);
+    res.status(500).json({ message: "Failed to send OTP email." });
   }
+};
+
+// Verify OTP
+exports.verifyOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ message: "Email and OTP are required." });
+  }
+
+  const patient = await Patient.findOne({ email });
+  if (!patient) {
+    return res.status(404).json({ message: "Patient not found." });
+  }
+
+  if (patient.isVerified) {
+    return res.status(400).json({ message: "Email is already verified." });
+  }
+
+  if (patient.otp !== parseInt(otp) || Date.now() > patient.otpExpiration) {
+    return res.status(400).json({ message: "Invalid or expired OTP." });
+  }
+
+  patient.isVerified = true;
+  patient.otp = undefined;
+  patient.otpExpiration = undefined;
+  await patient.save();
+
+  res.status(200).json({ message: "Email verified successfully." });
 };
 
 // Handle patient login
@@ -501,6 +557,23 @@ exports.checkPatientRecord = async (req, res) => {
   } catch (error) {
     console.error("Error checking patient record:", error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Check if an email address exists
+exports.checkEmailExists = async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ message: "Email is required." });
+  }
+
+  try {
+    const existingPatient = await Patient.findOne({ email });
+    res.json({ exists: !!existingPatient });
+  } catch (error) {
+    console.error("Error checking email existence:", error);
+    res.status(500).json({ message: "Server error while checking email." });
   }
 };
 
