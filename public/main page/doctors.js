@@ -34,6 +34,28 @@ async function fetchdentists() {
               ? dentist.contact.replace(/^\+?\d+\s?/, "") // Removes the country code and space
               : "N/A";
 
+            // Format schedule
+            let scheduleHtml = "";
+            if (dentist.schedule && dentist.schedule.useClinicHours) {
+              scheduleHtml = `<span class="text-green-700 font-semibold">Clinic's Hours</span>`;
+            } else if (
+              dentist.schedule &&
+              Array.isArray(dentist.schedule.days) &&
+              dentist.schedule.days.length > 0
+            ) {
+              scheduleHtml =
+                "<ul class='text-gray-700 text-sm mt-2'>" +
+                dentist.schedule.days
+                  .map(
+                    (d) =>
+                      `<li><span class="font-semibold capitalize">${d.day}:</span> ${d.start} - ${d.end}</li>`
+                  )
+                  .join("") +
+                "</ul>";
+            } else {
+              scheduleHtml = `<span class="text-gray-400">No schedule set</span>`;
+            }
+
             return `
                 <li class="flex flex-col border border-solid border-slate-900 dark:border-gray-100 bg-[#F5F5F5] pt-4 px-2 shadow-xl">
                     <img src="${
@@ -46,6 +68,10 @@ async function fetchdentists() {
                     <h3 class="text-xl px-1 text-left text-black font-inter font-bold">${title} ${
               dentist.firstName
             } ${dentist.lastName}</h3>
+                    <div class="mt-2 mb-2">
+                      <span class="block text-gray-600 font-medium">Schedule:</span>
+                      ${scheduleHtml}
+                    </div>
                     <p class="text-center text-black mt-10 mb-2 tracking-widest"></p>
                 </li>`;
           })

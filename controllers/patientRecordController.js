@@ -264,6 +264,42 @@ exports.getAllPatientRecords = async (req, res) => {
   }
 };
 
+// Upload files for a patient record
+exports.uploadFiles = async (req, res) => {
+  const { firstName, lastName } = req.body;
+
+  if (!firstName || !lastName) {
+    return res.status(400).json({
+      message: "First name and last name are required for file upload.",
+    });
+  }
+
+  let patientRecord = await PatientRecord.findOne({ firstName, lastName });
+
+  // Create a new patient record if not found
+  if (!patientRecord) {
+    patientRecord = new PatientRecord({
+      firstName,
+      lastName,
+      uploadedFiles: [],
+    });
+  }
+
+  const files = req.files.map((file) => ({
+    filename: file.filename,
+    originalname: file.originalname,
+    path: file.path,
+  }));
+
+  patientRecord.uploadedFiles = [...patientRecord.uploadedFiles, ...files];
+  await patientRecord.save();
+
+  res.status(200).json({
+    message: "Files uploaded successfully.",
+    files: patientRecord.uploadedFiles,
+  });
+};
+
 // 🔹 Helper function to get the most popular treatment for each period
 function getMostPopularTreatment(countObj) {
   let result = {};

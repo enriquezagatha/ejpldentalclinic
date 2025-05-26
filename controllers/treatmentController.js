@@ -9,22 +9,27 @@ exports.getAllTreatments = async (req, res) => {
         const formattedTreatments = treatments.map((treatment) => {
             const { name, price, minPrice, maxPrice, _id } = treatment;
 
+            let formattedPrice = price;
             let parsedMinPrice = minPrice;
             let parsedMaxPrice = maxPrice;
 
-            // Parse price string if it exists
-            if (price && typeof price === "string" && price.includes("-")) {
+            // If both minPrice and maxPrice exist, format price as a range string
+            if (parsedMinPrice != null && parsedMaxPrice != null) {
+                formattedPrice = `${parsedMinPrice}-${parsedMaxPrice}`;
+            } else if (price && typeof price === "string" && price.includes("-")) {
+                // Parse price string if it exists and is a range
                 const [min, max] = price.split("-").map((p) => parseFloat(p.replace(/,/g, "").trim()));
                 if (!isNaN(min) && !isNaN(max)) {
                     parsedMinPrice = min;
                     parsedMaxPrice = max;
+                    formattedPrice = `${parsedMinPrice}-${parsedMaxPrice}`;
                 }
             }
 
             return {
                 _id,
                 name,
-                price: parsedMinPrice === null && parsedMaxPrice === null ? price : null, // Keep original price string if no range
+                price: formattedPrice,
                 minPrice: parsedMinPrice || null,
                 maxPrice: parsedMaxPrice || null,
             };

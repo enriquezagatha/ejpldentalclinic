@@ -169,6 +169,69 @@
                                         class="mt-1 block w-full px-4 py-2 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 </div>
 
+                                <!-- Dentist Schedule Section -->
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Schedule:</label>
+                                    <div class="flex items-center mb-2">
+                                        <input type="checkbox" id="dentist-use-clinic-hours" class="mr-2">
+                                        <label for="dentist-use-clinic-hours" class="text-sm">Use Clinic's Hours</label>
+                                    </div>
+                                    <div id="dentist-custom-schedule">
+                                        <div class="grid grid-cols-1 gap-2">
+                                            <!-- Days of the week with time pickers -->
+                                            <div class="flex items-center gap-2" data-day="Monday">
+                                                <input type="checkbox" class="dentist-day-checkbox" id="dentist-day-monday">
+                                                <label for="dentist-day-monday" class="w-20 text-sm">Monday</label>
+                                                <input type="time" class="dentist-time dentist-time-start" id="dentist-monday-start">
+                                                <span class="mx-1">-</span>
+                                                <input type="time" class="dentist-time dentist-time-end" id="dentist-monday-end">
+                                            </div>
+                                            <div class="flex items-center gap-2" data-day="Tuesday">
+                                                <input type="checkbox" class="dentist-day-checkbox" id="dentist-day-tuesday">
+                                                <label for="dentist-day-tuesday" class="w-20 text-sm">Tuesday</label>
+                                                <input type="time" class="dentist-time dentist-time-start" id="dentist-tuesday-start">
+                                                <span class="mx-1">-</span>
+                                                <input type="time" class="dentist-time dentist-time-end" id="dentist-tuesday-end">
+                                            </div>
+                                            <div class="flex items-center gap-2" data-day="Wednesday">
+                                                <input type="checkbox" class="dentist-day-checkbox" id="dentist-day-wednesday">
+                                                <label for="dentist-day-wednesday" class="w-20 text-sm">Wednesday</label>
+                                                <input type="time" class="dentist-time dentist-time-start" id="dentist-wednesday-start">
+                                                <span class="mx-1">-</span>
+                                                <input type="time" class="dentist-time dentist-time-end" id="dentist-wednesday-end">
+                                            </div>
+                                            <div class="flex items-center gap-2" data-day="Thursday">
+                                                <input type="checkbox" class="dentist-day-checkbox" id="dentist-day-thursday">
+                                                <label for="dentist-day-thursday" class="w-20 text-sm">Thursday</label>
+                                                <input type="time" class="dentist-time dentist-time-start" id="dentist-thursday-start">
+                                                <span class="mx-1">-</span>
+                                                <input type="time" class="dentist-time dentist-time-end" id="dentist-thursday-end">
+                                            </div>
+                                            <div class="flex items-center gap-2" data-day="Friday">
+                                                <input type="checkbox" class="dentist-day-checkbox" id="dentist-day-friday">
+                                                <label for="dentist-day-friday" class="w-20 text-sm">Friday</label>
+                                                <input type="time" class="dentist-time dentist-time-start" id="dentist-friday-start">
+                                                <span class="mx-1">-</span>
+                                                <input type="time" class="dentist-time dentist-time-end" id="dentist-friday-end">
+                                            </div>
+                                            <div class="flex items-center gap-2" data-day="Saturday">
+                                                <input type="checkbox" class="dentist-day-checkbox" id="dentist-day-saturday">
+                                                <label for="dentist-day-saturday" class="w-20 text-sm">Saturday</label>
+                                                <input type="time" class="dentist-time dentist-time-start" id="dentist-saturday-start">
+                                                <span class="mx-1">-</span>
+                                                <input type="time" class="dentist-time dentist-time-end" id="dentist-saturday-end">
+                                            </div>
+                                            <div class="flex items-center gap-2" data-day="Sunday">
+                                                <input type="checkbox" class="dentist-day-checkbox" id="dentist-day-sunday">
+                                                <label for="dentist-day-sunday" class="w-20 text-sm">Sunday</label>
+                                                <input type="time" class="dentist-time dentist-time-start" id="dentist-sunday-start">
+                                                <span class="mx-1">-</span>
+                                                <input type="time" class="dentist-time dentist-time-end" id="dentist-sunday-end">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <input type="hidden" id="editdentistId"> <!-- For editing -->
 
                                 <div class="flex justify-end space-x-2">
@@ -233,7 +296,6 @@
                 document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
         </script>
-
-</body>
+    </body>
 
 </html>

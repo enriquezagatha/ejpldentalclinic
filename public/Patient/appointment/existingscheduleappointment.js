@@ -149,14 +149,25 @@ function loadFormData() {
 
     const treatmentPriceInput = document.getElementById("treatment-price");
     if (treatmentPriceInput) {
-      treatmentPriceInput.value =
-        treatmentPrice && treatmentPrice !== "0"
-          ? treatmentPrice.includes("-")
-            ? `₱${treatmentPrice.split("-")[0].trim()} - ₱${treatmentPrice
-                .split("-")[1]
-                .trim()}`
-            : `₱${treatmentPrice}`
-          : "";
+      if (treatmentPrice && treatmentPrice !== "0") {
+        if (treatmentPrice.includes("-")) {
+          const parts = treatmentPrice.split("-");
+          const minPrice = parts[0] ? parts[0].trim() : "";
+          const maxPrice = parts[1] ? parts[1].trim() : "";
+          treatmentPriceInput.value =
+            minPrice && maxPrice
+              ? `₱${minPrice} - ₱${maxPrice}`
+              : minPrice
+              ? `₱${minPrice}`
+              : maxPrice
+              ? `₱${maxPrice}`
+              : "";
+        } else {
+          treatmentPriceInput.value = `₱${treatmentPrice}`;
+        }
+      } else {
+        treatmentPriceInput.value = "";
+      }
     }
 
     if (preferredDate) {

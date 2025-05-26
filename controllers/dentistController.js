@@ -13,18 +13,24 @@ exports.getDentists = async (req, res) => {
 // Add a dentist
 exports.addDentist = async (req, res) => {
     try {
-        const { firstName, secondName, middleName, lastName, contact, gender } = req.body;
+        const { firstName, lastName, gender } = req.body;
         const image = req.file ? `/uploads/${req.file.filename}` : null; // Store image path
+        let schedule = {};
+        if (req.body.schedule) {
+            try {
+                schedule = JSON.parse(req.body.schedule);
+            } catch (e) {
+                schedule = {};
+            }
+        }
 
-        // Create new dentist with firstName, secondName, middleName, lastName, gender
+        // Create new dentist with firstName, lastName, gender, schedule
         const newDentist = new Dentist({
             firstName,
-            secondName,
-            middleName,
             lastName,
-            contact,
             gender, // Saving the gender
             image,
+            schedule,
         });
 
         await newDentist.save();
@@ -37,12 +43,20 @@ exports.addDentist = async (req, res) => {
 // Update a dentist
 exports.updateDentist = async (req, res) => {
     try {
-        const { firstName, secondName, middleName, lastName, contact, gender } = req.body;
+        const { firstName, lastName, gender } = req.body;
         const image = req.file ? `/uploads/${req.file.filename}` : req.body.image; // Keep old image if not updated
+        let schedule = {};
+        if (req.body.schedule) {
+            try {
+                schedule = JSON.parse(req.body.schedule);
+            } catch (e) {
+                schedule = {};
+            }
+        }
 
         const updatedDentist = await Dentist.findByIdAndUpdate(
             req.params.id,
-            { firstName, secondName, middleName, lastName, contact, gender, image },
+            { firstName, lastName, gender, image, schedule },
             { new: true }
         );
 

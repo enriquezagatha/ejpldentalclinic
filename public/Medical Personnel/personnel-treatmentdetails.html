@@ -365,6 +365,75 @@
             function displayProfileInfo(data) {
                 document.getElementById('profile-name').innerText = `${data.firstName}`;
             }
+
+            function uploadFiles() {
+                const fileInput = document.getElementById('fileUpload');
+                const uploadedImagesList = document.getElementById('uploadedImagesList');
+                const uploadedOtherFilesList = document.getElementById('uploadedOtherFilesList');
+
+                if (fileInput.files.length === 0) {
+                    alert('Please select files to upload.');
+                    return;
+                }
+
+                const formData = new FormData();
+                Array.from(fileInput.files).forEach(file => {
+                    formData.append('files', file);
+                });
+
+                // Ensure patient details are retrieved correctly
+                const urlParams = new URLSearchParams(window.location.search);
+                const firstName = urlParams.get('firstName');
+                const lastName = urlParams.get('lastName');
+
+                if (!firstName || !lastName) {
+                    alert('Patient details are missing. Please check the URL parameters.');
+                    return;
+                }
+
+                formData.append('firstName', firstName);
+                formData.append('lastName', lastName);
+
+                fetch('/api/patientRecords/upload-files', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Files uploaded successfully.') {
+                        data.files.forEach(file => {
+                            const listItem = document.createElement('div');
+                            listItem.className = 'mt-2 flex items-center justify-between';
+
+                            if (file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+                                listItem.innerHTML = `
+                                    <img src="/${file.path}" alt="${file.originalname}" class="w-16 h-16 object-cover rounded mr-4">
+                                    <span class="text-sm text-gray-700">${file.originalname}</span>
+                                    <button class="text-red-500 hover:underline ml-4" onclick="removePreview(this)">Remove</button>
+                                `;
+                                uploadedImagesList.appendChild(listItem);
+                            } else {
+                                listItem.innerHTML = `
+                                    <a href="/${file.path}" target="_blank" class="text-blue-500 hover:underline">${file.originalname}</a>
+                                    <button class="text-red-500 hover:underline ml-4" onclick="removePreview(this)">Remove</button>
+                                `;
+                                uploadedOtherFilesList.appendChild(listItem);
+                            }
+                        });
+                        fileInput.value = ''; // Clear the file input after processing
+                    } else {
+                        alert('Error uploading files: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading files:', error);
+                    alert('Error uploading files. Please try again.');
+                });
+            }
+
+            function removePreview(button) {
+                button.closest('div').remove();
+            }
         </script>
 
         <div id="toast" class="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded shadow-lg hidden"></div>

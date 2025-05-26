@@ -104,11 +104,11 @@ async function displayDentists() {
                               '${dentist._id}', 
                               '${fullName.replace(/'/g, "\\'")}', 
                               '${dentist.image || ""}',
-                              '${dentist.gender || ""}'
+                              '${dentist.gender || ""}',
+                              ${JSON.stringify(dentist.schedule || null).replace(/"/g, '&quot;')}
                             )">
                           Edit
                         </button>
-
                         <button class="px-3 py-1 bg-[#2C4A66] text-white rounded-md hover:bg-[#1E354D] focus:outline-none focus:ring-2 focus:ring-red-300" onclick="deleteDentist('${
                           dentist._id
                         }')">Delete</button>
@@ -143,6 +143,115 @@ function showToast(message, bgColor = "bg-green-500") {
   setTimeout(() => {
     toast.classList.add("hidden");
   }, 2000);
+}
+
+// Helper: collect schedule from modal
+function getDentistScheduleFromModal() {
+  const useClinic = document.getElementById("dentist-use-clinic-hours").checked;
+  const days = [
+    "monday","tuesday","wednesday","thursday","friday","saturday","sunday"
+  ];
+  const everydayCheckbox = document.getElementById("dentist-day-everyday");
+  
+  if (useClinic) {
+    // If 'Everyday' is checked, treat as all days selected
+    let checkedDays;
+    if (everydayCheckbox && everydayCheckbox.checked) {
+      checkedDays = [...days];
+    } else {
+      checkedDays = days.filter(day => document.getElementById(`dentist-day-${day}`).checked);
+    }
+    // Require at least one day to be selected
+    if (checkedDays.length === 0) {
+      showToast("Please select at least one day or 'Everyday' for Clinic Hours.", "bg-red-500");
+      throw new Error("No day selected for clinic hours");
+    }
+    // Don't call setClinicHoursInModal() here anymore to keep it optional
+    
+    const schedule = [];
+    checkedDays.forEach(day => {
+      schedule.push({
+        day,
+        start: document.getElementById(`dentist-${day}-start`).value,
+        end: document.getElementById(`dentist-${day}-end`).value
+      });
+    });
+    return { useClinicHours: true, days: schedule };
+  }
+  // Custom schedule
+  const schedule = [];
+  days.forEach(day => {
+    const checked = document.getElementById(`dentist-day-${day}`).checked;
+    if (checked) {
+      const start = document.getElementById(`dentist-${day}-start`).value;
+      const end = document.getElementById(`dentist-${day}-end`).value;
+      if (start && end) {
+        schedule.push({ day, start, end });
+      }
+    }
+  });
+  return { useClinicHours: false, days: schedule };
+}
+
+// Helper: enable/disable schedule fields
+function setScheduleFieldsDisabled(disabled) {
+  ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"].forEach(day => {
+    document.getElementById(`dentist-day-${day}`).disabled = disabled;
+    document.getElementById(`dentist-${day}-start`).disabled = disabled;
+    document.getElementById(`dentist-${day}-end`).disabled = disabled;
+  });
+}
+
+// Helper: set schedule in modal for editing, with optional clinic hours fill
+function setDentistScheduleInModal(schedule, fillClinicHours = false) {
+  const useClinic = schedule && schedule.useClinicHours;
+  document.getElementById("dentist-use-clinic-hours").checked = !!useClinic;
+  // Always show the custom schedule section
+  document.getElementById("dentist-custom-schedule").style.display = "block";
+  // Reset all days/times
+  ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"].forEach(day => {
+    document.getElementById(`dentist-day-${day}`).checked = false;
+    document.getElementById(`dentist-${day}-start`).value = "";
+    document.getElementById(`dentist-${day}-end`).value = "";
+  });
+
+  if (useClinic && fillClinicHours) {
+    setClinicHoursInModal();  // only fill if true
+    setScheduleFieldsDisabled(true);
+  } else if (!useClinic && schedule && Array.isArray(schedule.days)) {
+    schedule.days.forEach(s => {
+      if (s.day) {
+        document.getElementById(`dentist-day-${s.day}`).checked = true;
+        document.getElementById(`dentist-${s.day}-start`).value = s.start || "";
+        document.getElementById(`dentist-${s.day}-end`).value = s.end || "";
+      }
+    });
+    setScheduleFieldsDisabled(false);
+  } else {
+    setScheduleFieldsDisabled(false);
+  }
+}
+
+// Add this function to fill in the clinic hours
+function setClinicHoursInModal() {
+  // Monday: 6:00 PM - 2:00 AM
+  document.getElementById("dentist-day-monday").checked = true;
+  document.getElementById("dentist-monday-start").value = "18:00";
+  document.getElementById("dentist-monday-end").value = "02:00";
+  // Tuesday-Friday: 2:00 PM - 2:00 AM
+  ["tuesday","wednesday","thursday","friday"].forEach(day => {
+    document.getElementById(`dentist-day-${day}`).checked = true;
+    document.getElementById(`dentist-${day}-start`).value = "14:00";
+    document.getElementById(`dentist-${day}-end`).value = "02:00";
+  });
+  // Saturday: 10:00 AM - 2:00 AM
+  document.getElementById("dentist-day-saturday").checked = true;
+  document.getElementById("dentist-saturday-start").value = "10:00";
+  document.getElementById("dentist-saturday-end").value = "02:00";
+  // Sunday: 2:00 PM - 2:00 AM
+  document.getElementById("dentist-day-sunday").checked = true;
+  document.getElementById("dentist-sunday-start").value = "14:00";
+  document.getElementById("dentist-sunday-end").value = "02:00";
 }
 
 // Add or update dentist (with image upload support)
@@ -191,6 +300,7 @@ async function addOrUpdateDentist() {
     if (imageFile) {
       formData.append("image", imageFile);
     }
+    formData.append("schedule", JSON.stringify(getDentistScheduleFromModal()));
 
     const url = editId ? `${DENTIST_API_URL}/${editId}` : DENTIST_API_URL;
     const method = editId ? "PUT" : "POST";
@@ -205,7 +315,13 @@ async function addOrUpdateDentist() {
       document.getElementById("dentist-modal").style.display = "none";
       displayDentists();
     } else {
-      showToast("Failed to save dentist.", "bg-red-500");
+      // Try to get error message from backend
+      let errorMsg = "Failed to save dentist.";
+      try {
+        const err = await response.json();
+        if (err && err.message) errorMsg = err.message;
+      } catch (e) {}
+      showToast(errorMsg, "bg-red-500");
     }
   } catch (error) {
     console.error("Error saving dentist:", error);
@@ -213,7 +329,7 @@ async function addOrUpdateDentist() {
 }
 
 // Edit dentist (populate fields)
-function editDentist(id, fullName, image = "", gender = "") {
+function editDentist(id, fullName, image = "", gender = "", schedule = null) {
   const nameParts = fullName.split(" ");
   const firstName = nameParts[0];
   const lastName = nameParts[nameParts.length - 1];
@@ -245,6 +361,9 @@ function editDentist(id, fullName, image = "", gender = "") {
 
   // Update modal title
   document.getElementById("dentist-modal-title").innerText = "Edit Dentist Details";
+
+  // Set schedule
+  setDentistScheduleInModal(schedule);
 
   document.getElementById("dentist-modal").style.display = "flex";
 }
@@ -295,6 +414,16 @@ async function deleteDentist(id) {
 document
   .getElementById("open-dentist-modal-btn")
   .addEventListener("click", () => {
+    // Reset modal fields for new dentist
+    document.getElementById("dentist-first-name").value = "";
+    document.getElementById("dentist-last-name").value = "";
+    document.getElementById("dentist-gender").value = "";
+    document.getElementById("dentist-image").value = "";
+    document.getElementById("editdentistId").value = "";
+    document.getElementById("dentist-modal-title").innerText = "Add New Dentist";
+    const imagePreview = document.getElementById("dentist-image-preview");
+    if (imagePreview) imagePreview.style.display = "none";
+    setDentistScheduleInModal({ useClinicHours: false, days: [] });
     document.getElementById("dentist-modal").style.display = "flex";
   });
 
@@ -310,3 +439,28 @@ document
 
 // Load dentists on page load
 displayDentists();
+
+document.addEventListener('DOMContentLoaded', function () {
+  const useClinicHours = document.getElementById('dentist-use-clinic-hours');
+  if (useClinicHours) {
+    useClinicHours.addEventListener('change', function () {
+      // Always show the custom schedule section
+      const customSchedule = document.getElementById('dentist-custom-schedule');
+      if (customSchedule) {
+        customSchedule.style.display = "block";
+      }
+      if (this.checked) {
+        setClinicHoursInModal();
+        setScheduleFieldsDisabled(true);
+      } else {
+        // Clear all fields when unchecked and enable them
+        ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"].forEach(day => {
+          document.getElementById(`dentist-day-${day}`).checked = false;
+          document.getElementById(`dentist-${day}-start`).value = "";
+          document.getElementById(`dentist-${day}-end`).value = "";
+        });
+        setScheduleFieldsDisabled(false);
+      }
+    });
+  }
+});

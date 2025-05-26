@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const patientRecordController = require("../controllers/patientRecordController");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 // Route to fetch all patient records
 router.get("/all-patient-records", patientRecordController.getAllPatientRecords);
@@ -25,5 +27,12 @@ router.get(
 
 // Route to fetch distinct years from patient records
 router.get("/years", patientRecordController.getPatientRecordYears);
+
+// Route to handle file uploads
+router.post(
+  "/upload-files",
+  upload.array("files"),
+  patientRecordController.uploadFiles
+);
 
 module.exports = router;

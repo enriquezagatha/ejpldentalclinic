@@ -93,7 +93,7 @@ exports.createAppointment = async (req, res) => {
     preferredDate: formattedPreferredDate,
     preferredTime,
     treatmentType,
-    treatmentPrice: String(treatmentPrice),
+    treatmentPrice: treatmentPrice, // <-- keep as-is, do not convert to String()
     age,
     birthDay,
     gender,
